@@ -1,0 +1,596 @@
+---
+id: schema
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import AtomDemoDemo from "/src/components/AtomDemo";
+import AtomDemoDemoJs from "!!raw-loader!/src/components/AtomDemo/index.js";
+import DraggableDemo from "/src/components/DraggableDemo";
+import DraggableDemoJs from "!!raw-loader!/src/components/DraggableDemo/index.js";
+import CodeTrueDemo from "/src/components/CodeDemo/CodeTrue.js";
+import CodeTrueDemoJs from "!!raw-loader!/src/components/CodeDemo/CodeTrue.js";
+import CodeFalseDemo from "/src/components/CodeDemo/CodeFalse.js";
+import CodeFalseDemoJs from "!!raw-loader!/src/components/CodeDemo/CodeFalse.js";
+import DefiningTrueDemo from "/src/components/DefiningDemo/DefiningFalse.js";
+import DefiningTrueDemoJs from "!!raw-loader!/src/components/DefiningDemo/DefiningFalse.js";
+import DefiningFalseDemo from "/src/components/DefiningDemo/DefiningTrue.js";
+import DefiningFalseDemoJs from "!!raw-loader!/src/components/DefiningDemo/DefiningTrue.js";
+
+import CustomMarkDemo from "/src/components/CustomMarkDemo";
+import CustomMarkDemoJs from "!!raw-loader!/src/components/CustomMarkDemo/index.js";
+import CustomMarkDotDemoJs from "!!raw-loader!/src/components/CustomMarkDemo/mark-dot.js";
+
+import InclusiveTrueDemo from "/src/components/InclusiveDemo/InclusiveTrue.js";
+import InclusiveFalseDemo from "/src/components/InclusiveDemo/InclusiveFalse.js";
+import InclusiveTrueDemoJs from "!!raw-loader!/src/components/InclusiveDemo/InclusiveTrue.js";
+import InclusiveFalseDemoJs from "!!raw-loader!/src/components/InclusiveDemo/InclusiveFalse.js";
+import InclusiveMarkDotDemoJs from "!!raw-loader!/src/components/InclusiveDemo/mark-dot.js";
+
+import ExcludesDemo from "/src/components/ExcludesDemo";
+import ExcludesDemoJs from "!!raw-loader!/src/components/ExcludesDemo/index.js";
+
+import ExitableTrueDemo from "/src/components/ExitableDemo/ExitableTrue.js";
+import ExitableFalseDemo from "/src/components/ExitableDemo/ExitableFalse.js";
+import ExitableTrueDemoJs from "!!raw-loader!/src/components/ExitableDemo/ExitableTrue.js";
+import ExitableFalseDemoJs from "!!raw-loader!/src/components/ExitableDemo/ExitableFalse.js";
+import ExitableMarkDotDemoJs from "!!raw-loader!/src/components/ExitableDemo/mark-dot.js";
+
+
+
+[schema](https://tiptap.dev/api/schema)（[这个单词实在难易中文翻译](https://zhuanlan.zhihu.com/p/340830528) ）
+
+## 初识 schema
+
+schema 其实就是我们定义扩展(extension)、节点(node)和标记(mark)用的语法规范！
+
+当您只使用我们给您提供的时这些东西时，您不必太在意 schema，但您要自定义的时候，了解其的工作原理可能会有所帮助。
+
+让我们看一下典型 ProseMirror 编辑器的最简单 schema 长什么样：
+
+```js
+// ProseMirror里的 schema
+{
+  nodes: {
+    // 定义了一个doc的节点类型
+    // 每个schema （在tiptap中 为 每个editor实例）必须至少定义一个顶级节点类型（默认为"doc"）和"text"文本内容的类型。
+    doc: {
+      content: 'block+',
+    },
+    paragraph: {
+      content: 'inline*',
+      group: 'block',
+      parseDOM: [{ tag: 'p' }],
+      toDOM: () => ['p', 0],
+    },
+    text: {
+      group: 'inline',
+    },
+  },
+}
+```
+
+我们在这里注册了三个节点 doc,paragraph 和 text。
+
+- doc 是文档节点，亦是根节点，它允许一个或多个块节点作为子节点 `content: 'block+'`。
+- paragraph 是段落节点，它隶属于块节点组`group: 'block'`，它允许零个或多个内联节点作为子节点 `content: 'inline*'`,因此只能 text 节点在其中。
+- text 是文本节点，它隶属于行节点组`group: 'inline'`。
+
+再来看 Tiptap 的约束长什么样。  
+在 Tiptap 中，每个节点、标记和扩展名都存在于自己的文件中。这允许我们拆分逻辑，最后整个模式将合并在一起
+
+```js
+// Tiptap里的 schema
+import { Node } from "@tiptap/core";
+
+const Document = Node.create({
+  name: "doc",
+  topNode: true,
+  content: "block+",
+});
+
+const Paragraph = Node.create({
+  name: "paragraph",
+  group: "block",
+  content: "inline*",
+  parseHTML() {
+    return [{ tag: "p" }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ["p", HTMLAttributes, 0];
+  },
+});
+
+const Text = Node.create({
+  name: "text",
+  group: "inline",
+});
+```
+
+## 节点 schema
+
+节点就像内容块，例如段落、标题、代码块、引用等等。  
+与许多其他编辑器不同，Tiptap 基于定义内容结构。这使您能够定义文档中可能出现的节点类型、其属性以及它们的嵌套方式。这个模式非常严格。您不能使用任何未在您的架构中定义的 HTML 元素或属性。 这就要求我们必须熟练 节点 schema。
+
+比如：`这是 <strong>非常重要的</strong>`放到 Tiptap 中，但没有任何处理 strong 标签的扩展，你只会看到`这是非常重要的`渲染成功，却没有被 strong。
+
+一个简单的文档可能是一个"doc"包含两个"paragraph" 的节点，每个 paragraph 节点包含一个"text"节点。
+
+### content
+
+content 属性准确定义了节点可以拥有的内容类型。ProseMirror 对此非常严格。这意味着，不符合模式的内容将被丢弃。 如果不指定 content 则任何内容都会被丢弃！
+
+content 的值来源于某一个节点类型的 group、目前[tiptap 内置一些常用的节点](/api/nodes)如：block、inline 等。
+
+```js
+Node.create({
+  // 内容只允许有一个block
+  content: 'block',
+
+  // 内容至少有1个 block类型
+  content: 'block+',
+
+  //内容为0或多个 block类型
+  content: 'block*',
+
+  // 所有的内容必须是 'inline'类型  (text 或 hard break)
+  content: 'inline*',
+
+  // 内容只允许 'text'类型
+  content: 'text*',
+
+  // 可以有一个或多个 【paragraph 或 lists】 (如果存在list)
+  content: '(paragraph|list?)+',
+
+  // 必须顶部有一个标题 在下边有更多的block
+  content: 'heading block+'
+
+  // 当然 也可以是自定义的节点类型(前提您得定义好group为custom的节点)
+  content: 'custom'
+})
+```
+
+### group
+
+将此节点添加到某一分组中。然后在别的节点的[content](#content)会使用。
+
+```js
+Node.create({
+  // 添加到 'block' 组
+  group: "block",
+
+  // 添加到 'inline' 组
+  group: "inline",
+
+  // 添加到 'block' 和 'list' 组
+  group: "block list",
+
+  // 当然 也可以是自定义的节点分组名
+  group: "custom",
+});
+```
+
+如果您想在 编辑器内容的（doc）根节点中 使用自定义的节点分组名，则需要重写[默认根节点定义 schema](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-document/src/document.ts)的 content 属性
+
+```js
+import { Node } from "@tiptap/core";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import React from "react";
+
+// 重写根节点 使其的支持custom组的所有节点 作为子节点
+const CustomDocument = Node.create({
+  name: "doc",
+  topNode: true,
+  content: "(block|custom)+",
+});
+
+const CustomNodes = Node.create({
+  name: "custom-node-myspan",
+  group: "custom",
+  content: "text*",
+  parseHTML() {
+    return [{ tag: "myspan" }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ["myspan", HTMLAttributes, 0];
+  },
+});
+
+export default () => {
+  const editor = useEditor({
+    extensions: [StarterKit, CustomDocument, CustomNodes],
+    content: "<myspan>你好世界</myspan>",
+  });
+  return <EditorContent editor={editor} />;
+};
+```
+
+![schema-1](/img/api/schema-1.jpg)
+
+### inline
+
+**会换行**  
+当父节点 schema 配置`content:block`，  
+你的 editor 初始内容为`content: '你好<myspan>世界</myspan>'` 则会被渲染成
+
+```html
+<!-- 即text会被p标签包裹起来 -->
+<p>你好</p>
+<p><myspan>世界</myspan></p>
+```
+
+这个时候子节点 schema 配置 inline 必须配置为 false，否则报错
+
+**不会换行**  
+当父节点 schema 配置`content:text*` 或者`content:inline*`，  
+你的 editor 初始内容为`content: '<myspan>你好世界</myspan>'` 则会被渲染成
+
+```html
+你好<myspan>世界</myspan>
+```
+
+这个时候子节点 schema 配置 inline 必须配置为 true，否则报错
+
+**inline 存在的意义**  
+看起来节点的 inline 只是被动设置，由父节点 content 的值决定。  
+在上边的例子中，如`content:(block|custom)+` 则在父节点内部内容的 render 表现为：  
+当前节点 myspan 即会和文本 Text 一行。此时的节点就像个标记一样，但具备节点的功能。
+
+### mark
+
+您可以使用定义节点内允许哪些标记 marks。
+
+```js
+Node.create({
+  // 此节点只允许 'bold' 标记
+  marks: "bold",
+
+  // 此节点允许 'bold'和 'italic' 标记
+  marks: "bold italic",
+
+  // 此节点允许所有标记
+  marks: "_",
+
+  // 此节点禁止所有标记
+  marks: "",
+});
+```
+
+### atom
+
+节点不可直接编辑，应将其视为一个单元。
+
+```js
+Node.create({
+  atom: true,
+});
+```
+
+<Fieldset title="🌰 举个例子">
+  <AtomDemoDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{AtomDemoDemoJs}</CollapseCodeblock>
+
+当然我们也内置了一个[提及 Mention](https://tiptap.dev/api/nodes/mention)节点 就是用了这个。
+
+### selectable
+
+配置节点是否可选择，一般默认是可选择的。
+
+```js
+Node.create({
+  selectable: true,
+});
+```
+
+:::tip
+译者尚未发现有什么作用，不知道使用场景
+:::
+
+### draggable
+
+使用此设置可以将节点配置为可拖动
+
+<Fieldset title="🌰 举个例子">
+  <DraggableDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{DraggableDemoJs}</CollapseCodeblock>
+
+### code
+
+你的内容中包含代码，但是渲染的不如你的预期(如保留空格与换行、拥有 defining 特性)，可以尝试开启此配置
+
+```js
+Node.create({
+  code: true,
+});
+```
+
+<Fieldset title="🌰 举个例子">
+  <CodeTrueDemo />
+</Fieldset>
+<Tabs>
+  <TabItem value="index.jsx" label="Code为true" default>
+    <CollapseCodeblock language="jsx">{CodeTrueDemoJs}</CollapseCodeblock>
+  </TabItem>
+  <TabItem value="Code为false" label="Code为false">
+    <Fieldset title="🌰 举个例子">
+      <CodeFalseDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">{CodeFalseDemoJs}</CollapseCodeblock>
+  </TabItem>
+</Tabs>
+
+### whitespace
+
+控制节点中的空格的处理方式
+
+```js
+Node.create({
+  whitespace: "pre",
+});
+```
+
+:::tip
+译者尚未发现有什么作用，不知道使用场景
+:::
+
+### defining
+
+默认情况下，当节点的全部内容被替换时（例如，粘贴新内容时），当前节点本身就会被保留。
+
+开启此选项，则会保证替换节点所有内容 包含节点本身。
+
+通常，节点 Blockquote、CodeBlock、Heading 和 ListItem 会用到此项。
+
+```js
+Node.create({
+  defining: true,
+});
+```
+
+<Tabs>
+  <TabItem value="Defining为true" label="Defining为true" default>
+    <Fieldset title="🌰 举个例子">
+      <DefiningTrueDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">{DefiningTrueDemoJs}</CollapseCodeblock>
+  </TabItem>
+  <TabItem value="Defining为false" label="Defining为false">
+    <Fieldset title="🌰 举个例子">
+      <DefiningFalseDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">{DefiningFalseDemoJs}</CollapseCodeblock>
+  </TabItem>
+</Tabs>
+
+### isolating
+
+将删除和编辑等光标控制在一定范围内的节点，比如[单元格 TableCell](https://tiptap.dev/api/nodes/table-cell)会用到
+
+```js
+Node.create({
+  isolating: true,
+});
+```
+
+:::tip
+译者尚未发现有什么作用，除了表格的单元格会用到，其它不知道使用场景
+:::
+
+### allowGapCursor
+
+为[Gapcursor 扩展](https://tiptap.dev/api/extensions/gapcursor)提供的一个属性，用来决定光标是否可以出现在该节点的任意间隙的地方
+
+```js
+Node.create({
+  allowGapCursor: false,
+});
+```
+
+:::tip
+译者尚未发现有什么作用，不知道使用场景
+:::
+
+### tableRole
+
+为[Table 扩展](https://tiptap.dev/api/nodes/table)提供的一个属性，来配置节点具有的角色，如表头、表行、单元格
+
+```js
+Node.create({
+  // 允许的值为table、row、cell和header_cell
+  tableRole: "cell",
+});
+```
+
+:::tip
+译者尚未发现有什么作用，不知道使用场景
+:::
+
+## 标记 schema
+
+标记可以应用于节点的特定部分 使其特殊显示，标记有：**粗体**、_斜体_、~~删除线~~、<a>链接</a>等
+
+先来个例子 自己扩充加一个 【重点项】的标记
+
+<Fieldset title="🌰 举个例子">
+  <CustomMarkDemo />
+</Fieldset>
+<Tabs>
+<TabItem value="index.jsx" label="index.jsx" default>
+  <CollapseCodeblock language="jsx">{CustomMarkDemoJs}</CollapseCodeblock>
+</TabItem>
+<TabItem value="mark-dot.js" label="mark-dot.js">
+  <CollapseCodeblock language="jsx">{CustomMarkDotDemoJs}</CollapseCodeblock>
+</TabItem>
+<TabItem value="全局样式" label="全局样式">
+
+```css
+text-dot {
+  text-emphasis: dot;
+  text-emphasis-position: under left;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### inclusive
+
+配置标记在光标结束时是否需要处于活动状态。
+
+```js
+Mark.create({
+  inclusive: false,
+});
+```
+
+这里有对比的例子
+
+<Tabs>
+  <TabItem value="inclusive为true" label="inclusive为true" default>
+    <Fieldset title="🌰 举个例子">
+      <InclusiveTrueDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">
+      {InclusiveMarkDotDemoJs}
+    </CollapseCodeblock>
+    <CollapseCodeblock language="jsx">{InclusiveTrueDemoJs}</CollapseCodeblock>
+  </TabItem>
+  <TabItem value="inclusive为false" label="inclusive为false">
+    <Fieldset title="🌰 举个例子">
+      <InclusiveFalseDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">
+      {InclusiveMarkDotDemoJs}
+    </CollapseCodeblock>
+    <CollapseCodeblock language="jsx">{InclusiveFalseDemoJs}</CollapseCodeblock>
+  </TabItem>
+</Tabs>
+
+### excludes
+
+默认情况下，节点可以被标记同时应用。使用 excludes 属性，您可以定义哪些标记不能与标记共存。
+
+```js
+Mark.create({
+  // 不能和粗体标记同时使用
+  excludes: 'bold'
+  // 不能和其它任何标记同时使用
+  excludes: '_',
+})
+```
+
+举个例子，定一个不能和粗体同时使用的标记
+
+<Fieldset title="🌰 举个例子">
+  <ExcludesDemo />
+</Fieldset>
+<CollapseCodeblock language="jsx">{ExcludesDemoJs}</CollapseCodeblock>
+
+
+### exitable
+默认情况下，标记会“捕获”光标，这意味着光标无法离开标记（比如在文末执行标记，那么您的光标向右永远也移动不出去，标记的active一直处于激活状态）。   
+如果设置为 true，当标记位于节点末尾时，标记将退出。   
+这在某些场景下很使用，比如说code标记。
+```js
+Mark.create({
+  // 标记的光标是否可以在头尾离开 -默认为false(不离开)
+  exitable: true,
+})
+```   
+
+这里有个对比的例子，您将光标移动到末尾处 并使用右方向键向右移动
+<Tabs>
+   <TabItem value="Exitable为false" label="Exitable为false" default>
+    <Fieldset title="🌰 举个例子">
+      <ExitableFalseDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">
+      {ExitableMarkDotDemoJs}
+    </CollapseCodeblock>
+    <CollapseCodeblock language="jsx">{ExitableFalseDemoJs}</CollapseCodeblock>
+  </TabItem>
+  <TabItem value="Exitable为true" label="Exitable为true">
+    <Fieldset title="🌰 举个例子">
+      <ExitableTrueDemo />
+    </Fieldset>
+    <CollapseCodeblock language="jsx">
+      {ExitableMarkDotDemoJs}
+    </CollapseCodeblock>
+    <CollapseCodeblock language="jsx">{ExitableTrueDemoJs}</CollapseCodeblock>
+  </TabItem>
+</Tabs>
+
+### group
+将您的标记 添加（或归类）到一组中。
+这样后续可以在[节点属性中引用](/api/schema/#mark)。
+```js
+Mark.create({
+  // 将此标记归类到 'basic' 组
+  group: 'basic',
+  // 将此标记归类到 'basic' 和 'foobar' 组
+  group: 'basic foobar',
+})
+```
+
+
+### code
+你的内容中包含代码，但是渲染的不如你的预期(如保留空格与换行、拥有 defining 特性)，可以尝试开启此配置
+```js
+Mark.create({
+  code: true,
+})
+```
+使用场景和 [节点的配置项code](/api/schema/#code) 一样。
+
+
+### spanning
+默认情况下，标记可以使用是跨节点的。    
+设置spanning: false则说明标记不得跨越多个节点。
+```js
+Mark.create({
+  spanning: false,
+})
+```
+
+## 获取底层 ProseMirror schema
+在某些场景下，您可能需要使用底层Schema。   
+比如协作文本编辑功能，或您想要手动将您的内容呈现为 HTML。
+
+```js
+import { Editor } from '@tiptap/core'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+
+const editor = new Editor({
+  extensions: [
+    Document,
+    Paragraph,
+    Text,
+    // 下边或还有更多其它
+  ]
+})
+const schema = editor.schema
+```
+
+如果您只想拥有架构而不初始化实际的编辑器，则可以使用getSchema辅助函数。
+```js
+import { getSchema } from '@tiptap/core'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+
+const schema = getSchema([
+  Document,
+  Paragraph,
+  Text,
+  // 下边或还有更多其它
+])
+```

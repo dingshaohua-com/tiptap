@@ -1,0 +1,555 @@
+---
+title: 自定义功能
+sidebar_position: 8
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import AttributesDemo from "/src/components/AttributesDemo";
+import AttributesDemoJs from "!!raw-loader!/src/components/AttributesDemo/index.js";
+import RenderHTMLDemo from "/src/components/RenderHTMLDemo";
+import RenderHTMLDemoJs from "!!raw-loader!/src/components/RenderHTMLDemo/index.js";
+import StrikeDemo from "/src/components/StrikeDemo";
+import StrikeDemoJs from "!!raw-loader!/src/components/StrikeDemo/index.js";
+
+
+:::tip
+为避免理解和翻译误差，特此说明，extensions指的是`编辑器配置对象中的配置项extensions`，此配置项支持 节点、标记和扩展，一般我将其称为三大件或功能，并不是单纯的指扩展一项。
+:::
+
+## 介绍
+
+Tiptap 的优势之一是它的可扩展性，您可以根据您的喜好扩展编辑器（的功能）。
+
+Tiptap 内容有三大法宝构成：节点(node)、标记(mark)和扩展(extension)，您都可去扩展丰富它们。
+
+本章的所有内容 都是均可用于 这三大法宝上。
+
+## 继承现有的功能
+
+每个 Tiptap 的功能三大件都有一个`extend()`方法，它接受一个对象，其中包含您想要更改或添加的所有内容。
+
+比方说，您想更改[无序列表扩展](/)的键盘快捷键，那如下就会把将普通段落转为无须列表的快捷键`Control+Shift+8`改为了`Control+l`。
+
+```js
+import BulletList from "@tiptap/extension-bullet-list";
+
+// 重写该扩展里定义的快捷键设置
+const CustomBulletList = BulletList.extend({
+  addKeyboardShortcuts() {
+    return {
+      "Mod-l": () => this.editor.commands.toggleBulletList(),
+    };
+  },
+});
+
+// 在你的编辑器中尝试一些你的新扩展吧
+new Editor({
+  extensions: [
+    CustomBulletList(),
+    // …
+  ],
+});
+```
+
+### 名称
+
+扩展名称无法（通过 extend）修改，换个思路，如果可以把整个扩展代码赋值一份 其中改写名字字段。然后再使用这个自定义的扩展 不就行了？！
+
+### 设置项
+
+通过`addOptions`，可以为三大件添加一些设置项（翻译为设置项目，其实不太合适，它算是定义的一些插件内部常量吧），这些设置项你可以在后边的renderHtml或parseHTML中用到。         
+如果你想更改默认设置，但是不完全重写，还想保持父级原有的内容，你可以这样
+
+```js
+import Heading from "@tiptap/extension-heading";
+
+const CustomHeading = Heading.extend({
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      levels: [1, 2, 3],
+    };
+  },
+});
+```
+
+如上 CustomHeading 扩展 除了 levels 不一样，其它都和原 Heading 扩展保持一致！
+
+## 创建新的功能
+
+除了继承之外，我们还允许您头开始构建自己的功能扩展。
+
+### 创建扩展
+
+```js
+import { Extension } from "@tiptap/core";
+
+const CustomExtension = Extension.create({
+  name: "customExtension",
+  // ...
+});
+```
+
+### 创建节点
+
+您可以将文档视为一棵树，那么[节点](https://tiptap.dev/api/nodes)只是该树中的一种内容。您可以学习[Paragraph](/)、Heading 或 CodeBlock。
+
+```js
+import { Node } from "@tiptap/core";
+
+const CustomNode = Node.create({
+  name: "customNode",
+  // ...
+});
+```
+
+### 创建标记
+
+标记可以应用于节点，例如添加内联格式：加粗、斜体。您可以学习[Bold](/),Italic 和 Highlight。
+
+```js
+import { Mark } from "@tiptap/core";
+
+const CustomMark = Mark.create({
+  name: "customMark",
+  // ...
+});
+```
+
+## 加载优先级
+
+优先级定义了扩展注册的顺序。默认优先级是 100，这是大多数扩展所具有的。具有更高优先级的扩展将被更早地加载。
+
+```js
+import Link from "@tiptap/extension-link";
+
+const CustomLink = Link.extend({
+  priority: 1000,
+});
+```
+
+除此之外，更高的优先级的扩展 还会影响到最终的渲染效果，例如 Link 标记具有更高的优先级。这意味着它将呈现为`<a href="…"><strong>Example</strong></a>`而不是`<strong><a href="…">Example</a></strong>`。
+
+## 扩展的内部存储
+
+在某些时候，您可能希望在扩展实例中保存一些数据变量等。您可以在 下的扩展中访问它`storage`
+
+```js
+import { Extension } from "@tiptap/core";
+
+const CustomExtension = Extension.create({
+  name: "customExtension",
+
+  addStorage() {
+    return {
+      awesomeness: 100,
+    };
+  },
+
+  onUpdate() {
+    this.storage.awesomeness += 1;
+  },
+});
+```
+
+在扩展外部，您可以通过 editor.storage 来访问
+
+```js
+const editor = new Editor({
+  extensions: [CustomExtension],
+});
+
+const awesomeness = editor.storage.customExtension.awesomeness;
+```
+
+## 架构
+
+[架构](api/schema/)，Tiptap 工作在严格的 schema 中。  
+schema 规定了标记、节点和扩展，这些共同组成了编辑器强大丰富的功能。  
+标记决定了样式，节点可以定义您的富文本内容标签支持 和嵌套规范等，而扩展则为您的编辑器提供了额外的功能。
+
+## 属性
+
+属性可以让您在（节点、标记、扩展）内容中存储附加信息。  
+假设您想扩展默认 Paragraph 节点以具有不同的颜色：
+
+```js
+const CustomParagraph = Paragraph.extend({
+  addAttributes() {
+    // 返回一个属性配置对象
+    return {
+      color: {
+        default: "pink",
+      },
+    };
+  },
+});
+
+// 渲染结果如下
+// <p color="pink">示例文本</p>
+```
+
+让我们继续使用颜色示例，并假设您想要添加一个内联样式来实际为文本着色。使用该 renderHTML 函数，您可以返回将在输出中呈现的 HTML 属性。
+
+此示例根据以下值添加样式 HTML 属性 color：
+
+```js
+const CustomParagraph = Paragraph.extend({
+  addAttributes() {
+    return {
+      color: {
+        default: null,
+        // 返回 如何呈现属性的字符串
+        renderHTML: (attributes) => {
+          // … 返回一个属性配置对象
+          return {
+            style: `color: ${attributes.color}`,
+          };
+        },
+      },
+    };
+  },
+});
+
+// 渲染结果如下
+// <p style="color: pink">示例文本</p>
+```
+
+您还可以控制如何从 HTML 解析属性。  
+也许您想将颜色存储在一个名为 data-color（而不仅仅是 color）的属性中，下面是您将如何做到这一点：
+
+<Fieldset title="🌰 举个例子">
+  <AttributesDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{AttributesDemoJs}</CollapseCodeblock>
+
+### 扩展现有属性
+如果要向三大件添加属性并保留现有属性，您可以通过 访问它们`this.parent()`。
+```js
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      myCustomAttribute: {
+        // …
+      },
+    }
+  },
+})
+```
+
+## 全局属性
+属性可以一次应用于多个三大件。    
+这对于文本对齐、行高、颜色、字体系列和其他与样式相关的属性很有用。
+
+以TextAlign扩展来举例
+```js
+const TextAlign = Extension.create({
+  addGlobalAttributes() {
+    return [
+      {
+        // 继承（即应用在）以下extensions（节点、标记、描述）
+        types: [
+          'heading',
+          'paragraph',
+        ],
+        // … 拥有这些属性
+        attributes: {
+          textAlign: {
+            default: 'left',
+            renderHTML: attributes => ({
+              style: `text-align: ${attributes.textAlign}`,
+            }),
+            parseHTML: element => element.style.textAlign || 'left',
+          },
+        },
+      },
+    ]
+  },
+})
+```
+如果有时间，您可仔细查看[TextAlign扩展的完整源代码](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text-align)。
+
+
+## 呈现 HTML
+使用该renderHTML函数，您可以控制三大件（节点、标记、描述）如何呈现为 HTML。    
+renderHTML函数有一个参数，其中包含所有本地属性、全局属性和配置的 CSS 类。 
+
+这是Bold扩展的一个例子
+```js
+renderHTML({ HTMLAttributes }) {
+  return ['strong', HTMLAttributes, 0]
+},
+```
+返回是个数组中:
+* 第一个值应该是 HTML 标签的名称。
+* 第二个元素是一个对象或一个数组，若是对象它被解释为一组属性。
+* 第三个是一个数字，用于指示应该插入内容的位置。
+
+若第二个元素为数组，则表示之后的任何元素都呈现为子元素。       
+让我们看一下带有两个嵌套标签的扩展的渲染 以CodeBlock为例：
+```js
+renderHTML({ HTMLAttributes }) {
+  return ['pre', ['code', HTMLAttributes, 0]]
+},
+```
+
+如果您想添加一些额外的属性，请使用mergeAttributes
+```js
+import { mergeAttributes } from '@tiptap/core'
+
+renderHTML({ HTMLAttributes }) {
+  return ['a', mergeAttributes(HTMLAttributes, { rel: this.options.rel }), 0]
+},
+```
+
+<Fieldset title="🌰 举个例子">
+  <RenderHTMLDemo />
+</Fieldset>
+<CollapseCodeblock language="jsx">{RenderHTMLDemoJs}</CollapseCodeblock>
+
+## 解析HTML
+此函数定义了  三大件的解析规则，遇到那些匹配到的标签会触发解析（进而执行renderHTML）。
+下边是一个Bold的解析简化示例
+```js
+parseHTML() {
+  return [
+    {
+      //意思是只有遇到strong 标签的时候才会触发本扩展/节点/标记
+      tag: 'strong',  
+    },
+  ]
+},
+```
+
+
+### 使用 getAttrs
+getAttrs根据您返回布尔值，来决定是否会触发解析（进而执行renderHTML）。
+
+相比tag，他更加灵活。因为它是个函数，通过形参 您可以获取到当前的dom节点信息，进而根据节点信息 做出一些逻辑性的决定
+
+```js
+parseHTML() {
+  return [
+    {
+      tag: 'span',
+      getAttrs: element => {
+        // 检查是否包含这个属性: element.hasAttribute('style')
+        // 检查行内样式: element.style.color
+        // 检查一个特殊属性: element.getAttribute('data-color')
+        // 比如 这个意思是：只有当tag为span，并且其span标签颜色为red的时候 才会匹配上 并解析
+        return element.style.color==='red';
+      },
+    },
+  ]
+}
+```
+
+我们甚至还可以用在[属性选项](/guide/custom-extensions#属性)中，这样设置属性的值将更加灵活。
+```js
+addAttributes() {
+  return {
+    color: {
+      // 从`data-color` 属性获取颜色 来设置属性color
+      parseHTML: element => element.getAttribute('data-color'),
+    }
+  }
+},
+```
+
+## 命令
+命令是扩展/标记/节点内部暴漏的方法。   
+定义形式如下
+```js
+import Paragraph from '@tiptap/extension-paragraph'
+
+const CustomParagraph = Paragraph.extend({
+  addCommands() {
+    return {
+      // 要访问内部的其他命令，这里结构出commands参数就可以用
+      setP: () => ({ commands }) => {
+        return commands.setNode('paragraph')
+      },
+    }
+  },
+})
+```
+使用如下
+```js
+editor.commands.setP()
+```
+
+## 热键
+大多数核心extensions都默认带有合理的键盘快捷键。    
+比方说，您想更改[无序列表扩展](/)的键盘快捷键，那如下就会把将普通段落转为无须列表的快捷键`Control+Shift+8`改为了`Control+l`。
+```js
+// 改变设定为无序列表 的默认快捷键
+import BulletList from '@tiptap/extension-bullet-list'
+
+const CustomBulletList = BulletList.extend({
+  addKeyboardShortcuts() {
+    return {
+      'Mod-l': () => this.editor.commands.toggleBulletList(),
+    }
+  },
+})
+```
+
+
+## 输入规则
+您可以定义正则表达式来侦听用户输入，然后做出修改。就像您常用的markdown编辑器那样。
+
+对节点使用nodeInputRule，对于标记使用markInputRule，举个例子：将删除标记的输入激活规则修改下
+<Fieldset title="🌰 举个例子">
+  <StrikeDemo />
+</Fieldset>
+<CollapseCodeblock language="jsx">{StrikeDemoJs}</CollapseCodeblock>
+
+
+
+## 粘贴规则
+粘贴规则就像输入规则（见上文）一样工作。但它们不是听用户输入的内容，而是监听用户的粘贴的内容操作。
+```js
+import Strike from '@tiptap/extension-strike'
+import { markPasteRule } from '@tiptap/core'
+
+const CustomStrike = Strike.extend({
+  addPasteRules() {
+    return [
+      markPasteRule({
+        find: /(?:^|\s)((?:~)((?:[^~]+))(?:~))/g,
+        type: this.type,
+      }),
+    ]
+  },
+})
+```
+
+## 事件
+extensions内部提供了各种钩子函数。
+```js
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  onCreate() {
+    // 编辑器已准备就绪.
+  },
+  onUpdate() {
+    // 内容发生变化
+  },
+  onSelectionUpdate({ editor }) {
+    // 选中的内容发生改变
+  },
+  onTransaction({ transaction }) {
+    // 编辑器状态改变
+  },
+  onFocus({ event }) {
+    // 编辑器被聚焦
+  },
+  onBlur({ event }) {
+    // 编辑器失焦
+  },
+  onDestroy() {
+    // 编辑器销毁
+  },
+})
+```
+
+## extensions中的this
+尽管extensions不是类，但是this也会被经常使用。
+```js
+// extensions（节点、标记、扩展）的名字, 比如 'bulletList（无序列表）'
+this.name
+
+// 编辑器当前实例
+this.editor
+
+// ProseMirror 类型
+this.type
+
+// 所有的设置对象
+this.options
+
+// 父级 节点、标记、扩展
+this.parent
+```
+
+## ProseMirror 插件（高级）
+在ProseMirror 扩展的功能叫做 plugins，但是在我们Tiptap中 叫它extensions，其作用是一样的，不用太纠结。
+
+毕竟，Tiptap 是建立在 ProseMirror 之上的，而 ProseMirror 也有一个非常强大的插件 API。要直接访问它，请使用addProseMirrorPlugins()。
+
+### 现有插件
+您可以将现有的 ProseMirror 插件包装在 Tiptap 的extensions中，如下例所示。
+```js
+import { history } from '@tiptap/pm/history'
+
+const History = Extension.create({
+  addProseMirrorPlugins() {
+    return [
+      history(),
+      // …
+    ]
+  },
+})
+```
+
+### 访问 ProseMirror API
+您可以通过[editor-props](https://tiptap.dev/api/editor#editor-props)将[事件](https://prosemirror.net/docs/ref/#view.EditorProps)传递到ProseMirror中，也可以直接在Tiptap 扩展定义ProseMirror Plugin
+```js
+import { Extension } from '@tiptap/core'
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+
+export const EventHandler = Extension.create({
+  name: 'eventHandler',
+
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({  //自定义一个ProseMirror 插件
+        key: new PluginKey('eventHandler'),
+        props: {
+          handleClick(view, pos, event) { /* … */ },
+          handleDoubleClick(view, pos, event) { /* … */ },
+          handlePaste(view, event, slice) { /* … */ },
+          // … 还有更多
+          // 这里是所有的事件列表: https://prosemirror.net/docs/ref/#view.EditorProps
+        },
+      }),
+    ]
+  },
+})
+```
+
+## 节点视图（高级）
+renderHTML渲染还是过于简单了，比如您的节点和复杂您可以使用节点视图`addNodeView`
+
+比如 您需要在您自定义的节点中添加点击事件，以及处理各种程序。
+```js
+import Image from '@tiptap/extension-image'
+
+const CustomImage = Image.extend({
+  addNodeView() {
+    return () => {
+      const container = document.createElement('div')
+
+      container.addEventListener('click', event => {
+        alert('clicked on the container')
+      })
+
+      const content = document.createElement('div')
+      container.append(content)
+
+      return {
+        dom: container,
+        contentDOM: content,
+      }
+    }
+  },
+})
+```
+这里有个更具体的例子,[TaskItem](https://tiptap.dev/api/nodes/task-item)   
+建议您看我们专门写的[节点视图教程文档](/guide/node-views/)
+

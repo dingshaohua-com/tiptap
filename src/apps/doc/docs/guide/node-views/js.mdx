@@ -1,0 +1,112 @@
+---
+title: javaScript
+---
+
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import NodeViewJsDemo from "/src/components/NodeViewJsDemo";
+import NodeViewJsDemoJs from "!!raw-loader!/src/components/NodeViewJsDemo/index.js";
+import NodeViewJsDemoExtensionJs from "!!raw-loader!/src/components/NodeViewJsDemo/extension.js";
+
+import NodeViewEditJsDemo from "/src/components/NodeViewEditJsDemo";
+import NodeViewEditJsDemoJs from "!!raw-loader!/src/components/NodeViewEditJsDemo/index.js";
+import NodeViewEditJsDemoExtensionJs from "!!raw-loader!/src/components/NodeViewEditJsDemo/extension.js";
+
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+使用像 Vue 或 React 这样的框架可能会感觉太复杂了，或者在纯 js 项目中使用，请好好阅读本节。
+
+## 渲染节点视图
+```js
+import { Node } from '@tiptap/core'
+import Component from './Component.vue'
+
+export default Node.create({
+  // configuration …
+
+  addNodeView() {
+    return ({ editor, node, getPos, HTMLAttributes, decorations, extension }) => {
+      const dom = document.createElement('div')
+      dom.innerHTML = 'Hello, 我是node view!'
+      return {dom}
+    }
+  },
+})
+```
+步骤如下:
+1. 创建节点扩展，节点添加addNodeView()，并编写渲染逻辑
+2. 配置 Tiptap 以使用您的新节点扩展
+
+下边有个更具体的例子（例子中的节点视图甚至与编辑器存在交互）。
+<Fieldset title="🌰 举个例子">
+  <NodeViewJsDemo />
+</Fieldset>
+<Tabs>
+  <TabItem value="index.js" label="index.js" default>
+    <CollapseCodeblock language="jsx">{NodeViewJsDemoJs}</CollapseCodeblock>
+  </TabItem>
+  <TabItem value="extension.js" label="extension.js">
+    <CollapseCodeblock language="jsx" >{NodeViewJsDemoExtensionJs}</CollapseCodeblock>
+  </TabItem>
+</Tabs>
+
+
+## 访问节点属性
+渲染函数可能会用到编辑器定义的一些变量，该如何访问呢？
+```js
+addNodeView() {
+  return ({ node }) => {
+    console.log(node.attrs.count)
+    // …
+  }
+}
+```
+
+## 更新节点属性
+有时候会有这种节点视图更新节点属性需求,如下便是做法
+```js
+addNodeView() {
+  return ({ editor, node, getPos }) => {
+    const { view } = editor
+
+    // 创建一个按钮 …
+    const button = document.createElement('button')
+    button.innerHTML = `This button has been clicked ${node.attrs.count} times.`
+
+    // … 当按钮被点击的时候 …
+    button.addEventListener('click', () => {
+      if (typeof getPos === 'function') {
+        // … 触发一个更新事件 …
+        view.dispatch(view.state.tr.setNodeMarkup(getPos(), undefined, {
+          count: node.attrs.count + 1,
+        }))
+
+        // … 焦点收回编辑器.
+        editor.commands.focus()
+      }
+    })
+
+    // …
+  }
+}
+```
+是不是有点太复杂了？考虑使用React或Vue，事情就容易多了。
+
+## 节点视图的内容可编辑
+上边的例子，我们的节点视图都是默认不可编辑的。   
+来个可以编辑的视图节点的例子：只要您为节点视图返回一个容器，为内容（contentDOM）返回另一个容器。
+<Fieldset title="🌰 举个例子">
+  <NodeViewEditJsDemo />
+</Fieldset>
+<Tabs>
+  <TabItem value="index.js" label="index.js" default>
+    <CollapseCodeblock language="jsx">{NodeViewEditJsDemoJs}</CollapseCodeblock>
+  </TabItem>
+  <TabItem value="extension.js" label="extension.js">
+    <CollapseCodeblock language="jsx" >{NodeViewEditJsDemoExtensionJs}</CollapseCodeblock>
+  </TabItem>
+</Tabs>
+
+需要注意的是，此内容由 Tiptap 呈现。这意味着你需要告诉允许什么样的内容，例如`content: 'inline*'`

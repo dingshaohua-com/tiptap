@@ -1,0 +1,125 @@
+---
+title: 输出
+sidebar_position: 5
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import Fieldset from "/src/components/Fieldset";
+import OutputDemo from "/src/components/OutputDemo";
+import OutputDemoJs from "!!raw-loader!/src/components/OutputDemo/index.js";
+
+## 介绍
+
+您可以将编辑器里的富文本内容存储为 JSON 或 HTML 字符串，两者都工作正常。  
+当然，它们也都可以用来传入编辑器用于回显。
+
+## 内容的输出与回显
+
+调用我们提供的方法，即可获得 JSON 格式或者 HTML 字符串的编辑器里的富文本内容。  
+拿到数据后，您如果需要可以将其存储在您的数据库中。
+
+```js
+const json = editor.getJSON(); //获取json格式的内容
+const html = editor.getHTML(); //获取html格式的内容
+```
+
+通过以下方式进行回显
+
+```js
+// 编辑器初始化的时候设置
+new Editor({
+  content: `<p>示例文字</p>`, // json 或 html字符串
+});
+
+// or 后期异步更新设置
+editor.commands.setContent(`<p>示例文字</p>`); // json 或 html字符串
+```
+
+:::tip 协同与 Markdown
+协同实时编辑我们是基于[Y.js](http://febeacon.com/yjs-docs-zh-cn/routes/) ,它在存储或回显的时候，显然和常规的上边讲的不一样，这里不在深入，具体看[相关文档](/guide/collaborative-editing)。同时我们不支持 Markdown 作为输入或输出格式。
+:::
+
+## 监听变化
+
+如果你有 监听编辑器内容变化的需求（比如实时保存到数据库），我们也提供了一个事件来让您能够抓捕到这样的时机
+
+```js
+const editor = new Editor({
+  content: `<p>示例内容</p>`,
+  // 监听编辑器任何变化
+  onUpdate({ editor }) {
+    const json = editor.getJSON();
+    // 下边请求接口
+  },
+});
+```
+
+## 渲染在非编辑器中
+
+要想在非编辑器中，呈现和编辑器中一样的效果。（倘若保存的内容中有您为编辑器自定义的节点或应用了自定义的扩展， 那作为普通的 HTML 内容去渲染 必定显示有问题）您觉得很难做到对吧。  
+实际上 您的思路就不对了，想要达到这样的效果，您只需要编辑器设置为只读不就行了？！
+
+<Fieldset title="🌰 举个例子">
+  <OutputDemo />
+</Fieldset>
+
+<CodeBlock language="jsx">{OutputDemoJs}</CodeBlock>
+
+## ProseMirror JSON 与 HTML 相互转换
+
+在[内容的输出与回显](#内容的输出与回显)中我们了解到 编辑器可以内容保存为 JSON，此 JSON 即为 ProseMirror 存储 JSON（不要忘了我们是基于它的），那如何两者相互转换呢？
+
+** ProseMirror JSON 转 HTML **
+
+```js
+import Bold from "@tiptap/extension-bold";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { generateHTML } from "@tiptap/html";
+
+const json = {
+  type: "doc",
+  content: [
+    {
+      type: "paragraph",
+      content: [
+        {
+          type: "text",
+          text: "Example ",
+        },
+        {
+          type: "text",
+          marks: [
+            {
+              type: "bold",
+            },
+          ],
+          text: "Text",
+        },
+      ],
+    },
+  ],
+};
+const htmlStr = generateHTML(json, [Document, Paragraph, Text, Bold]);
+```
+
+** HTML 转 ProseMirror JSON **
+
+```js
+import Bold from "@tiptap/extension-bold";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { generateJSON } from "@tiptap/html";
+
+const htmlStr = "<p>示例 <strong>文本</strong></p>";
+
+const json = generateJSON(html, [Document, Paragraph, Text, Bold]);
+```
+
+
+## 从别的编辑器迁移
+如果您要将现有内容迁移到 Tiptap，我们建议您将现有输出转换为 HTML。   
+
+HTML字符串是初始内容放入 Tiptap 的最佳格式，因为 ProseMirror 会确保它没有任何问题：即使有一些不允许的标签或属性（根据您的配置），Tiptap 也会悄悄地把它们扔掉，而不会出现显示异常！

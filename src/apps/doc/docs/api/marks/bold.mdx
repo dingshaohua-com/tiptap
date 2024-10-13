@@ -1,0 +1,50 @@
+---
+title: 加粗
+---
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import BoldDemo from "/src/components/BoldDemo";
+import BoldDemoJs from "!!raw-loader!/src/components/BoldDemo/index.js";
+import BoldHTMLAttributesDemo from "/src/components/BoldHTMLAttributesDemo";
+import BoldHTMLAttributesDemoJs from "!!raw-loader!/src/components/BoldHTMLAttributesDemo/index.js";
+
+[Bold](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bold/)     
+使用此扩展以粗体呈现文本。     
+如果您在编辑器的初始内容中有`<strong>`标签或带有相关的内联样式的，它们都会相应地呈现。
+
+```shell
+npm install @tiptap/extension-bold
+```
+
+## 用法示例
+
+### 基础
+
+<Fieldset title="🌰 举个例子">
+  <BoldDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{BoldDemoJs}</CollapseCodeblock>
+
+
+## API
+|方法| 说明|
+| --- | --- |
+| setBold | 将文本标记为粗体 |
+| toggleBold | 切换粗体标记 |
+| unsetBold | 删除粗体标记 |
+
+举个例子：
+```js
+editor.commands.setBold()
+```
+
+## 设置
+通过configure来对标记Bold进行额外配置
+### HTMLAttributes
+通过设置 HTMLAttributes 可以为此粗体标记的文本 添加额外属性  比如class：
+<Fieldset title="🌰 举个例子">
+  <BoldHTMLAttributesDemo />
+</Fieldset>
+<CollapseCodeblock language="jsx">{BoldHTMLAttributesDemoJs}</CollapseCodeblock>
+

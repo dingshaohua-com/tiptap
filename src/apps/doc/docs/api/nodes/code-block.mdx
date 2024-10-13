@@ -1,0 +1,43 @@
+---
+title: 代码块
+---
+
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import Demo from "/src/components/CodeBlockDemo";
+import DemoJs from "!!raw-loader!/src/components/CodeBlockDemo";
+
+该扩展会使编辑器识别`<pre>` `<code>`标签。
+在新行的开头输入` ```  `（三个反引号和一个空格），` ∼∼∼ `（三个波浪线一个空格），会添加一个代码块。
+可以指定语言，比如` ```javaScript  `
+
+:::tip
+CodeBlock 扩展没有语法高亮的样式，也没有内置语法突出显示。如果您正在寻找具有语法高亮显示的代码块，请尝试使用CodeBlockLowlight扩展。 
+:::
+
+## 安装
+```shell
+npm install @tiptap/extension-code-block
+```
+
+
+## 用法示例
+<Fieldset>
+  <Demo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{DemoJs}</CollapseCodeblock>
+
+## API
+|方法| 说明|使用方法|
+| --- | --- | --- |
+| setCodeBlock() | 设置|editor.commands.setCodeBlock()|
+| toggleCodeBlock() | 切换|editor.commands.toggleCodeBlock()|
+
+## 键盘快捷键
+|命令| Windows/Linux|macOS|
+| --- | --- | --- |
+|toggleCodeBlock|Control Shift C|Cmd Shift C
+
+## 源码
+[github](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-code-block)

@@ -1,0 +1,3 @@
+packages:   # 配置 pnpm 工作区路径
+  - 'src/apps/*' # 多个app
+  - 'src/utils' # 公共的utils

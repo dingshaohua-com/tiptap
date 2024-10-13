@@ -1,0 +1,19 @@
+.CollapseCodeblock {
+  position: relative;
+  .CollapsePng {
+    position: absolute;
+    right: 68px;
+    top: 16px;
+    width: 20px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  :global {
+    .theme-code-block {
+      [class*="codeBlockContent"] {
+        height: 300px;
+        overflow-y: scroll;
+      }
+    }
+  }
+}

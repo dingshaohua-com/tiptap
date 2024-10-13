@@ -1,0 +1,39 @@
+---
+title: 引用
+---
+
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import BlockquoteDemo from "/src/components/BlockquoteDemo";
+import BlockquoteDemoJs from "!!raw-loader!/src/components/BlockquoteDemo";
+
+该扩展会使编辑器识别`<blockquote>`标签。
+在新行的开头输入`>`会将该行转换为引用块。
+
+## 安装
+```shell
+npm install @tiptap/extension-blockquote
+```
+
+
+## 用法示例
+<Fieldset>
+  <BlockquoteDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{BlockquoteDemoJs}</CollapseCodeblock>
+
+## API
+|方法| 说明|使用方法|
+| --- | --- | --- |
+| setBlockquote() | 设置|editor.commands.setBlockquote()|
+| toggleBlockquote() | 切换 |editor.commands.toggleBlockquote()|
+| unsetBlockquote() | 取消设置 |editor.commands.unsetBlockquote()|
+
+## 键盘快捷键
+|命令| Windows/Linux|macOS|
+| --- | --- | --- |
+|toggleBlockquote|Control Shift B|Cmd Shift B
+
+## 源码
+[github](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-blockquote)

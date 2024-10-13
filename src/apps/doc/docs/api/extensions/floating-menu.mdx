@@ -1,0 +1,47 @@
+---
+title: 浮动菜单
+---
+
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import FloatingMenuDemo from "/src/components/FloatingMenuDemo";
+import FloatingMenuDemoJs from "!!raw-loader!/src/components/FloatingMenuDemo/index.js";
+import FloatingMenuCustomShowDemo from "/src/components/FloatingMenuCustomShowDemo";
+import FloatingMenuCustomShowDemoJs from "!!raw-loader!/src/components/FloatingMenuCustomShowDemo/index.js";
+
+[Floating Menu](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-floating-menu/)    
+此扩展程序将使菜单出现在空行中。
+```shell
+npm install @tiptap/extension-floating-menu
+```
+
+
+## 用法示例
+
+### 基础
+
+<Fieldset title="🌰 举个例子">
+  <FloatingMenuDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{FloatingMenuDemoJs}</CollapseCodeblock>
+
+### 自定义显示逻辑
+
+<Fieldset title="🌰 举个例子">
+  <FloatingMenuCustomShowDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">
+  {FloatingMenuCustomShowDemoJs}
+</CollapseCodeblock>
+
+## API
+
+|属性| 说明| 类型|默认值|
+| --- | --- | --- | --- |
+| tippyOptions | 本扩展基于[tippy.js](https://atomiks.github.io/tippyjs/v6/all-props/)，此参数（如延迟显示等）将完全传递给它 | Object | {} |
+| shouldShow | 自定义显示菜单的逻辑 | (props) => boolean | - |
+| updateDelay | 更新延迟 | Number | 250 毫秒 |
+| element | 菜单挂载点（原生使用方式会用到） | HTMLElement | null |
+| pluginKey | 扩展唯一标识（一般用不到） | string | PluginKey | 'bubbleMenu' |

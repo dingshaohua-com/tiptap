@@ -1,0 +1,72 @@
+---
+title: react
+sidebar_position: 2
+---
+
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import FullDemo from "/src/components/FullDemo";
+import fullDemoJs from "!!raw-loader!/src/components/FullDemo/index.js";
+import fullDemoCss from "!!raw-loader!/src/components/FullDemo/style.scss";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+如果您想快速体验 Tiptap，您可使用[Tiptap Create React App 模板](https://github.com/alb/cra-template-tiptap)来创建一个新项目。
+
+```shell
+npx create-react-app my-tiptap-project --template tiptap
+```
+
+如果是从已有的项目中集成进去，以下指南描述了如何将 Tiptap 与您的 React 项目集成。
+
+## 安装依赖
+
+```
+npm install @tiptap/react @tiptap/pm @tiptap/starter-kit
+```
+
+## 使用 Tiptap
+
+找到`src/App.js`将以下示例代码放入。
+
+```tsx
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+
+const App = () => {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "<p>Hello World!</p>",
+  });
+
+  return (
+    <div className="App">
+      <EditorContent editor={editor} />
+    </div>
+  );
+};
+
+export default App;
+```
+
+启用项目， 您现在应该在浏览器中看到一个漂亮的 Tiptap 示例。
+
+## 完整的配置
+
+上边的例子 比较简陋，这里给一个设置了基本工具栏的例子。
+
+<Fieldset title="🌰 举个例子">
+  <FullDemo />
+</Fieldset>
+
+<Tabs>
+  <TabItem value="index.js" label="index.js" default>
+<CollapseCodeblock language="jsx">{fullDemoJs}</CollapseCodeblock>
+</TabItem>
+
+  <TabItem value="style.scss" label="style.scss">
+    
+      <CollapseCodeblock language="jsx" >{fullDemoCss}</CollapseCodeblock>
+    
+    </TabItem>
+</Tabs>

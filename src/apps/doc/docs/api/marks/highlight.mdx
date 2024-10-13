@@ -1,0 +1,62 @@
+---
+title: 高亮
+---
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import HighlightDemo from "/src/components/HighlightDemo";
+import HighlightDemoJs from "!!raw-loader!/src/components/HighlightDemo/index.js";
+
+
+
+[Highlight](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-highlight/)     
+使用此扩展来呈现突出显示的文本。     
+如果您在编辑器的初始内容中有`<mark>`标签，它们都会相应地呈现。
+
+```shell
+npm install @tiptap/extension-highlight
+```
+
+## 用法示例
+
+### 基础
+
+<Fieldset title="🌰 举个例子">
+  <HighlightDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{HighlightDemoJs}</CollapseCodeblock>
+
+
+## API
+|方法| 说明|参数|
+| --- | --- | --- |
+| setHighlight | 将文本标记为高亮 | `{ color: '#ffcc00' }` |
+| toggleHighlight | 切换高亮标记 | `{ color: '#ffcc00' }` |
+| unsetHighlight | 删除高亮标记 | - |
+
+举个例子：
+```js
+editor.commands.unsetHighlight()
+```
+
+## 设置
+通过configure来对标记Bold进行额外配置
+### HTMLAttributes
+通过设置 HTMLAttributes 可以为此粗体标记的文本 添加额外属性。
+```
+Highlight.configure({
+  HTMLAttributes: {
+    class: 'my-custom-class',
+  }
+})
+```   
+参考[粗体一章](/api/marks/bold#htmlattributes)有讲解，这里不再赘述。
+
+### multicolor
+支持多色， 默认为false
+```
+Highlight.configure({
+  multicolor: true,
+})
+```
+上边的用法示例-基础中的例子 就是开启了多彩支持。如果关掉，则高亮只能显示黄色，哪怕你指定了都不行。

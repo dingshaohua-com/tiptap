@@ -1,0 +1,49 @@
+---
+title: 气泡菜单
+---
+
+import CollapseCodeblock from "/src/components/CollapseCodeblock";
+import Fieldset from "/src/components/Fieldset";
+import BubbleMenuDemo from "/src/components/BubbleMenuDemo";
+import BubbleMenuDemoJs from "!!raw-loader!/src/components/BubbleMenuDemo/index.js";
+import BubbleMenuCustomShowDemo from "/src/components/BubbleMenuCustomShowDemo";
+import BubbleMenuCustomShowDemoJs from "!!raw-loader!/src/components/BubbleMenuCustomShowDemo/index.js";
+
+[Bubble Menu](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/)  
+此扩展将使上下文菜单出现在所选文本附近。  
+使用它让用户将标记应用于他们的文本选择。  
+与往常一样，标记和样式完全取决于您。
+
+```shell
+npm install @tiptap/extension-bubble-menu
+```
+
+## 用法示例
+
+### 基础
+
+<Fieldset title="🌰 举个例子">
+  <BubbleMenuDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">{BubbleMenuDemoJs}</CollapseCodeblock>
+
+### 自定义显示逻辑
+
+<Fieldset title="🌰 举个例子">
+  <BubbleMenuCustomShowDemo />
+</Fieldset>
+
+<CollapseCodeblock language="jsx">
+  {BubbleMenuCustomShowDemoJs}
+</CollapseCodeblock>
+
+## API
+
+|属性| 说明| 类型|默认值|
+| --- | --- | --- | --- |
+| tippyOptions | 本扩展基于[tippy.js](https://atomiks.github.io/tippyjs/v6/all-props/)，此参数（如延迟显示等）将完全传递给它 | Object | {} |
+| shouldShow | 自定义显示菜单的逻辑 | (props) => boolean | - |
+| updateDelay | 更新延迟 | Number | 250 毫秒 |
+| element | 菜单挂载点（原生使用方式会用到） | HTMLElement | null |
+| pluginKey | 扩展唯一标识（一般用不到） | string | PluginKey | 'bubbleMenu' |

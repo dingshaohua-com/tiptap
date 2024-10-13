@@ -1,0 +1,90 @@
+
+## 安装
+```shell
+yarn add @tiptap/vue-3 @tiptap/pm @tiptap/starter-kit
+```
+
+## 使用
+```vue
+<template>
+  <editor-content :editor="editor" />
+</template>
+
+<script>
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+
+export default {
+  components: {
+    EditorContent,
+  },
+
+  data() {
+    return {
+      editor: null,
+    }
+  },
+
+  mounted() {
+    this.editor = new Editor({
+      content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',
+      extensions: [
+        StarterKit,
+      ],
+    })
+  },
+
+  beforeUnmount() {
+    this.editor.destroy()
+  },
+}
+</script>
+```
+
+当然您也可以使用选项是api
+```vue
+<template>
+  <editor-content :editor="editor" />
+</template>
+
+<script>
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+
+export default {
+  components: {
+    EditorContent,
+  },
+
+  setup() {
+    const editor = useEditor({
+      content: '<p>在 Vue.js中运行 Tiptap  🎉</p>',
+      extensions: [
+        StarterKit,
+      ],
+    })
+
+    return { editor }
+  },
+}
+</script>
+```
+
+或者用在最新的setup中
+```vue
+<template>
+  <editor-content :editor="editor" />
+</template>
+
+<script setup>
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+
+const editor = useEditor({
+  content: '<p>在 Vue.js中运行 Tiptap  🎉</p>',
+  extensions: [
+    StarterKit,
+  ],
+})
+</script>
+```
