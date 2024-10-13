@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev:doc": "node ./bin/dev"
+    "dev:doc": "node ./bin/dev doc",
+    "dev:demo": "node ./bin/dev demo"
   },
   "keywords": [],
   "author": "",
