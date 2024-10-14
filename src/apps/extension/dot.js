@@ -1,36 +1,13 @@
 import { Mark, mergeAttributes } from '@tiptap/core';
+import styleInject from './style-inject';
 
-function styleInject(css, ref) {
-  if ( ref === void 0 ) ref = {};
-  var insertAt = ref.insertAt;
+const css = `.dot {
+    text-emphasis: dot; 
+    text-emphasis-position: under left; 
+}`;
+styleInject(css);
 
-  if (!css || typeof document === 'undefined') { return; }
-
-  var head = document.head || document.getElementsByTagName('head')[0];
-  var style = document.createElement('style');
-  style.type = 'text/css';
-
-  if (insertAt === 'top') {
-    if (head.firstChild) {
-      head.insertBefore(style, head.firstChild);
-    } else {
-      head.appendChild(style);
-    }
-  } else {
-    head.appendChild(style);
-  }
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
-var css_248z = ".dot {\n    text-emphasis: dot;\n    text-emphasis-position: under left;\n  }";
-styleInject(css_248z);
-
-var index = Mark.create({
+export default Mark.create({
     name: "dot",
     addAttributes() {
         return {
@@ -74,5 +51,3 @@ var index = Mark.create({
         };
     }
 });
-
-export { index as default };

@@ -1,7 +1,8 @@
 import "./App.scss";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Dot from "@tiptap/extension-dot";
+import Dot from "@tiptap/extension/dot";
+import SquareInput from "@tiptap/extension/square-input";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -31,13 +32,24 @@ const MenuBar = ({ editor }) => {
       >
         删除线
       </button>
+      <button
+        onClick={() => editor.chain().focus().toggleDot().run()}
+        disabled={!editor.can().chain().focus().toggleDot().run()}
+        className={editor.isActive("dot") ? "is-active" : ""}
+      >
+        强调
+      </button>
+
+      <button onClick={() => editor.chain().focus().setSquareInput().run()}>
+        ⭕️
+      </button>
     </>
   );
 };
 
-const App =  () => {
-  const editor = useEditor({
-    extensions: [StarterKit],
+const App = () => {
+  const editor: any = useEditor({
+    extensions: [StarterKit, Dot, SquareInput],
     content: `
       <h2>
         嗨,
@@ -48,10 +60,18 @@ const App =  () => {
     `,
   });
 
+  const onSave = () => {
+    const json = editor.getJSON(); //获取json格式的内容
+    const html = editor.getHTML(); //获取html格式的内容
+    console.log(json, html);
+    
+  };
+
   return (
     <div>
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
+      <button onClick={onSave}>保存</button>
     </div>
   );
 };
