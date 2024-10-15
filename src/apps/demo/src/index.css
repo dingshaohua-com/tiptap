@@ -2,3 +2,12 @@
   background-color: black;
   color: white;
 }
+
+circle {
+  /* display: inline-block; */
+  width: 20px; /* 圆的直径 */
+  height: 20px;
+  background-color: blue; /* 圆的颜色 */
+  border-radius: 50%; /* 使其变为圆形 */
+  margin: 0 2px; /* 可选，调整间距 */
+}

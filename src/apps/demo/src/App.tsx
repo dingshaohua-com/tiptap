@@ -2,7 +2,9 @@ import "./App.scss";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Dot from "@tiptap/extension/dot";
-import SquareInput from "@tiptap/extension/square-input";
+import Circle from "@tiptap/extension/circle";
+import Triangle from "@tiptap/extension/triangle";
+import Square from "@tiptap/extension/square";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -40,22 +42,30 @@ const MenuBar = ({ editor }) => {
         强调
       </button>
 
-      <button onClick={() => editor.chain().focus().setSquareInput().run()}>
+      <button onClick={() => editor.chain().focus().inertCircle().run()}>
         ⭕️
       </button>
+      <button onClick={() => editor.chain().focus().inertTriangle().run()}>
+        ▶️
+      </button>
+      <button onClick={() => editor.chain().focus().inertSquare().run()}>
+        ▪️
+      </button>
+      
+      
     </>
   );
 };
 
 const App = () => {
   const editor: any = useEditor({
-    extensions: [StarterKit, Dot, SquareInput],
+    extensions: [StarterKit, Dot, Circle, Triangle, Square],
     content: `
       <h2>
         嗨,
       </h2>
       <p>
-        这是一个<strong>tiptap</strong>的<em>基础</em> 示例。 当然 文本编辑器会提供各种文本样式:
+        这是一个<strong>tiptap</strong>的<em>基础</em> 示例。 <triangle></triangle>
       </p>
     `,
   });

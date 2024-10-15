@@ -21,12 +21,12 @@ styleInject(css);
 
 export default Node.create({
   name: "circle-ipt",
-//   group: 'block',  // 分组
-//   selectable: true,
-//   draggable: true,
+  //   group: 'block',  // 分组
+  //   selectable: true,
+  //   draggable: true,
   inline: true,
-//   atom: true,
-//   content: "inline*",
+  //   atom: true,
+  //   content: "inline*",
   addAttributes() {
     return {
       class: {
@@ -37,12 +37,10 @@ export default Node.create({
 
   addOptions() {
     return {
-    //   exitOnTripleEnter: true,
-    //   exitOnArrowDown: true,
-    //   defaultLanguage: null,
-      HTMLAttributes: {
-
-      },
+      //   exitOnTripleEnter: true,
+      //   exitOnArrowDown: true,
+      //   defaultLanguage: null,
+      HTMLAttributes: {},
     };
   },
 
@@ -54,32 +52,32 @@ export default Node.create({
 
   parseHTML() {
     return [
-        {
-            tag: 'span',
-            getAttrs: element => {
-                return element.getAttribute('class') === 'circle-ipt';
-            },
+      {
+        tag: "span",
+        getAttrs: (element) => {
+          return element.getAttribute("class") === "circle-ipt";
         },
+      },
     ];
-},
+  },
 
   renderHTML({ HTMLAttributes }) {
     return [
       "span",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-      0
+      0,
     ];
-//     return [
-//         'span',
-//         mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-//         [
-//           'span',
-//           {
-//             class: null
-//           },
-//           0,
-//         ],
-//       ]
+    //     return [
+    //         'span',
+    //         mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+    //         [
+    //           'span',
+    //           {
+    //             class: null
+    //           },
+    //           0,
+    //         ],
+    //       ]
   },
 
   addCommands() {
