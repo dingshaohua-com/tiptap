@@ -1,0 +1,13 @@
+.ImgCmp {
+  display: inline-block;
+  position: relative;
+}
+
+.ImgCmp > * {
+  user-select: text !important;
+}
+
+.Selected {
+  border: rgba(0, 0, 0, 0.3) dashed 2px;
+  cursor: pointer;
+}

@@ -1,8 +1,12 @@
-import { Node, nodeInputRule } from '@tiptap/core';
-import { mergeAttributes, ReactNodeViewRenderer } from '@tiptap/react';
-import { uploadImagePlugin, UploadFn } from '../upimg-helper/upload_image';
-import handleUpload from '../upimg-helper/handle-upload';
-import ImgCmp from '../componetns/img-cmp';
+import { Node, nodeInputRule } from "@tiptap/core";
+import { mergeAttributes, ReactNodeViewRenderer } from "@tiptap/react";
+import {
+  handleUpload,
+  uploadImagePlugin,
+  openFileWindow,
+  fileToBase64,
+} from "./helper";
+import ImgCmp from "./img-cmp";
 
 /**
  * Tiptap Extension to upload images
@@ -17,24 +21,17 @@ import ImgCmp from '../componetns/img-cmp';
  * ![Lorem](image.jpg "Ipsum") -> [, "Lorem", "image.jpg", "Ipsum"]
  */
 
-
-
 const IMAGE_INPUT_REGEX = /!\[(.+|:?)\]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
 
 export default Node.create({
-  name: 'image',
+  name: "image",
   selected: true,
   atom: true,
   draggable: true,
-  defaultOptions: {
-    inline: true,
+  inline: true,
+  group: "inline",
+  addOptions: {
     HTMLAttributes: {},
-  },
-  inline() {
-    return this.options.inline;
-  },
-  group() {
-    return this.options.inline ? 'inline' : 'block';
   },
   // 配合parseHTML方法使用，命中的都会进去这里来
   addNodeView() {
@@ -58,38 +55,55 @@ export default Node.create({
   },
   parseHTML: () => [
     {
-      tag: 'img[src]',
+      tag: "img",
       getAttrs: (dom) => {
-        if (typeof dom === 'string') return {};
+        if (typeof dom === "string") return {};
         const element = dom;
         const obj = {
-          src: element.getAttribute('src'),
-          title: element.getAttribute('title'),
-          alt: element.getAttribute('alt'),
-          width: element.getAttribute('width'),
+          src: element.getAttribute("src"),
+          title: element.getAttribute("title"),
+          alt: element.getAttribute("alt"),
+          width: element.getAttribute("width"),
         };
         return obj;
       },
     },
   ],
   renderHTML({ HTMLAttributes, node }) {
-    return ['img', mergeAttributes(HTMLAttributes)];
+    return ["img", mergeAttributes(HTMLAttributes)];
+  },
+
+  uploadImg(){
+    console.log(8989);
+    
   },
 
   addCommands() {
     return {
-      setImage: (attrs) => ({ state, dispatch }) => {
-        const { selection } = state;
-        const position = selection.$head
-          ? selection.$head.pos
-          : selection.$to.pos;
-
-        const node = this.type.create(attrs);
-        const transaction = state.tr.insert(position, node);
-        return dispatch?.(transaction);
+      afterUploadImg(arg) {
+        console.log(111, arg);
+        
+        // const { tr, dispatch, state } = arg;
+        // // 获取段落节点类型
+        // const paragraphNodeType = state.schema.nodes["paragraph"];
+        // // 创建一个包含文本的文本节点
+        // const textNode = state.schema.text("哈哈");
+        // // 创建段落节点并包含文本节点
+        // const paragraphNode = paragraphNodeType.create(null, textNode); // this.type.create 代表创建当前节点
+        // // 创建事务
+        // const transaction = tr.insert(1, paragraphNode);
+        // // 提交事务
+        // dispatch(transaction);
+        // return true;
+      },
+      uploadImg: () => (arg) => {
+        openFileWindow().then(async (imgFile) => {
+          arg.commands.afterUploadImg(arg);
+        });
       },
     };
   },
+
   addInputRules() {
     const fn = (match) => {
       const [_, alt, src, title, width] = match;

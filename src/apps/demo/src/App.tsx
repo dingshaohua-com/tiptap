@@ -2,9 +2,7 @@ import "./App.scss";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Dot from "@tiptap/extension/dot";
-import Circle from "@tiptap/extension/circle";
-import Triangle from "@tiptap/extension/triangle";
-import Square from "@tiptap/extension/square";
+import Img from "@tiptap/extension/image";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -42,31 +40,22 @@ const MenuBar = ({ editor }) => {
         强调
       </button>
 
-      <button onClick={() => editor.chain().focus().inertCircle().run()}>
-        ⭕️
+      <button onClick={() => editor.chain().focus().uploadImg().run()}>
+        图
       </button>
-      <button onClick={() => editor.chain().focus().inertTriangle().run()}>
-        ▶️
-      </button>
-      <button onClick={() => editor.chain().focus().inertSquare().run()}>
-        ▪️
-      </button>
-      
-      
     </>
   );
 };
 
 const App = () => {
   const editor: any = useEditor({
-    extensions: [StarterKit, Dot, Circle, Triangle, Square],
+    extensions: [StarterKit, Dot, Img],
     content: `
       <h2>
         嗨,
       </h2>
       <p>
-        这是一个<strong>tiptap</strong>的<em>基础</em> 示例。 <triangle></triangle>
-        <img src="https://img.dingshaohua.com/other/202409251723086.webp" /> 222
+        这是一个<strong>tiptap</strong>的<em>基础</em> 示例。
       </p>
     `,
   });
