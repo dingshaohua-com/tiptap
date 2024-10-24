@@ -1,5 +1,5 @@
 // 都有那些模块
-const ctxModules = [{ id: "guide", label: "教程", docId:'configuration'},{ id: "api", label: "API"}];
+const ctxModules = [{ id: "guide", label: "教程", docId:'configuration'},{ id: "api", label: "API"},{ id: "note", label: "笔记"}];
  // 多实例路由
  exports.pluginContentDocs = ctxModules.map(({ id }) => [
     "@docusaurus/plugin-content-docs",

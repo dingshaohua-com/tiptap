@@ -66,6 +66,7 @@ const App = () => {
       </h2>
       <p>
         这是一个<strong>tiptap</strong>的<em>基础</em> 示例。 <triangle></triangle>
+        <img src="https://img.dingshaohua.com/other/202409251723086.webp" /> 222
       </p>
     `,
   });
