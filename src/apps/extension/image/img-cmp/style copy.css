@@ -1,13 +1,13 @@
-.imgCmp {
+.ImgCmp {
   display: inline-block;
+  position: relative;
 }
 
-
-/* .imgCmp > * {
+.ImgCmp > * {
   user-select: text !important;
-} */
+}
 
-/* .Selected {
+.Selected {
   border: rgba(0, 0, 0, 0.3) dashed 2px;
   cursor: pointer;
-} */
+}

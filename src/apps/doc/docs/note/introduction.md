@@ -12,6 +12,22 @@ tiptap 内置了一些常用的扩展，如加粗、斜体、下划线、列表�
 其实这样也好，因为 mark、node、extension 都属于 extensions，容易把 extension 和 extensions 搞混淆。  
 三者的配置项一样，之所以用不同的方式创建，就是为了区分。
 
+```js
+const Paragraph = Node.create({
+  name: 'paragraph',
+  group: 'block',
+  content: 'inline*',
+  parseHTML() {
+    return [
+      { tag: 'p' },
+    ]
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['p', HTMLAttributes, 0]
+  },
+})
+```
+
 ## renderHTML
 
 就是你审查编辑显示 元素看到什么样，保存下来的（既 getHtml） 就是什么样，所见即所得。
@@ -152,7 +168,7 @@ renderHTML 主要用于简单的渲染需求，通常适用于不需要复杂交
       inserText: (content) => (arg) => {
         const { tr, dispatch, state } = arg;
         // 获取段落节点类型
-        const paragraphNodeType = state.schema.nodes["paragraph"]; 
+        const paragraphNodeType = state.schema.nodes["paragraph"];
         // 创建一个包含文本的文本节点
         const textNode = state.schema.text("哈哈");
         // 创建段落节点并包含文本节点
@@ -168,6 +184,79 @@ renderHTML 主要用于简单的渲染需求，通常适用于不需要复杂交
 }
 ```
 
-
 在你的 addCommands 函数中，返回值 的作用是指示 ProseMirror 命令执行后的状态。这通常用于处理命令链中的下一个操作。
 
+这里可以访问相关 api https://tiptap.dev/docs/editor/api/commands
+
+editor.commands.insertContentAt:  
+这是 Tiptap 提供的一个高层 API，用于在指定位置插入内容。它封装了对底层 ProseMirror 事务的操作，提供了更简洁的接口。
+使用这个方法时，Tiptap 会自动处理事务的创建、更新状态、和视图的渲染等。
+
+tr.insert(...):  
+这是 ProseMirror 提供的低级 API，用于在指定位置插入节点。这个方法本身不会自动提交事务，也不会更新视图。
+你需要手动创建事务并调用 dispatch 来使更改生效。
+
+对于大多数简单的插入操作，建议使用 editor.commands.insertContentAt，而在需要复杂控制的场景中，使用 tr.insert(...) 会更合适。根据你的具体需求选择即可。
+
+editor.commands.insertContentAt 插入的节点格式和 tr.insert 不一样，请注意
+editor.commands.insertContent 支持在异步中执行，而 tr.insert 不可
+
+## ReactNodeViewRenderer
+
+默认情况下，渲染的节点视图ReactNodeViewRenderer始终会有一个包装div，为什么要多这个没用的包裹，请看说明：
+https://github.com/ueberdosis/tiptap/pull/3984#issuecomment-1668520002
+
+
+你可以自定义包裹容器的属性
+
+```js
+return ReactNodeViewRenderer(MyCmp, { // 作用到最外层
+  contentDOMElementTag: "span",
+  className: "span-wrapper",
+});
+```
+但是我尝试了，没有生效。
+
+
+还有另一个组件NodeViewContent可以帮助您向节点视图添加可编辑内容。以下是示例：
+```jsx
+import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
+import React from 'react'
+
+export default () => {
+  return (
+    //  作用到第二层
+    <NodeViewWrapper className="react-component">  
+      <label contentEditable={false}>React Component</label>
+
+      <NodeViewContent className="content is-editable" />
+    </NodeViewWrapper>
+  )
+}
+```
+
+NodeViewContent呈现`<div>`HTML 标记,但您可以更改它。例如，`<NodeViewContent as="p">`应呈现一个段落。但有一个限制：该标记在运行时不得更改。
+
+
+## addOptions
+该方法为三大件添加设置项（也可理解为内部变量/属性），添加的内部属性可以在parseHTML，renderHTML方法中使用，可以通过this.options.xxx访问
+
+
+## addAttributes
+给节点添加自定义属性，添加后 后续无论是保存还是呈现，才可以显示出来
+
+
+## addProseMirrorPlugins
+tiptap并没有对ProseMirror所有的api进行封装， 如果现有的功能无法满足你自定义扩展，你可以借助此属性，完成更高级的扩展能力，比如监听复制粘贴等等
+官方说：毕竟，Tiptap 是基于 ProseMirror 构建的，而 ProseMirror 也拥有非常强大的插件 API。要直接访问它，请使用addProseMirrorPlugins()。
+
+https://tiptap.dev/docs/editor/extensions/custom-extensions/extend-existing#prosemirror-plugins-advanced
+
+
+https://tiptap.dev/docs/editor/extensions/functionality/filehandler#onpaste tiptap也封装了诸如粘贴或拖拽的操作，可那是回调，意味着你只能知道 但是不能干预这个过程
+
+以下为gpt所言：是的，正如你所说，使用 onPaste 只能让你获取粘贴的内容，而不能干预这个过程。在 onPaste 中，你只能读取事件并执行某些操作，但无法控制内容如何被插入或是否被插入。
+
+相对而言，使用 addProseMirrorPlugins 中的 handlePaste 则可以更灵活地控制粘贴行为。你可以选择如何处理粘贴的内容，例如修改内容、阻止默认行为或决定是否将其插入到编辑器中。
+
+简而言之，onPaste 适用于简单的监听和处理，而 handlePaste 适用于更复杂的自定义需求。

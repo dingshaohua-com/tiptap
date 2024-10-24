@@ -28,20 +28,31 @@ export const handleUpload = async (file) => {
  * @see https://gist.github.com/slava-vishnyakov/16076dff1a77ddaca93c4bccd4ec4521#gistcomment-3744392
  */
 
-export const uploadImagePlugin = (upload) => {
+export const uploadImagePlugin = () => {
+  const upload = handleUpload;
   return new Plugin({
     props: {
-      handlePaste(view, event) {
-        const items = Array.from(event.clipboardData?.items || []);
-        const { schema } = view.state;
+      handlePaste(view, event, slice) {
+        const {
+          state: { schema },
+        } = view;
+        const { clipboardData } = event;
+        // const pastedText = clipboardData.getData('text/plain');
+
+        const items = Array.from(clipboardData.items);
         items.forEach((item) => {
-          const image = item.getAsFile();
-
-          if (item.type.indexOf("image") === 0) {
+         
+         
+          const isImg = item.type.indexOf("image") > -1;
+          if (isImg) {
+            
+            
             event.preventDefault();
-
+            const image = item.getAsFile();
+            console.log(8989, image);
             if (upload && image) {
               upload(image).then((src) => {
+                console.log(111, src);
                 const node = schema.nodes.image.create({
                   src,
                 });
@@ -49,22 +60,25 @@ export const uploadImagePlugin = (upload) => {
                 view.dispatch(transaction);
               });
             }
-          } else {
-            const reader = new FileReader();
-            reader.onload = (readerEvent) => {
-              const node = schema.nodes.image.create({
-                src: readerEvent.target?.result,
-              });
-              const transaction = view.state.tr.replaceSelectionWith(node);
-              view.dispatch(transaction);
-            };
-            if (!image) return;
-            reader.readAsDataURL(image);
-          }
+          } 
+          
+          // else {
+          //   const reader = new FileReader();
+          //   reader.onload = (readerEvent) => {
+          //     const node = schema.nodes.image.create({
+          //       src: readerEvent.target?.result,
+          //     });
+          //     const transaction = view.state.tr.replaceSelectionWith(node);
+          //     view.dispatch(transaction);
+          //   };
+          //   if (!image) return;
+          //   reader.readAsDataURL(image);
+          // }
         });
 
         return false;
       },
+
       handleDOMEvents: {
         drop(view, event) {
           const hasFiles = event.dataTransfer?.files?.length;
@@ -131,9 +145,7 @@ export const openFileWindow = (callbc) => {
       // const src = await uploadImg(files[0]);
     });
   });
-
 };
-
 
 // 文件转base64
 export const fileToBase64 = (file) => {
