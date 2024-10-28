@@ -11,3 +11,14 @@ circle {
   border-radius: 50%; /* 使其变为圆形 */
   margin: 0 2px; /* 可选，调整间距 */
 }
+
+
+html,body{
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+#root{
+  height: 100%;
+}

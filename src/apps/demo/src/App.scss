@@ -1,7 +1,11 @@
 /* Basic editor styles */
 .ProseMirror {
-  border: red solid 1px;
-  padding: 10px;
+  outline:none;
+  // 一下三个属性 就是自适应剩余父元素的高度 将剩余的空间铺满
+  height: 100%;
+
+  
+  // padding: 10px;
   > * + * {
     margin-top: 0.75em;
   }
@@ -54,5 +58,32 @@
     border: none;
     border-top: 2px solid rgba(#0d0d0d, 0.1);
     margin: 2rem 0;
+  }
+}
+
+.app{
+  height: 100%;
+  padding: 0;
+  display: flow-root; // 此属性将没有任何副作用而形成bfc，防止子元素的margin影响父
+  .myEdit{
+    display: flex;
+    flex-direction:column;
+    margin: auto;
+    margin-top: 30px;
+    width: 960px;
+    min-height: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .03), 0 2px 4px rgba(0, 0, 0, .05), 0 12px 24px rgba(0, 0, 0, .05);
+    .editorContent{
+      flex: 1;
+      padding: 0 20px;
+      overflow: auto;
+    }
+  }
+  .actionBtn{
+    width: 960px;
+    margin: auto;
+    margin-top: 20px;
+    display: flex;
   }
 }
