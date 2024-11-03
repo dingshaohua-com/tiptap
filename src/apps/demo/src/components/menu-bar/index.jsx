@@ -1,46 +1,38 @@
 import "./style.scss";
+import { buttonGroup1 } from "./helper";
+import Button from "./button";
+import { Separator } from "@/components/ui/separator";
+import Heading from "./heading";
+import TextAlign from "./text-align";
 
 const MenuBar = ({ editor }) => {
-    if (!editor) {
-      return null;
-    }
-  
-    return (
-      <div className="menuBar">
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "is-active" : ""}
-        >
-          加粗
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editor.can().chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "is-active" : ""}
-        >
-          斜体
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          disabled={!editor.can().chain().focus().toggleStrike().run()}
-          className={editor.isActive("strike") ? "is-active" : ""}
-        >
-          删除线
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleDot().run()}
-          disabled={!editor.can().chain().focus().toggleDot().run()}
-          className={editor.isActive("dot") ? "is-active" : ""}
-        >
-          强调
-        </button>
-  
-        <button onClick={() => editor.chain().focus().uploadImg().run()}>
-          图
-        </button>
-      </div>
-    );
-  };
+  if (!editor) {
+    return null;
+  }
 
-  export default MenuBar;
+  return (
+    <div className="menuBar">
+      <Heading editor={editor}/>
+      <Separator orientation="vertical" className="mx-2 h-7" />
+      {buttonGroup1.map((item) => (
+        <Button
+          key={item.value}
+          tooltip={item.tooltip}
+          aria-label={item.label}
+          onClick={() => item.action(editor)}
+          isActive={item.isActive(editor)}
+        >
+          {item.icon}
+        </Button>
+      ))}
+      <Separator orientation="vertical" className="mx-2 h-7" />
+     <TextAlign editor={editor}/>
+
+      {/*<button onClick={() => editor.chain().focus().uploadImg().run()}>
+        图
+      </button> */}
+    </div>
+  );
+};
+
+export default MenuBar;
