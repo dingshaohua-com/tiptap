@@ -1,5 +1,5 @@
 import { Mark, mergeAttributes } from '@tiptap/core';
-import styleInject from './style-inject';
+import styleInject from '../utils/style-inject';
 
 const css = `.dot {
     text-emphasis: dot; 

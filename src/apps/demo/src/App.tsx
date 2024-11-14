@@ -4,8 +4,12 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from '@tiptap/extension-text-align'
 import { Button } from "@/components/ui/button";
-import Dot from "@tiptap/extension/dot";
-// import Img from "@tiptap/extension/image";
+import Dot from "@tiptap/extension/src/exts/dot";
+import Circle from "@tiptap/extension/src/exts/shape/circle";
+import Triangle from "@tiptap/extension/src/exts/shape/triangle";
+import Square from "@tiptap/extension/src/exts/shape/square";
+
+
 
 const App = () => {
   const editor = useEditor({
@@ -16,7 +20,7 @@ const App = () => {
     },
     extensions: [StarterKit, Dot, TextAlign.configure({
       types: ['heading', 'paragraph'],
-    }),],
+    }),Circle, Triangle, Square],
     content: `
       嗨,
       <p>

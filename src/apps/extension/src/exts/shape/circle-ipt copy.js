@@ -1,6 +1,6 @@
 import { isNodeSelection, mergeAttributes, Node } from "@tiptap/core";
 import { NodeSelection, TextSelection } from "@tiptap/pm/state";
-import styleInject from "./style-inject";
+import styleInject from "../../utils/style-inject";
 
 const css = `.circle-ipt {
     border: 1px solid #000000;

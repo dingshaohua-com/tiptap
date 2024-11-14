@@ -1,5 +1,5 @@
 import { Node } from "@tiptap/core";
-import styleInject from "./style-inject";
+import styleInject from "../../utils/style-inject";
 import { TextSelection } from "@tiptap/pm/state";
 
 const style = `.square {

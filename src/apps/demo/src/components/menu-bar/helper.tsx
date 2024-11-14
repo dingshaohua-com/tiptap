@@ -1,5 +1,6 @@
-import { FontBoldIcon, FontItalicIcon, UnderlineIcon, StrikethroughIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { FontBoldIcon, FontItalicIcon, UnderlineIcon, StrikethroughIcon, DotsHorizontalIcon, CircleIcon } from "@radix-ui/react-icons";
 
+// https://remixicon.com/
 export const buttonGroup1= [
   {
     value: "bold",
