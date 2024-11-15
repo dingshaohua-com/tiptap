@@ -8,12 +8,12 @@ export default Node.create({
   inline: true,
   atom: true,
   selected: true,
-  // content: "text*", // 允许插入文本
+  content: "text*", // 允许插入文本
 
   addAttributes() {
     return {
       class: {
-        default: "square",
+        default: "ignore-text-style square",
       },
       style: {
         default: "box-sizing:border-box; padding:2px; display: inline-block; width: 20px; height: 20px; position: relative; top: 4px; border: 1px solid black; margin:0 4px;",

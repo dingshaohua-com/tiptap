@@ -13,12 +13,11 @@ export default Node.create({
   addAttributes() {
     return {
       class: {
-        default: "circle",
+        default: "ignore-text-style circle",
       },
       style: {
         default: "box-sizing:border-box; padding:2px; display: inline-block; width: 20px; height: 20px; position: relative; top: 4px; border: 1px solid black; margin:0 4px; border-radius: 50%;",
       },
-      
     };
   },
   renderHTML({ HTMLAttributes }) {

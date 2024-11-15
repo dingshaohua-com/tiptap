@@ -8,6 +8,7 @@ import Dot from "@tiptap/extension/src/exts/dot";
 import Circle from "@tiptap/extension/src/exts/shape/circle";
 import Triangle from "@tiptap/extension/src/exts/shape/triangle";
 import Square from "@tiptap/extension/src/exts/shape/square";
+import CustomTextStyle from '@tiptap/extension/src/exts/custom-text-style'
 
 
 
@@ -20,14 +21,24 @@ const App = () => {
     },
     extensions: [StarterKit, Dot, TextAlign.configure({
       types: ['heading', 'paragraph'],
-    }),Circle, Triangle, Square],
-    content: `
-      嗨,
-      <p>
-        这是一个<strong>tiptap</strong>的<em>基础</em> 示例。
-      </p>
-      <h2>你好啊</h2>
-    `,
+    }), 
+    Circle, Triangle, 
+    CustomTextStyle,
+    Square,
+    
+     ],
+    // content: `
+    //   嗨,
+    //   <p>
+    //     这是一个<strong>tiptap</strong>的<em>基础</em> 示例。
+    //   </p>
+    //   <h2>你好啊</h2>
+    // `,
+
+    
+    content: `<p><span>This has a &lt;span&gt; tag without a style attribute, so it’s thrown away.</span></p>
+        <p><span style="">But this one is wrapped in a &lt;span&gt; tag with an inline style attribute, so it’s kept - even if it’s empty for now.</span></p>
+        <p>语文<span class="ignore-text-style square" style="box-sizing:border-box; padding:2px; display: inline-block; width: 20px; height: 20px; position: relative; top: 4px; border: 1px solid black; margin:0 4px;"></span> </p><p></p>`
   });
 
   const onSave = () => {

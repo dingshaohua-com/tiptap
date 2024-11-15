@@ -10,12 +10,12 @@ export default Node.create({
   group: "inline",
   inline: true,
   atom: true,
-  // content: "text*", // 允许插入文本
+  content: "text*", // 允许插入文本
 
   addAttributes() {
     return {
       class: {
-        default: "triangle",
+        default: "ignore-text-style triangle",
       },
       style: {
         default: `box-sizing:border-box; padding:2px; display: inline-block;width: 20px;height: 20px;position: relative;top: 4px;margin:0 4px;  background-image: url("https://homeworkdone-rtf.oss-cn-beijing.aliyuncs.com/triangle.png"); background-size: 100% 100%`,
