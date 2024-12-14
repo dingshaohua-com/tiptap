@@ -4,14 +4,14 @@ const lightTheme = themes.github;
 const darkTheme = themes.dracula;
 
 const config = {
-  title: "我的生活分享",
+  title: "tiptap文档",
   tagline: "Tiptap are cool",
   favicon: "img/favicon.svg",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   organizationName: "facebook", // Usually your GitHub org/user name.
   projectName: "docusaurus", // Usually your repo name.
-  onBrokenLinks: "throw",
+  onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
   i18n: {
     defaultLocale: "zh-Hans",

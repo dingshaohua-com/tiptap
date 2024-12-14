@@ -15,26 +15,27 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docusaurus/core": "3.5.2",
-    "@docusaurus/preset-classic": "3.5.2",
-    "@mdx-js/react": "^3.0.0",
     "@tiptap/extension-highlight": "^2.8.0",
     "@tiptap/extension-link": "^2.8.0",
     "@tiptap/extension-paragraph": "^2.8.0",
     "@tiptap/pm": "^2.8.0",
     "@tiptap/react": "^2.8.0",
     "@tiptap/starter-kit": "^2.8.0",
+    "@docusaurus/core": "^3.6.3",
+    "@docusaurus/preset-classic": "^3.6.3",
+    "@docusaurus/theme-live-codeblock": "^3.6.3",
+    "@mdx-js/react": "^3.1.0",
     "clsx": "^2.1.1",
     "docusaurus-plugin-sass": "^0.2.5",
     "prism-react-renderer": "^2.4.0",
     "raw-loader": "^4.0.2",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "sass": "^1.79.5"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sass": "^1.81.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.5.2",
-    "@docusaurus/types": "3.5.2"
+    "@docusaurus/module-type-aliases": "^3.6.3",
+    "@docusaurus/types": "3.6.3"
   },
   "browserslist": {
     "production": [
