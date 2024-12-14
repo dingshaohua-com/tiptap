@@ -53,7 +53,6 @@ const Shape = ({ editor }) => {
     return (
       <div className="shapItems">
         {items.map((item) => {
-          const Shap: any = item;
           return (
             <div
               className="shapItem"
@@ -85,6 +84,7 @@ const Shape = ({ editor }) => {
         >
           <div>
             <MenuBtn active={false} onClick={handleTooltipOpen}>
+              {/* @ts-ignore */}
               <RiShapesLine />
             </MenuBtn>
           </div>
