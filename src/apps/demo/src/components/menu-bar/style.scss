@@ -1,7 +1,10 @@
-.menuBar{
-    display: flex;
-    align-items: center;
-    // flex-shrink: 0;
-    padding: 10px;
-    border-bottom: 1px #e5e7eb solid;
+.menuBar {
+  display: flex;
+  align-items: center;
+  // flex-shrink: 0;
+  padding: 10px;
+  border-bottom: 1px #e5e7eb solid;
+  .menuBarDivider {
+    margin: 4px 10px;
+  }
 }
