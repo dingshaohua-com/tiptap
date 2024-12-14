@@ -25,7 +25,8 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#f5f5f9',
     color: 'rgba(0, 0, 0, 0.87)',
-    width: 260,
+    with:'80%',
+    maxWidth: 260,
     minHeight: 100,
     maxHeight: 160,
     fontSize: theme.typography.pxToRem(12),
@@ -55,6 +56,7 @@ const Shape = ({ editor }) => {
         {items.map((item) => {
           return (
             <div
+              key={item}
               className="shapItem"
               onClick={() => {
                 onClickItem(urlBase+item+'.png');
