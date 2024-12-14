@@ -23,7 +23,7 @@ apps.forEach((app) => {
     stdio: "inherit",
     shell: true,
   });
-//   const appDist = path.resolve(appPath, "dist");
-//   const appDistNewPath = path.resolve(rootDist, app.name);
-//   fsExtra.moveSync(appDist, appDistNewPath, { overwrite: true });
+  const appDist = path.resolve(appPath, "dist");
+  const appDistNewPath = path.resolve(rootDist, app.name);
+  fsExtra.moveSync(appDist, appDistNewPath, { overwrite: true });
 });
