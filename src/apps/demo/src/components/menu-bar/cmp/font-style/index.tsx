@@ -5,7 +5,6 @@ import {
   RiItalic,
   RiUnderline,
   RiStrikethrough,
-  RiFontColor,
 } from '@remixicon/react';
 
 const buttonGroup: Array<any> = [
