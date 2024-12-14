@@ -1,13 +1,28 @@
+import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
+import { checkbox } from "@inquirer/prompts";
 
+// 获取都有哪些项目
+const ignoreDir = [".DS_Store", "extension"];
+const appsDir = path.resolve("src", "apps");
+const apps = fs
+  .readdirSync(appsDir, { withFileTypes: true })
+  .filter((it) => !ignoreDir.includes(it.name));
 
-const args = process.argv.slice(2);
-const projectName = args[0];
-const projectPath = path.resolve("src","apps",projectName);
+// 根据用户选择，启动指定项目
+const answer = await checkbox({
+  instructions: "😍空格键多选，回车键确定启动💏",
+  message: "选择需要启动的项目？",
+  choices: apps.map((item) => ({ name: item.name, value: item.name })),
+});
 
-if (projectName === "doc") {
-    spawn("npm run", ["--prefix", projectPath, "start"], { stdio: "inherit", shell: true });
-}else if(projectName === "demo"){
-    spawn("npm run", ["--prefix", projectPath, "dev"], { stdio: "inherit", shell: true });
-}
+answer.forEach((appName) => {
+  const app = apps.find((it) => it.name === appName);
+  if (ignoreDir.includes(app.name)) return false;
+  const appPath = path.resolve(app.parentPath, app.name);
+  spawn("npm run", ["--prefix", appPath, "dev"], {
+    stdio: "inherit",
+    shell: true,
+  });
+});
