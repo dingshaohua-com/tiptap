@@ -19,7 +19,7 @@ jobs:
       - name: 安装Node
         uses: actions/setup-node@main
         with:
-          node-version: "20.x"
+          node-version: "22.x"
       
       - name: 安装依赖
         run: pnpm i
