@@ -5,13 +5,30 @@
 }
 .tooltipCont {
   box-sizing: border-box;
-  padding: 10px 10px 56px 10px;
+  padding: 10px;
   width: 100%;
-  math-field{
-    min-width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .tooltipContTab {
+    width: 100%;
+    flex: 1;
+    .customTabPanel{
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: -10px;
+      margin-top: -10px;
+      .formulaItem{
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+    }
   }
-  button{
-    margin-top: 10px;
-    float:right;
+  .footer {
+    box-sizing: border-box;
+    width: 100%;
+    border-top: rgba($color: #000000, $alpha: 0.1) solid 1px;
+    height: 48px;
+    padding-top: 10px;
   }
 }

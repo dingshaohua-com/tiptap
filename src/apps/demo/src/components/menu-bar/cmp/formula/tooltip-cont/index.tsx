@@ -1,31 +1,79 @@
 import './style.scss';
-import { Button } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { Box, Button } from '@mui/material';
 import { useState } from 'react';
+import presets from '../latex-presets';
 
-import { MathfieldElement } from "mathlive";
+console.log(presets);
 
-declare namespace JSX {
-    interface IntrinsicElements {
-      'math-field': React.DetailedHTMLProps<
-        React.HTMLAttributes<MathfieldElement>,
-        MathfieldElement
-      >;
-    }
-  }
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
 
+const CustomTabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
 
-const TooltipCont = ({ editor, handleTooltipClose }) => {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+};
 
-  const [value, setValue] = useState("");
+const TooltipCont = ({ editor }) => {
+  const [value, setValue] = useState(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(newValue);
+
+    setValue(newValue);
+  };
+  const onClickItem = (item) => {
+    editor.commands.setImage({ src: item });
+  };
+
   const onSave = () => {
-    const { from, to } = editor.state.selection;
-    editor.commands.insertContentAt(to, value);
-    handleTooltipClose();
+    console.log(value);
   };
   return (
     <div className="tooltipCont">
-      <math-field onInput={evt => setValue(evt.target.value)}>f(x)=</math-field>
-      <div className="">
+      <div className="tooltipContTab">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
+          {presets.map((item, index) => (
+            <Tab
+              label={item.label}
+              id={`simple-tab-${item.key}`}
+              aria-controls={`simple-tabpanel-${index}`}
+              key={item.key}
+            />
+          ))}
+        </Tabs>
+        {presets.map((item, index) => (
+          <CustomTabPanel value={value} index={index} key={item.key}>
+            <div className="customTabPanel">
+              {item.content.map((item) => (
+                <div className="formulaItem">
+                  <math-field>{item.latex}</math-field>
+                </div>
+              ))}
+            </div>
+          </CustomTabPanel>
+        ))}
+      </div>
+
+      <div className="footer">
         <Button variant="contained" onClick={onSave}>
           确定
         </Button>
