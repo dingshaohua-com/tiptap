@@ -78,7 +78,6 @@ const Formula = ({ editor }) => {
         >
           <div>
             <MenuBtn active={false} onClick={handleTooltipOpen}>
-              {/* @ts-ignore */}
               <RiFormula />
             </MenuBtn>
           </div>

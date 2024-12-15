@@ -4,6 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import MenuBar from '@/components/menu-bar';
 import Button from '@mui/material/Button';
+import { Formula } from "@/utils/tiptap-ext"
 
 const App = () => {
   const editor: any = useEditor({
@@ -12,6 +13,7 @@ const App = () => {
       Image.configure({
         inline: true,
       }),
+      Formula
     ],
     content: '<p>Hello World!</p>',
   });

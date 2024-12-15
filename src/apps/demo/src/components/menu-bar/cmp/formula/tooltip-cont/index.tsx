@@ -29,15 +29,15 @@ const CustomTabPanel = (props: TabPanelProps) => {
   );
 };
 
-const TooltipCont = ({ editor }) => {
+const TooltipCont = ({ editor, handleTooltipClose }) => {
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(newValue);
-
     setValue(newValue);
   };
   const onClickItem = (item) => {
-    editor.commands.setImage({ src: item });
+    editor.commands.insertFormula(item.latex)
+    console.log(item.latex);
+    handleTooltipClose();
   };
 
   const onSave = () => {
@@ -62,10 +62,10 @@ const TooltipCont = ({ editor }) => {
         </Tabs>
         {presets.map((item, index) => (
           <CustomTabPanel value={value} index={index} key={item.key}>
-            <div className="customTabPanel">
-              {item.content.map((item) => (
-                <div className="formulaItem">
-                  <math-field>{item.latex}</math-field>
+            <div className="customTabPanel" key={item.key}>
+              {item.content.map((it) => (
+                <div className="formulaItem" key={it.latex}>
+                  <math-field contentEditable={false} onFocus={()=>{onClickItem(it)}}>{it.latex}</math-field>
                 </div>
               ))}
             </div>
