@@ -13,6 +13,7 @@ const App = () => {
       Image.configure({
         inline: true,
       }),
+      // @ts-ignore
       Formula
     ],
     content: '<p>Hello World!</p>',
