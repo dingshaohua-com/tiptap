@@ -5,7 +5,7 @@ import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import presets from '../latex-presets';
 
-console.log(presets);
+
 
 interface TabPanelProps {
   children?: React.ReactNode;

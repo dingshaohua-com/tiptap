@@ -1,9 +1,15 @@
 /// <reference types="vite/client" />
 
-declare global {
-    namespace JSX {
-      interface IntrinsicElements {
-        'math-field': React.DetailedHTMLProps<React.HTMLAttributes<MathfieldElement>, MathfieldElement>;
-      }
+import React from 'react';
+import { MathfieldElement } from 'mathlive';
+
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'math-field': React.DetailedHTMLProps<
+        React.HTMLAttributes<MathfieldElement>,
+        MathfieldElement
+      >;
     }
   }
+}
