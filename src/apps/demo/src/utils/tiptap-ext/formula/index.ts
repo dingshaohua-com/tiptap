@@ -2,13 +2,11 @@ import { Node } from '@tiptap/core';
 
 export const Formula = Node.create({
   name: 'mathField',
-  selected: true,
   atom: true,
   group: 'inline',
   inline: true,
   content: 'text*',
 
-  // 解析规则（回显的时候，遇到什么要的规则需要解析 调用本扩展插件）
   parseHTML() {
     return [{ tag: 'math-field' }];
   },

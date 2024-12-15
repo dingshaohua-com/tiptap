@@ -16,7 +16,7 @@ const App = () => {
       // @ts-ignore
       Formula
     ],
-    content: '<p>Hello World!</p>',
+    content: '<p>Hello World! <math-field>\\frac{x}{y}</math-field></p>',
   });
 
   const onSave = () => {
