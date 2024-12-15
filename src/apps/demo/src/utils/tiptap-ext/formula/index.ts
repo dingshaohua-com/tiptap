@@ -12,7 +12,7 @@ export const Formula = Node.create({
   },
  
   // 渲染（文档初始化和变动就会被渲染 执行此函数）和提交（即调用getHtml）的时候的最终代码
-  renderHTML({node /* unused */, HTMLAttributes }) {
+  renderHTML({HTMLAttributes }) {
     return ['math-field', HTMLAttributes, 0];
   },
 
