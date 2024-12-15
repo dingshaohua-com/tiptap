@@ -18,7 +18,6 @@ const slotProps = {
 
 const MenuBtn = (props) => {
   const { tooltip, onClick, active } = props;
-  console.log(active);
   return tooltip ? (
     <Tooltip title={tooltip} placement="top" slotProps={slotProps} arrow>
       <Button

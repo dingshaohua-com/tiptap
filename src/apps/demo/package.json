@@ -19,6 +19,7 @@
     "@tiptap/react": "^2.10.3",
     "@tiptap/starter-kit": "^2.10.3",
     "classnames": "^2.5.1",
+    "mathlive": "^0.103.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remixicon": "^4.5.0"
