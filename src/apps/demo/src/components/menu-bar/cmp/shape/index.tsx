@@ -47,7 +47,7 @@ const Shape = ({ editor }) => {
 
   const ShapItems = () => {
     const urlBase = 'http://img.dingshaohua.com/editor/shape/';
-    const items = ['circle', 'square', 'triangle', 'trapezoid'];
+    const items = ['circle', 'square', 'triangle', 'trapezoid', 'iphone', 'star','kefu'];
     const onClickItem = (item) => {
       editor.commands.setImage({ src: item});
     };
@@ -59,10 +59,10 @@ const Shape = ({ editor }) => {
               key={item}
               className="shapItem"
               onClick={() => {
-                onClickItem(urlBase+item+'.png');
+                onClickItem(urlBase+item+'.svg');
               }}
             >
-              <img src={urlBase+item+'.png'} alt={item} width={24} />
+              <img src={urlBase+item+'.svg'} alt={item} width={24} />
             </div>
           );
         })}
