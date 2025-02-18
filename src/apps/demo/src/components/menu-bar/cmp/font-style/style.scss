@@ -1,5 +1,11 @@
 .fontStyle {
-  &>*{
-    margin-right: 2px!important;
+  button {
+    height: auto;
+    margin: 0 1px;
+    padding: 0px 6px;
+    border-radius: 2px;
+    svg {
+      width: 16px;
+    }
   }
 }

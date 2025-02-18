@@ -1,11 +1,11 @@
-import './style.scss';
-import MenuBtn from '@/components/menu-btn';
 import {
   RiBold,
   RiItalic,
   RiUnderline,
   RiStrikethrough,
 } from '@remixicon/react';
+import './style.scss';
+import { Button, Tooltip } from 'antd';
 
 const buttonGroup: Array<any> = [
   {
@@ -76,14 +76,16 @@ const FontStyle = ({ editor }) => {
   return (
     <div className="fontStyle">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value }) => (
-        <MenuBtn
-          tooltip={tooltip}
-          active={isActive(editor)}
-          onClick={() => action(editor)}
-          key={value}
-        >
-          <Icon />
-        </MenuBtn>
+        <Tooltip title={tooltip} key={value}>
+          <Button
+            onClick={() => action(editor)}
+            color="default"
+            variant={isActive(editor) ? 'solid' : 'filled'}
+            autoInsertSpace
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
       ))}
     </div>
   );

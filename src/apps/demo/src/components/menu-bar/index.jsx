@@ -4,6 +4,7 @@ import FontStyle from './cmp/font-style'
 import Shape from './cmp/shape';
 import Formula from './cmp/formula';
 import Divider from '@mui/material/Divider';
+import { Button } from "antd";
 
 
 const MenuBar = ({ editor }) => {
