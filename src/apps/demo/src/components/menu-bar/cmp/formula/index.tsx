@@ -1,90 +1,91 @@
 import './style.scss';
+import { Button, Popover } from 'antd';
 import { useState } from 'react';
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import MenuBtn from '@/components/menu-btn';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { RiFormula } from '@remixicon/react';
-import { styled } from '@mui/material/styles';
-import TooltipCont from './tooltip-cont';
+import { Tabs } from 'antd';
+import type { TabsProps } from 'antd';
+import presets from './latex-presets';
 
-const slotProps = {
-  popper: {
-    modifiers: [
-      {
-        name: 'offset',
-        options: {
-          offset: [0, -10],
-        },
-      },
-    ],
-  },
-};
-
-const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    minWidth: 400,
-    maxWidth: 500,
-    minHeight: 300,
-    maxHeight: 600,
-    display: 'flex',
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}));
-
-const Formula = ({ editor }) => {
+const Shape = ({ editor }) => {
   const [open, setOpen] = useState(false);
 
-  const handleTooltipClose = () => {
+  const show = () => {
+    setOpen(true);
+  };
+  const hide = () => {
     setOpen(false);
   };
 
-  const handleTooltipOpen = () => {
-    setOpen(true);
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
   };
 
-  const onClickAwayHandler = (e) => {
-    const mathKeyboard = document.querySelector('.ML__keyboard');
-    const parent = document.querySelector('.MuiTooltip-popper');
-    const child = e.target;
-    if (parent?.contains(child) || mathKeyboard?.contains(child)) {
-      return;
+
+
+  const description = () => {
+    const [mfPreviewVal, setMfPreviewVal] = useState('');
+    const onChange = (key: string) => {
+      console.log(key);
+    };
+
+    const onClickItem = (value) => {
+      setMfPreviewVal(mfPreviewVal + value.latex)
+
     }
-    handleTooltipClose();
+    const insertFormula = () => {
+      editor.commands.insertFormula(mfPreviewVal)
+      hide();
+    }
+
+    const items: TabsProps['items'] = presets.map((item, index) => (
+      {
+        key: item.key,
+        label: item.label,
+        children: (<div className="custom-tabpanel" key={item.key}>
+          {item.content.map((it) => (
+            <div className="formula-item" key={it.latex} >
+              {/* https://github.com/arnog/mathlive/issues/2102 */}
+              <div className='formula-item-mask' onClick={() => { onClickItem(it) }}></div>
+              <math-field contentEditable={false} >{it.latex}</math-field>
+            </div>
+          ))}
+        </div>)
+      }
+    ));
+    return (
+
+      <div>
+        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        <div className='mf-preview'>
+          <div className='mf'>
+            <math-field
+              onInput={evt => setMfPreviewVal(evt.target.value)}
+            >
+              {mfPreviewVal}
+            </math-field>
+          </div>
+
+          <Button type="primary" onClick={insertFormula}>插入</Button>
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div className="shap">
-      <ClickAwayListener onClickAway={onClickAwayHandler}>
-        <CustomTooltip
-          arrow={true}
-          title={
-            <TooltipCont
-              editor={editor}
-              handleTooltipClose={handleTooltipClose}
-            />
-          }
-          placement="bottom"
-          slotProps={slotProps}
-          disableFocusListener
-          disableHoverListener
-          disableTouchListener
-          onClose={handleTooltipClose}
-          open={open}
+    <div className="formula">
+      <Popover content={description} title="" open={open} trigger="click" destroyTooltipOnHide={true}
+        onOpenChange={handleOpenChange}>
+        <Button
+          onClick={show}
+          color="default"
+          variant="filled"
+          autoInsertSpace
         >
-          <div>
-            <MenuBtn active={false} onClick={handleTooltipOpen}>
-              <RiFormula />
-            </MenuBtn>
-          </div>
-        </CustomTooltip>
-      </ClickAwayListener>
+          <RiFormula />
+        </Button>
+      </Popover>
     </div>
   );
 };
 
-export default Formula;
+export default Shape;

@@ -41,9 +41,6 @@ const Heading = ({ editor }) => {
     }
   };
   const activeLeave = getActiveLeave();
-
-  console.log(111111);
-  
   return (
     <Select
       value={activeLeave || 0}
