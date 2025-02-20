@@ -37,7 +37,7 @@ const Shape = ({ editor }) => {
       hide();
     }
 
-    const items: TabsProps['items'] = presets.map((item, index) => (
+    const items: TabsProps['items'] = presets.map((item) => (
       {
         key: item.key,
         label: item.label,
@@ -59,7 +59,7 @@ const Shape = ({ editor }) => {
         <div className='mf-preview'>
           <div className='mf'>
             <math-field
-              onInput={evt => setMfPreviewVal(evt.target.value)}
+              onInput={evt => setMfPreviewVal((evt.target as HTMLInputElement)?.value)}
             >
               {mfPreviewVal}
             </math-field>

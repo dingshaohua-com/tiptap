@@ -1,4 +1,5 @@
 import StartPng from "@site/static/img/home/start.png";
+import DemoImg from "@site/static/img/home/demo.svg";
 import ExamplePng from "@site/static/img/home/example.png";
 import ExtensionPng from "@site/static/img/home/extension.png";
 import GuidePng from "@site/static/img/home/guide.png";
@@ -79,6 +80,12 @@ export const navs = [
     logo: SearchSvg,
     path: "/guide/configuration",
     width: 30
+  },
+  {
+    title: "例子",
+    logo: DemoImg,
+    path: "https://tiptap.dingshaohua.com/demo",
+    width: 26
   },
   {
     title: "文档",
