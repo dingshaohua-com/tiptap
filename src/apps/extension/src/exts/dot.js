@@ -1,5 +1,5 @@
-import { Mark, mergeAttributes } from '@tiptap/core';
-import styleInject from '../utils/style-inject';
+import { Mark, mergeAttributes } from "@tiptap/core";
+import styleInject from "../utils/style-inject";
 
 const css = `.dot {
     text-emphasis: dot; 
@@ -7,47 +7,50 @@ const css = `.dot {
 }`;
 styleInject(css);
 
-export default Mark.create({
-    name: "dot",
-    addAttributes() {
-        return {
-            class: {
-                default: 'dot'
-            },
-            'data-type':{
-                default: 'dot'
-            }
-        }
-    },
-    parseHTML() {
-        return [
-            {
-                tag: 'span',
-                getAttrs: element => {
-                    return element.getAttribute('data-type') === 'dot';
-                },
-            },
-        ];
-    },
-    renderHTML({ HTMLAttributes }) {
-        return [
-            "span",
-            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-            0,
-        ];
-    },
+export const Dot =  Mark.create({
+  name: "dot",
+  addAttributes() {
+    return {
+      class: {
+        default: "dot",
+      }
+    };
+  },
+  parseHTML() {
+    return [
+      {
+        tag: "span",
+        getAttrs: (element) => {
+          return element.getAttribute("class").indexOf("dot")>-1;
+        },
+      },
+    ];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "span",
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      0,
+    ];
+  },
 
-    addCommands() {
-        return {
-            setDot: () => ({ commands }) => {
-                return commands.setMark(this.name);
-            },
-            toggleDot: () => ({ commands }) => {
-                return commands.toggleMark(this.name);
-            },
-            unsetDot: () => ({ commands }) => {
-                return commands.unsetMark(this.name);
-            },
-        };
-    }
+  addCommands() {
+    return {
+      setDot:
+        () =>
+        ({ commands }) => {
+          return commands.setMark(this.name);
+        },
+      toggleDot:
+        () =>
+        ({ commands }) => {
+          return commands.toggleMark(this.name);
+        },
+      unsetDot:
+        () =>
+        ({ commands }) => {
+          return commands.unsetMark(this.name);
+        },
+    };
+  },
 });

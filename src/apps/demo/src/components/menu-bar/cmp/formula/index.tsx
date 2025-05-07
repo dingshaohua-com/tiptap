@@ -1,8 +1,7 @@
 import './style.scss';
-import { Button, Popover } from 'antd';
+import { Button, Popover, Tabs } from 'antd';
 import { useState } from 'react';
 import { RiFormula } from '@remixicon/react';
-import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import presets from './latex-presets';
 

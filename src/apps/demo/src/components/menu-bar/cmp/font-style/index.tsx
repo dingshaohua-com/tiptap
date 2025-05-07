@@ -3,6 +3,7 @@ import {
   RiItalic,
   RiUnderline,
   RiStrikethrough,
+  RiEmphasisCn,
 } from '@remixicon/react';
 import './style.scss';
 import { Button, Tooltip } from 'antd';
@@ -61,15 +62,17 @@ const buttonGroup: Array<any> = [
   //     canExecute: editor => editor.can().chain().focus().toggleUnderline().run() && !editor.isActive('codeBlock'),
   //     tooltip:"颜色",
   //   },
-  //   {
-  //     value: 'dot',
-  //     label: 'Dot',
-  //     icon: <DotsHorizontalIcon className="size-5" />,
-  //     action: editor => editor.chain().focus().toggleDot().run(),
-  //     isActive: editor => editor.isActive('dot'),
-  //     canExecute: editor => editor.can().chain().focus().toggleUnderline().run() && !editor.isActive('codeBlock'),
-  //     tooltip:"强调",
-  //   },
+  {
+    value: 'dot',
+    label: 'Dot',
+    icon: RiEmphasisCn,
+    action: (editor) => editor.chain().focus().toggleDot().run(),
+    isActive: (editor) => editor.isActive('dot'),
+    canExecute: (editor) =>
+      editor.can().chain().focus().toggleUnderline().run() &&
+      !editor.isActive('codeBlock'),
+    tooltip: '强调',
+  },
 ];
 
 const FontStyle = ({ editor }) => {

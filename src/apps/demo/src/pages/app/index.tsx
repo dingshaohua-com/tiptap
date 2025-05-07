@@ -4,7 +4,9 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import MenuBar from '@/components/menu-bar';
 import Button from '@mui/material/Button';
-import { Formula } from "@/utils/tiptap-ext"
+import { Formula } from '@/utils/tiptap-ext';
+import { Dot, Horizontal } from '@tiptap/extension';
+import TextAlign from '@tiptap/extension-text-align';
 
 const App = () => {
   const editor: any = useEditor({
@@ -14,7 +16,14 @@ const App = () => {
         inline: true,
       }),
       // @ts-ignore
-      Formula
+      Formula,
+      Dot,
+      Horizontal,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        alignments: ['left', 'center', 'right', 'justify'],
+        defaultAlignment: 'left',
+      }),
     ],
     content: '<p>Hello World! <math-field>\\frac{x}{y}</math-field></p>',
   });
