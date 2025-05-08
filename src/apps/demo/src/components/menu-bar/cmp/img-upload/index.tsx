@@ -3,7 +3,7 @@ import { RiFileImageLine } from '@remixicon/react';
 import { useState } from 'react';
 import { useFileUploader } from '@/hooks/use-file-uploader';
 
-const DesCmp = ({ editor }) => {
+const DesCmp = ({ editor, setOpen }) => {
   const { inputRef, file, uploading, error, selectFile, onFileChange } =
     useFileUploader({
       // url: 'http://localhost:3002/file/upload',
@@ -12,6 +12,7 @@ const DesCmp = ({ editor }) => {
         console.log(`Uploading ${file.name}: ${percent}%`);
       },
       onSuccess: (res, file) => {
+        setOpen(false);
         const imgUrl = 'https://api.dingshaohua.com' + res.data;
         console.log(`Uploadedsuccessfully`, imgUrl);
 
@@ -22,17 +23,33 @@ const DesCmp = ({ editor }) => {
         console.error(`Failed to upload ${file.name}`, err);
       },
     });
+    // http://localhost:3003/assets/images/fe-fw-lib-7961ee52ada77d43b6b3d68daef3794d.png
   const onSelectFile = () => {
-    console.log(123);
-
     selectFile();
   };
 
+  const insertNetImg = () => {
+    if(netImg){
+      editor.chain().focus().setImage({ src: netImg }).run();
+      setOpen(false);
+    }else{
+      alert('图片地址为空！')
+    }
+   
+  };
+
+  const [netImg, setNetImg] = useState();
   return (
-    <div style={{ display: 'flex', alignItems:'center', gap: 6 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
       <Input
-        style={{width: '120px'}}
-        addonAfter={<span style={{ cursor: 'pointer' }}>确定</span>}
+        value={netImg}
+        onChange={(e:any)=>setNetImg(e.target.value)}
+        style={{ width: '120px' }}
+        addonAfter={
+          <span style={{ cursor: 'pointer' }} onClick={insertNetImg}>
+            确定
+          </span>
+        }
         placeholder="网络地址"
       />
       或
@@ -68,7 +85,7 @@ const imgUpload = ({ editor }) => {
     <div className="fontStyle">
       <Tooltip title="图片">
         <Popover
-          content={<DesCmp editor={editor} />}
+          content={<DesCmp editor={editor} setOpen={setOpen}/>}
           title=""
           open={open}
           trigger="click"
