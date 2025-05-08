@@ -5,6 +5,7 @@ import Image from '@tiptap/extension-image';
 import MenuBar from '@/components/menu-bar';
 import Button from '@mui/material/Button';
 import { Formula } from '@/utils/tiptap-ext';
+// @ts-ignore
 import { Dot, Horizontal } from '@tiptap/extension';
 import TextAlign from '@tiptap/extension-text-align';
 
