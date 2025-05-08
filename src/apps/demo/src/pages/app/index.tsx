@@ -8,8 +8,6 @@ import { Formula } from '@/utils/tiptap-ext';
 // @ts-ignore
 import { Dot, Horizontal, Question } from '@tiptap/extension';
 import TextAlign from '@tiptap/extension-text-align';
-import { generateHTML } from '@tiptap/html'
-import CustomNode from './node-view'
 
 const App = () => {
   const editor: any = useEditor({
@@ -48,10 +46,6 @@ const App = () => {
         <Button variant="contained" onClick={onSave}>
           保存
         </Button>
-
-        <div dangerouslySetInnerHTML={{__html:`<p style="text-align: left"><span data-type="question" style="display:inline-block;width:20px;height:10px;margin:0 4px;border-bottom:1px solid black;"></span>Hello <math-field>\\frac{x}{y}</math-field> World <span data-type="question" style="display:inline-block;width:20px;height:20px;margin:0 4px;border-bottom:1px solid black;"></span>!</p>`}}>
-          
-        </div>
       </div>
     </div>
   );
