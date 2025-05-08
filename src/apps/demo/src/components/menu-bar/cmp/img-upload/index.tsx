@@ -3,15 +3,20 @@ import { RiFileImageLine } from '@remixicon/react';
 import { useState } from 'react';
 import { useFileUploader } from '@/hooks/use-file-uploader';
 
-const description = () => {
+const DesCmp = ({ editor }) => {
   const { inputRef, file, uploading, error, selectFile, onFileChange } =
     useFileUploader({
-      url: 'https://api.dingshaohua.com/api/file/upload',
+      // url: 'http://localhost:3002/file/upload',
+      url: 'https://api.dingshaohua.com/file/upload',
       onProgress: (percent, file) => {
         console.log(`Uploading ${file.name}: ${percent}%`);
       },
       onSuccess: (res, file) => {
-        console.log(`Uploaded ${file.name} successfully`, res);
+        const imgUrl = 'https://api.dingshaohua.com' + res.data;
+        console.log(`Uploadedsuccessfully`, imgUrl);
+
+        // 调用内置的 @tiptap/extension-image
+        editor.chain().focus().setImage({ src: imgUrl }).run();
       },
       onError: (err, file) => {
         console.error(`Failed to upload ${file.name}`, err);
@@ -24,28 +29,24 @@ const description = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', alignItems:'center', gap: 6 }}>
       <Input
+        style={{width: '120px'}}
         addonAfter={<span style={{ cursor: 'pointer' }}>确定</span>}
         placeholder="网络地址"
       />
-      <div>
-        或
-        <span
-          style={{ color: 'blue', cursor: 'pointer' }}
-          onClick={onSelectFile}
-        >
-          本地上传
-        </span>
-        {/* 渲染隐藏的input元素 */}
-        <input
-          type="file"
-          ref={inputRef}
-          onChange={onFileChange}
-          style={{ display: 'none' }}
-          multiple
-        />
-      </div>
+      或
+      <span style={{ color: 'blue', cursor: 'pointer' }} onClick={onSelectFile}>
+        本地上传
+      </span>
+      {/* 渲染隐藏的input元素 */}
+      <input
+        type="file"
+        ref={inputRef}
+        onChange={onFileChange}
+        style={{ display: 'none' }}
+        multiple
+      />
     </div>
   );
 };
@@ -67,7 +68,7 @@ const imgUpload = ({ editor }) => {
     <div className="fontStyle">
       <Tooltip title="图片">
         <Popover
-          content={description}
+          content={<DesCmp editor={editor} />}
           title=""
           open={open}
           trigger="click"
