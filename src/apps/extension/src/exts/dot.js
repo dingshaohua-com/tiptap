@@ -21,7 +21,7 @@ export const Dot =  Mark.create({
       {
         tag: "span",
         getAttrs: (element) => {
-          return element.getAttribute("class").indexOf("dot")>-1;
+          return element.getAttribute("class")?.indexOf("dot")>-1;
         },
       },
     ];

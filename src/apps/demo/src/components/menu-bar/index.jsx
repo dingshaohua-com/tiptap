@@ -7,6 +7,7 @@ import Formula from './cmp/formula';
 import Divider from '@mui/material/Divider';
 import ImgUpload from './cmp/img-upload';
 import InsertSome from './cmp/insert-some';
+import InsertQs from './cmp/insert-qs';
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -47,7 +48,7 @@ const MenuBar = ({ editor }) => {
       <Shape editor={editor} />
       <Formula editor={editor} />
       <ImgUpload editor={editor} />
-      
+      <InsertQs editor={editor} />      
     </div>
   );
 };

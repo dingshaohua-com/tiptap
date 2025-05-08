@@ -17,7 +17,7 @@ export default Node.create({
   },
   // 什么情况下会次插件会解析（当tag为formula 或者为旧版本的公式的时候）
   parseHTML() {
-    return [{ tag: 'formula' }];
+    return [{ tag: 'formula' },];
   },
   // 配合parseHTML方法使用，命中的都会进去这里来
   addNodeView() {
