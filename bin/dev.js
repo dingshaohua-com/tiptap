@@ -5,7 +5,7 @@ import { checkbox } from "@inquirer/prompts";
 
 // 获取都有哪些项目
 const ignoreDir = [".DS_Store", "extension"];
-const appsDir = path.resolve("src", "apps");
+const appsDir = path.resolve("apps");
 const apps = fs
   .readdirSync(appsDir, { withFileTypes: true })
   .filter((it) => !ignoreDir.includes(it.name));

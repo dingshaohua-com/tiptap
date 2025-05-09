@@ -1,0 +1,15 @@
+.app {
+  height: 100%;
+  padding: 0 10px;
+  max-width: 960px;
+  margin: auto;
+  margin-top: 20px;
+  display: flow-root; // 此属性将没有任何副作用而形成bfc，防止子元素的margin影响父
+
+  .actionBtn {
+    text-align: center;
+
+    margin-top: 20px;
+    display: flex;
+  }
+}
