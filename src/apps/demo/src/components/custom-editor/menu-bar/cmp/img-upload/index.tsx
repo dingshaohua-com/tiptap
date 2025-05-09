@@ -1,7 +1,7 @@
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { RiFileImageLine } from '@remixicon/react';
 import { useState } from 'react';
-import { useFileUploader } from '@/hooks/use-file-uploader';
+import { useFileUploader } from '../../../hooks/use-file-uploader';
 
 const DesCmp = ({ editor, setOpen }) => {
   const { inputRef, file, uploading, error, selectFile, onFileChange } =

@@ -1,6 +1,6 @@
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { useState } from 'react';
-import ohmImg from '@/assets/ohm.svg';
+import ohmImg from '@/assets/editor/ohm.svg';
 
 const DesCmp = ({ editor, setOpen }) => {
  

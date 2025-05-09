@@ -56,7 +56,7 @@ export const descendants = (editor) => {
   }
 };
 
-export const Question = Node.create({
+export const Question:any = Node.create({
   name: "question",
   group: "inline",
   inline: true,

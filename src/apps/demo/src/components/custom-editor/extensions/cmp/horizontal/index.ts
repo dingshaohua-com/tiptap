@@ -1,46 +1,44 @@
-import { Node, mergeAttributes } from "@tiptap/core";
+import { Node, mergeAttributes } from '@tiptap/core';
 
 export const Horizontal = Node.create({
-  name: "horizontalRule",
-  group: "block",
+  name: 'horizontal',
+  group: 'block',
 
   addAttributes() {
     return {
-      'class': {
-        default: "solid",
+      class: {
+        default: 'solid',
       },
     };
   },
 
   parseHTML() {
-    return [{ tag: "hr" }];
+    return [{ tag: 'hr' }];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["hr", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
+    return ['hr', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
 
   addCommands() {
     return {
       insertHr:
-        (arg = "solid") =>
+        (arg = 'solid') =>
         (editor) => {
           const myNode = {
             type: this.name,
             attrs: {
-              'class': arg,
+              class: arg,
             },
           };
 
           const { from, to } = editor.state.selection;
-          console.log(111, myNode);
           return editor
             .chain()
-            .insertContentAt(to + 1, myNode)
-            // .setTextSelection(to + 1)
-            .insertContentAt(to + 2, {
-              type: "paragraph",
-            })
+            .insertContent([
+              myNode,
+              { type: 'paragraph' }, // 可选：添加段落用于继续编辑
+            ])
             .run();
         },
     };

@@ -1,6 +1,6 @@
 import { Button, Tooltip } from 'antd';
-import Solid from '@/assets/solid.svg';
-import Dashed from '@/assets/dashed.svg';
+import Solid from '@/assets/editor/solid.svg';
+import Dashed from '@/assets/editor/dashed.svg';
 
 const buttonGroup: Array<any> = [
   {
