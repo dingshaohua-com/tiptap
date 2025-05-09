@@ -1,0 +1,16 @@
+.question{
+    display: inline-block;
+    box-sizing: border-box;
+    border-bottom:black solid 1px ;
+    margin:0 2px;
+    padding: 0 2px 2px 2px;
+    div{
+       text-align: center;
+        font-size: 12px;
+        height: 14px;
+        width: 14px;
+        border: #60a4ff solid 1px;
+        background-color: #94c0ff;
+        color: white;
+    }
+}

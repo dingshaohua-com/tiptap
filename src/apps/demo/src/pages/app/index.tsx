@@ -27,7 +27,7 @@ const App = () => {
         defaultAlignment: 'left',
       }),
     ],
-    content: '<p>Hello  <math-field>\\frac{x}{y}</math-field> World <span data-type="question" style="display:inline-block;width:20px;height:20px;margin:0 4px;border-bottom:1px solid black;"></span>!</p> ',
+    content: '<p>Hello  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>!</p> ',
   });
 
   const onSave = () => {
