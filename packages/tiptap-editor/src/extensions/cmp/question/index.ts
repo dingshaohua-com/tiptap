@@ -110,11 +110,6 @@ export const Question:any = Node.create({
   addProseMirrorPlugins() {
     return [IndexUpdatePlugin("question")];
   },
-
-  // 确保被视为 void 节点
-  atom: true,
-  selectable: false,
-  draggable: false,
 });
 
 
