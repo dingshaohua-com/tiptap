@@ -1,2 +1,3 @@
 packages:   # 配置 pnpm 工作区路径
-  - 'apps/*' # 多个app
+  - 'apps/*' # app
+  - 'packages/*' # 其它

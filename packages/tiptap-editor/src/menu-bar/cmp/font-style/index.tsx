@@ -13,7 +13,10 @@ const buttonGroup: Array<any> = [
     value: 'bold',
     label: 'Bold',
     icon: RiBold,
-    action: (editor) => editor.chain().focus().toggleBold().run(),
+    action: (editor) => {
+      editor.chain().focus().toggleBold().run();
+      // editor.commands.focus();
+    },
     isActive: (editor) => editor.isActive('bold'),
     canExecute: (editor) =>
       editor.can().chain().focus().toggleBold().run() &&
