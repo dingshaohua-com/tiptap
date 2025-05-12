@@ -5,8 +5,8 @@ import { handleOldData } from './utils';
 import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
-import TextAlign from '@tiptap/extension-text-align';
 import TableCell from '@tiptap/extension-table-cell';
+import TextAlign from '@tiptap/extension-text-align';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
@@ -40,7 +40,7 @@ const CustomEditor = (props, ref) => {
       TableRow,
       TableHeader,
       TableCell,
-      Span
+      Span,
     ],
     content: handleOldData(props.content) || '',
     onCreate({ editor }) {
@@ -76,7 +76,12 @@ const CustomEditor = (props, ref) => {
 
   useEffect(() => {
     editor.setEditable(Boolean(props.editable));
-
+    if (props.editable) {
+      // 聚焦到最后一位字符
+      editor.commands.focus(); // 先聚焦编辑器
+      const docSize = editor.state.doc.content.size;
+      editor.commands.setTextSelection(docSize); // 将光标移到文档的最后
+    }
     // 获取所有 <math-field> 元素，设置为只读
     const mathFields = document.querySelectorAll('math-field');
     mathFields.forEach((field: any) => {
