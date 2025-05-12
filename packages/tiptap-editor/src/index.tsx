@@ -89,6 +89,11 @@ const CustomEditor = (props, ref) => {
     });
   }, [props.editable]);
 
+
+  useEffect(() => {
+    editor.commands.setContent(props.content);
+  }, [props.content]);
+
   return (
     <div className={cs(['myEdit', { editable: props.editable }])}>
       {props.editable && <MenuBar editor={editor} handlers={handlers} />}

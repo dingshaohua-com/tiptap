@@ -21,6 +21,7 @@ const initContent = `
     </table>
 `;
 const App = () => {
+  const [content, setContent] = useState('哈哈');
   const editorRef = useRef(null);
 
   // 手动获取结果
@@ -39,6 +40,9 @@ const App = () => {
       //   console.log(html);
       //   console.log(json);
       // });
+      setTimeout(() => {
+        setContent(initContent);
+      }, 1000);
     }
   }, [editorRef]);
 
@@ -51,7 +55,7 @@ const App = () => {
       <div className="my-edit">
         <div className="title">下方是一个实例编辑器，现在 {editable ? <span onClick={() => setEditable(false)}>退出编辑</span> : <span onClick={() => setEditable(true)}>开始编辑</span>}</div>
         <Divider />
-        <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={initContent} />
+        <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={content} />
       </div>
     </div>
   );
