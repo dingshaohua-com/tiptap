@@ -43,6 +43,7 @@ const Heading = ({ editor }) => {
   const activeLeave = getActiveLeave();
   return (
     <Select
+      getPopupContainer={trigger => trigger.parentNode}
       value={activeLeave || 0}
       style={{ width: 88 }}
       options={options}
