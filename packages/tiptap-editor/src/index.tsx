@@ -1,4 +1,5 @@
 import './style.scss';
+import cs from 'classnames';
 import MenuBar from './menu-bar';
 import { handleOldData } from './utils';
 import Table from '@tiptap/extension-table';
@@ -8,8 +9,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import TableCell from '@tiptap/extension-table-cell';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
-import { Dot, Horizontal, Question, Formula, Img } from './extensions';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { Dot, Horizontal, Question, Formula, Img, Span } from './extensions';
 
 interface CustomEditorProps {
   content?: string;
@@ -39,6 +40,7 @@ const CustomEditor = (props, ref) => {
       TableRow,
       TableHeader,
       TableCell,
+      Span
     ],
     content: handleOldData(props.content) || '',
     onCreate({ editor }) {
@@ -50,7 +52,7 @@ const CustomEditor = (props, ref) => {
       props?.onUpdate && props.onUpdate({ html, json });
       props?.onChange && props.onChange(html);
     },
-    editable: props.editable,
+    editable: Boolean(props.editable),
   });
 
   useImperativeHandle(ref, () => {
@@ -73,14 +75,19 @@ const CustomEditor = (props, ref) => {
   delete arrt.editable;
 
   useEffect(() => {
-    editor.setEditable(props.editable);
+    editor.setEditable(Boolean(props.editable));
+
+    // 获取所有 <math-field> 元素，设置为只读
+    const mathFields = document.querySelectorAll('math-field');
+    mathFields.forEach((field: any) => {
+      field.readonly = true;
+    });
   }, [props.editable]);
 
-
   return (
-    <div className="myEdit">
+    <div className={cs(['myEdit', { editable: props.editable }])}>
       {props.editable && <MenuBar editor={editor} handlers={handlers} />}
-      <EditorContent editor={editor} className="editorContent" {...arrt}/>
+      <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>
   );
 };

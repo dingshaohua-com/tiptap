@@ -1,10 +1,10 @@
 import './style.scss';
+import { Divider } from 'antd';
 import TiptapEditor from '@repo/tiptap-editor';
-// import CustomEditor from '@/components/custom-editor';
 import { useEffect, useRef, useState } from 'react';
 
 const initContent = `
-<p>Hello  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>!</p> 
+<p>Hell<span style="color:red">o</span>  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>!</p> 
     <table>
       <thead>
         <tr>
@@ -50,6 +50,7 @@ const App = () => {
     <div className="app">
       <div className="my-edit">
         <div className="title">下方是一个实例编辑器，现在 {editable ? <span onClick={() => setEditable(false)}>退出编辑</span> : <span onClick={() => setEditable(true)}>开始编辑</span>}</div>
+        <Divider />
         <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={initContent} />
       </div>
     </div>
