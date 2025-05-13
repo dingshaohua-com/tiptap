@@ -119,9 +119,14 @@ math-field[readonly] {
         border-top: 2px solid rgba(#0d0d0d, 0.1);
         margin: 2rem 0;
       }
-      // p {
-      //   line-height: 0.2;
-      // }
+
+      p.is-editor-empty:first-child::before {
+        color: #adb5bd;
+        content: attr(data-placeholder);
+        float: left;
+        height: 0;
+        pointer-events: none;
+      }
     }
   }
 }

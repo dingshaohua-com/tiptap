@@ -11,10 +11,12 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { Dot, Horizontal, Question, Formula, Img, Span } from './extensions';
+import Placeholder from '@tiptap/extension-placeholder';
 
 interface CustomEditorProps {
   content?: string;
   onSave?: (content: string) => void;
+  placeholder?: string;
   [str: string]: any;
 }
 
@@ -41,6 +43,9 @@ const CustomEditor = (props, ref) => {
       TableHeader,
       TableCell,
       Span,
+      Placeholder.configure({
+        placeholder: props.placeholder || '请输入 …',
+      }),
     ],
     content: handleOldData(props.content) || '',
     onCreate({ editor }) {
@@ -97,7 +102,7 @@ const CustomEditor = (props, ref) => {
   return (
     <div className={cs(['myEdit', { editable: props.editable }])}>
       {props.editable && <MenuBar editor={editor} handlers={handlers} />}
-      <EditorContent editor={editor} className="editorContent" {...arrt} />
+      <EditorContent editor={editor} className="editorContent" {...arrt}/>
     </div>
   );
 };
