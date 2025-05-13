@@ -21,7 +21,7 @@ const initContent = `
     </table>
 `;
 const App = () => {
-  const [content, setContent] = useState(initContent);
+  const [content, setContent] = useState('');
   const editorRef = useRef(null);
 
   // 手动获取结果
@@ -44,7 +44,7 @@ const App = () => {
   }, [editorRef]);
 
   const onChange = (content: string) => {
-    // console.log(content);
+    console.log(content);
   };
   const onDoubleClick = (e) => {
     setEditable(true);

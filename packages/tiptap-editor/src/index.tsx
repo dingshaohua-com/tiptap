@@ -6,8 +6,8 @@ import { handleOldData } from './utils';
 import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
-import TableCell from '@tiptap/extension-table-cell';
 import TextAlign from '@tiptap/extension-text-align';
+import TableCell from '@tiptap/extension-table-cell';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
@@ -54,8 +54,16 @@ const CustomEditor = (props, ref) => {
       Question.descendants(editor);
     },
     onUpdate({ editor }) {
-      const html = editor.getHTML();
+      let html = editor.getHTML();
       const json = editor.getJSON();
+      // 清除空段落
+      if (json.content.length === 1) {
+        const firstNode = json.content[0];
+        if (firstNode.type === 'paragraph' && !firstNode.content) {
+          delete json.content;
+          html = '';
+        }
+      }
       props?.onUpdate && props.onUpdate({ html, json });
       props?.onChange && props.onChange(html);
     },
@@ -80,6 +88,7 @@ const CustomEditor = (props, ref) => {
   delete arrt.onUpdate;
   delete arrt.onChange;
   delete arrt.editable;
+  delete arrt.onClickEditor;
 
   useEffect(() => {
     editor.setEditable(Boolean(props.editable));
@@ -106,16 +115,15 @@ const CustomEditor = (props, ref) => {
       const target = event.target as HTMLElement;
       // 判断点击的元素是否在编辑器内
       if (target.closest('#' + uniqueId)) {
-        console.log('点击发生在编辑器内');
+        // console.log('点击发生在编辑器内');
         props.onClickEditor && props.onClickEditor(true);
       } else {
-        console.log('点击发生在编辑器外');
+        // console.log('点击发生在编辑器外');
         props.onClickEditor && props.onClickEditor(false);
       }
     });
   };
 
-  
   useEffect(() => {
     onClickBodyListener();
   }, []);

@@ -9,8 +9,16 @@ const buttonGroup: Array<any> = [
     style: { width: 20 },
     action: (editor, handlers) => {
       if(!handlers.onSave){return false};
-      const html = editor.getHTML();
+      let html = editor.getHTML();
       const json = editor.getJSON();
+      // 清除空段落
+      if(json.content.length === 1 ){
+        const firstNode = json.content[0];
+        if(firstNode.type === 'paragraph' && !firstNode.content){
+          delete json.content;
+          html = '';
+        }
+      }
       handlers.onSave({html, json});
     },
     tooltip: '保存',
