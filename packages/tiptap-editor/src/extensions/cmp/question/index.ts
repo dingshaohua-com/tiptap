@@ -93,7 +93,7 @@ export const Question:any = Node.create({
   addNodeView() {
     return ReactNodeViewRenderer(NodeView);
   },
-
+// @ts-ignore
   addCommands() {
     return {
       insertQs:

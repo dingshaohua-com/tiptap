@@ -19,7 +19,7 @@ export const Horizontal = Node.create({
   renderHTML({ HTMLAttributes }) {
     return ['hr', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
-
+// @ts-ignore
   addCommands() {
     return {
       insertHr:

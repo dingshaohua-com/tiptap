@@ -9,6 +9,7 @@ export const Dot = Mark.create({
       },
     };
   },
+  // @ts-ignore
   parseHTML() {
     return [
       {
@@ -26,7 +27,7 @@ export const Dot = Mark.create({
       0,
     ];
   },
-
+ // @ts-ignore
   addCommands() {
     return {
       setDot:
