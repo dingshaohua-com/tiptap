@@ -44,7 +44,7 @@ const App = () => {
   }, [editorRef]);
 
   const onChange = (content: string) => {
-    console.log(content);
+    setContent(content);
   };
   const [editable, setEditable] = useState(false);
   const onDoubleClick = (e) => {

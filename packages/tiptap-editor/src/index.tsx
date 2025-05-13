@@ -6,8 +6,9 @@ import { handleOldData } from './utils';
 import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
-import TableCell from '@tiptap/extension-table-cell';
+import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import TableCell from '@tiptap/extension-table-cell';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
@@ -32,6 +33,7 @@ const CustomEditor = (props, ref) => {
   const editor: any = useEditor({
     extensions: [
       StarterKit,
+      Underline,
       Img.configure({
         inline: true,
       }),
@@ -112,7 +114,10 @@ const CustomEditor = (props, ref) => {
   }, [props.editable]);
 
   useEffect(() => {
-    editor.commands.setContent(handleOldData(props.content));
+    // 如果不一样，再覆盖，否则插入的横线有问题，未知原因
+    if (props.content !== editor.getHTML()) {
+      editor.commands.setContent(handleOldData(props.content));
+    }
   }, [props.content]);
 
   const [uniqueId, setUniqueId] = useState('tiptap_' + uuidv4().replace(/-/g, ''));

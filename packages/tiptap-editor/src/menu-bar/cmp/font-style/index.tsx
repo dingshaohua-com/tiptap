@@ -52,7 +52,7 @@ const buttonGroup: Array<any> = [
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive('strike'),
     canExecute: (editor) =>
-      editor.can().chain().focus().toggleUnderline().run() &&
+      editor.can().chain().focus().toggleStrike().run() &&
       !editor.isActive('codeBlock'),
     tooltip: '删除线',
   },
