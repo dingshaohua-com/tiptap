@@ -122,10 +122,10 @@ const CustomEditor = (props, ref) => {
       // 判断点击的元素是否在编辑器内
       if (target.closest('#' + uniqueId)) {
         // console.log('点击发生在编辑器内');
-        props.onClickEditor && props.onClickEditor(true, editableRef.current);
+        props.onClickEditor && props.onClickEditor(true, editableRef.current, event);
       } else {
         // console.log('点击发生在编辑器外');
-        props.onClickEditor && props.onClickEditor(false, editableRef.current);
+        props.onClickEditor && props.onClickEditor(false, editableRef.current, event);
       }
     });
   };
@@ -136,7 +136,6 @@ const CustomEditor = (props, ref) => {
 
   return (
     <div className={cs(['tiptap-editor', { editable: props.editable }])} id={uniqueId}>
-      {Boolean(props.editable).toString()}
       {props.editable && <MenuBar editor={editor} handlers={handlers} />}
       <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>
