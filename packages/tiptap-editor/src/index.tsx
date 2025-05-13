@@ -96,7 +96,7 @@ const CustomEditor = (props, ref) => {
 
 
   useEffect(() => {
-    editor.commands.setContent(props.content);
+    editor.commands.setContent(handleOldData(props.content));
   }, [props.content]);
 
   return (

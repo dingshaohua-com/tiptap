@@ -1,49 +1,5 @@
 /* Basic editor styles */
 
-//  自定义样式
-.solid {
-  border-top: 1px solid black !important;
-}
-.dashed {
-  border-top: 1px dashed black !important;
-}
-
-.dot {
-  text-emphasis: dot;
-  text-emphasis-position: under left;
-}
-
-/* 可以放在你的全局 CSS 或组件样式文件中 */
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 2px 8px;
-}
-
-th {
-  background-color: #f2f2f2;
-  text-align: left;
-}
-
-math-field[readonly] {
-  border: none; /* 去掉边框 */
-  outline: none; /* 去掉聚焦时的轮廓 */
-}
-
-@media not (pointer: coarse) {
-  math-field::part(virtual-keyboard-toggle) {
-    display: none;
-  }
-  math-field::part(menu-toggle) {
-    display: none;
-  }
-}
-
 .editable {
   border-radius: 10px;
   border: rgba($color: #000000, $alpha: 0.1) solid 1px;
@@ -126,6 +82,50 @@ math-field[readonly] {
         float: left;
         height: 0;
         pointer-events: none;
+      }
+
+      //  自定义样式
+      .solid {
+        border-top: 1px solid black !important;
+      }
+      .dashed {
+        border-top: 1px dashed black !important;
+      }
+
+      .dot {
+        text-emphasis: dot;
+        text-emphasis-position: under left;
+      }
+
+      /* 可以放在你的全局 CSS 或组件样式文件中 */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 2px 8px;
+      }
+
+      th {
+        background-color: #f2f2f2;
+        text-align: left;
+      }
+
+      math-field[readonly] {
+        border: none; /* 去掉边框 */
+        outline: none; /* 去掉聚焦时的轮廓 */
+      }
+
+      @media not (pointer: coarse) {
+        math-field::part(virtual-keyboard-toggle) {
+          display: none;
+        }
+        math-field::part(menu-toggle) {
+          display: none;
+        }
       }
     }
   }
