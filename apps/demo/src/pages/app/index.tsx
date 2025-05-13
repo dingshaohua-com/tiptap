@@ -51,7 +51,7 @@ const App = () => {
   };
 
   const onClickEditor = (result) => {
-    if(!result){
+    if(!result && editable){
       setEditable(result);
     }
   };
@@ -61,7 +61,7 @@ const App = () => {
     <div className="app">
       <div className="my-edit">
         <div className="title">下方是一个实例编辑器，现在 {editable ? <span onClick={() => setEditable(false)}>退出编辑</span> : <span onClick={() => setEditable(true)}>开始编辑</span>}</div>
-        <div className="title">(或着双击编辑器也能快速进入编辑状态)</div>
+        <div className="title">(or 双击编辑器也能快速进入编辑状态)</div>
         <Divider />
         <div className="editor-container" onDoubleClick={onDoubleClick}>
           <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容" onClickEditor={onClickEditor}/>
