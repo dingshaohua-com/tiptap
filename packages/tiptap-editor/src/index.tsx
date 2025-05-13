@@ -6,13 +6,13 @@ import { handleOldData } from './utils';
 import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
-import TextAlign from '@tiptap/extension-text-align';
 import TableCell from '@tiptap/extension-table-cell';
+import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Dot, Horizontal, Question, Formula, Img, Span } from './extensions';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 interface CustomEditorProps {
   content?: string;
@@ -23,6 +23,12 @@ interface CustomEditorProps {
 }
 
 const CustomEditor = (props, ref) => {
+  // 更新 `editableRef` 的值，以确保它总是保存最新的 `props.editable`
+  const editableRef = useRef(Boolean(props.editable));
+  useEffect(() => {
+    editableRef.current = Boolean(props.editable);
+  }, [props.editable]);
+
   const editor: any = useEditor({
     extensions: [
       StarterKit,
@@ -111,15 +117,15 @@ const CustomEditor = (props, ref) => {
 
   const [uniqueId, setUniqueId] = useState('tiptap_' + uuidv4().replace(/-/g, ''));
   const onClickBodyListener = () => {
-    document.body.addEventListener('click', function (event) {
+    window.addEventListener('click', function (event) {
       const target = event.target as HTMLElement;
       // 判断点击的元素是否在编辑器内
       if (target.closest('#' + uniqueId)) {
         // console.log('点击发生在编辑器内');
-        props.onClickEditor && props.onClickEditor(true);
+        props.onClickEditor && props.onClickEditor(true, editableRef.current);
       } else {
         // console.log('点击发生在编辑器外');
-        props.onClickEditor && props.onClickEditor(false);
+        props.onClickEditor && props.onClickEditor(false, editableRef.current);
       }
     });
   };
@@ -130,6 +136,7 @@ const CustomEditor = (props, ref) => {
 
   return (
     <div className={cs(['tiptap-editor', { editable: props.editable }])} id={uniqueId}>
+      {Boolean(props.editable).toString()}
       {props.editable && <MenuBar editor={editor} handlers={handlers} />}
       <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>

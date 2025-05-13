@@ -46,17 +46,18 @@ const App = () => {
   const onChange = (content: string) => {
     console.log(content);
   };
+  const [editable, setEditable] = useState(false);
   const onDoubleClick = (e) => {
     setEditable(true);
   };
 
-  const onClickEditor = (result) => {
-    if(!result && editable){
-      setEditable(result);
+  const onClickEditor = (isClickEditor, isEditable) => {
+    if(!isClickEditor && isEditable){
+      setEditable(isClickEditor);
     }
   };
 
-  const [editable, setEditable] = useState(false);
+
   return (
     <div className="app">
       <div className="my-edit">
