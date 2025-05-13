@@ -29,7 +29,8 @@
     "axios": "^1.9.0",
     "classnames": "^2.5.1",
     "mathlive": "^0.104.0",
-    "remixicon": "^4.6.0"
+    "remixicon": "^4.6.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.3"

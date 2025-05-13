@@ -46,13 +46,26 @@ const App = () => {
   const onChange = (content: string) => {
     // console.log(content);
   };
+  const onDoubleClick = (e) => {
+    setEditable(true);
+  };
+
+  const onClickEditor = (result) => {
+    if(!result){
+      setEditable(result);
+    }
+   
+  };
+
   const [editable, setEditable] = useState(false);
   return (
     <div className="app">
       <div className="my-edit">
         <div className="title">下方是一个实例编辑器，现在 {editable ? <span onClick={() => setEditable(false)}>退出编辑</span> : <span onClick={() => setEditable(true)}>开始编辑</span>}</div>
         <Divider />
-        <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容"/>
+        <div className="editor-container" onDoubleClick={onDoubleClick}>
+          <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容" onClickEditor={onClickEditor}/>
+        </div>
       </div>
     </div>
   );

@@ -1,21 +1,23 @@
 import './style.scss';
 import cs from 'classnames';
 import MenuBar from './menu-bar';
+import { v4 as uuidv4 } from 'uuid';
 import { handleOldData } from './utils';
 import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
 import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
-import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Dot, Horizontal, Question, Formula, Img, Span } from './extensions';
-import Placeholder from '@tiptap/extension-placeholder';
 
 interface CustomEditorProps {
   content?: string;
   onSave?: (content: string) => void;
+  onClickEditor?: (result: boolean) => void;
   placeholder?: string;
   [str: string]: any;
 }
@@ -94,15 +96,34 @@ const CustomEditor = (props, ref) => {
     });
   }, [props.editable]);
 
-
   useEffect(() => {
     editor.commands.setContent(handleOldData(props.content));
   }, [props.content]);
 
+  const [uniqueId, setUniqueId] = useState('tiptap_' + uuidv4().replace(/-/g, ''));
+  const onClickBodyListener = () => {
+    document.body.addEventListener('click', function (event) {
+      const target = event.target as HTMLElement;
+      // 判断点击的元素是否在编辑器内
+      if (target.closest('#' + uniqueId)) {
+        console.log('点击发生在编辑器内');
+        props.onClickEditor && props.onClickEditor(true);
+      } else {
+        console.log('点击发生在编辑器外');
+        props.onClickEditor && props.onClickEditor(false);
+      }
+    });
+  };
+
+  
+  useEffect(() => {
+    onClickBodyListener();
+  }, []);
+
   return (
-    <div className={cs(['myEdit', { editable: props.editable }])}>
+    <div className={cs(['tiptap-editor', { editable: props.editable }])} id={uniqueId}>
       {props.editable && <MenuBar editor={editor} handlers={handlers} />}
-      <EditorContent editor={editor} className="editorContent" {...arrt}/>
+      <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>
   );
 };

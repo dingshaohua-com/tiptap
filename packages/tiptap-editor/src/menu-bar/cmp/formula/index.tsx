@@ -71,7 +71,7 @@ const Shape = ({ editor }) => {
 
   return (
     <div className="formula">
-      <Popover content={description} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
+      <Popover content={description} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange} getPopupContainer={trigger => trigger.parentNode as HTMLElement}>
         <Button onClick={show} color="default" variant="filled" autoInsertSpace>
           <RiFormula />
         </Button>
