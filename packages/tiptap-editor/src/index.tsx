@@ -22,6 +22,7 @@ interface CustomEditorProps {
   onClickEditor?: (result: boolean) => void;
   placeholder?: string;
   [str: string]: any;
+  config?: any
 }
 
 const CustomEditor = (props, ref) => {
@@ -73,6 +74,8 @@ const CustomEditor = (props, ref) => {
           html = '';
         }
       }
+      console.log(888999);
+      
       props?.onUpdate && props.onUpdate({ html, json });
       props?.onChange && props.onChange(html);
     },
@@ -110,28 +113,6 @@ const CustomEditor = (props, ref) => {
       const docSize = editor.state.doc.content.size;
       editor.commands.setTextSelection(docSize); // 将光标移到文档的最后
     }
-    // // 获取所有 <math-field> 元素，设置为只读
-    // const mathFields = document.querySelectorAll('math-field');
-    // mathFields.forEach((field: any) => {
-    //   field.readonly = true;
-    // });
-
-    // if(Boolean(props.editable)){
-    //   const mathFields = document.querySelectorAll('math-field');
-    //   // mathFields.forEach((field: any) => {
-    //   //   field.readonly = true;
-    //   //   // field.setAttribute('caneditable', true);
-    //   // });
-    //   mathFields.forEach((field: any) => {
-    //     field.addEventListener('click', (e) => {
-    //       e.stopPropagation();
-    //       const latex = handleOldData(e.target.innerHTML)
-    //       console.log(latex);
-          
-    //     });
-    //   });
-    // }
-    
   }, [props.editable]);
 
   useEffect(() => {
@@ -164,9 +145,20 @@ const CustomEditor = (props, ref) => {
     onClickBodyListener();
   }, []);
 
+    // 给一个默认的uploadFileConfig的handler
+    let uploadFileConfig = props.uploadFileConfig;
+    if (!uploadFileConfig) {
+      uploadFileConfig = {
+        transformBase64: true,
+        // handler: uploadQuestionAttachHelper,
+      };
+    } else if (!uploadFileConfig.handler) {
+      // uploadFileConfig.handler = uploadQuestionAttachHelper;
+    }
+
   return (
     <div className={cs(['tiptap-editor', { editable: props.editable }])} id={uniqueId}>
-      {props.editable && <MenuBar editor={editor} handlers={handlers} uploadFileConfig={props.uploadFileConfig}/>}
+      {props.editable && <MenuBar editor={editor} handlers={handlers} uploadFileConfig={uploadFileConfig}/>}
       <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>
   );
