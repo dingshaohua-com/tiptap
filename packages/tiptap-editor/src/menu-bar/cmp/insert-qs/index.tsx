@@ -30,7 +30,7 @@ const imgUpload = ({ editor }) => {
 
   return (
     <div className="fontStyle">
-      <Tooltip title="问题">
+      <Tooltip title="填空">
         {/* <Popover
           content={<DesCmp editor={editor} setOpen={setOpen}/>}
           title=""
@@ -45,7 +45,7 @@ const imgUpload = ({ editor }) => {
             variant="filled"
             autoInsertSpace
           >
-            <img src={ohmImg}/>
+            <img src={ohmImg} style={{ width: 18 }}/>
           </Button>
         {/* </Popover> */}
       </Tooltip>

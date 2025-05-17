@@ -3,10 +3,13 @@ export function autoPrefixImageHost(html: string, host = 'https://gil-test.oss-c
   return html.replace(/<img\s+[^>]*src=["'](?!https?:\/\/|data:)([^"']+)["']/g, (match, relativeSrc) => match.replace(relativeSrc, host + '/' + relativeSrc.replace(/^\/+/, '')));
 }
 
-// 将行内公式转换为math-field
 export function convertInlineLatexToMathField(html: string): string {
-  return html.replace(/\\\((.+?)\\\)/g, (_, content) => {
-    return `<math-field>${content}</math-field>`;
+  const latexRegex = /\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\$(?!\$)([\s\S]+?)\$/g;
+
+  return html.replace(latexRegex, (_, group1, group2, group3, group4) => {
+    // 哪个组匹配到就用哪个
+    const content = group1 || group2 || group3 || group4 || '';
+    return `<math-field>${content.trim()}</math-field>`;
   });
 }
 

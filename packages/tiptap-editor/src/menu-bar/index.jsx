@@ -10,7 +10,7 @@ import ImgUpload from './cmp/img-upload';
 import AlignStyle from './cmp/align-style';
 import InsertSome from './cmp/insert-some';
 
-const MenuBar = ({ editor, handlers }) => {
+const MenuBar = ({ editor, handlers, uploadFileConfig }) => {
   if (!editor) {
     return null;
   }
@@ -27,7 +27,7 @@ const MenuBar = ({ editor, handlers }) => {
       <Divider type="vertical" className="menuBarDivider" />
       {/* <Shape editor={editor} /> */}
       <Formula editor={editor} />
-      <ImgUpload editor={editor} />
+      <ImgUpload editor={editor} uploadFileConfig={uploadFileConfig} />
       <InsertQs editor={editor} />
       <Divider type="vertical" className="menuBarDivider" />
       <Action editor={editor} handlers={handlers} />

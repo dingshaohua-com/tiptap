@@ -2,13 +2,24 @@ import axios from 'axios';
 import { useRef, useState, useCallback } from 'react';
 
 interface UploadOptions {
-  url: string;
+  handler: (fileToUpload: File) => Promise<any>;
   fieldName?: string; // default 'file'
   headers?: Record<string, string>;
   onProgress?: (percent: number, file: File) => void;
   onSuccess?: (response: any, file: File) => void;
   onError?: (error: any, file: File) => void;
 }
+
+
+// const uploadHander = async (fileToUpload: File) => {
+//   const formData = new FormData();
+//   formData.append('file', fileToUpload);
+//   return await axios.post('http://localhost:3002/file/upload', formData, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     }
+//   });
+// }
 
 export function useFileUploader(options: UploadOptions) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -22,24 +33,10 @@ export function useFileUploader(options: UploadOptions) {
 
   const uploadFile = useCallback(
     async (fileToUpload: File) => {
-      const formData = new FormData();
-      formData.append(options.fieldName || 'file', fileToUpload);
-
       try {
         setUploading(true);
         setError(null);
-
-        const response = await axios.post(options.url, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            ...options.headers,
-          },
-          onUploadProgress: (e) => {
-            const percent = Math.round((e.loaded * 100) / (e.total || 1));
-            options.onProgress?.(percent, fileToUpload);
-          },
-        });
-
+        const response = await options.handler(fileToUpload);
         options.onSuccess?.(response.data, fileToUpload);
       } catch (err) {
         setError('上传失败');

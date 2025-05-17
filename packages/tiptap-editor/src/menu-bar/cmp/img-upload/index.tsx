@@ -3,20 +3,36 @@ import { RiFileImageLine } from '@remixicon/react';
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { useFileUploader } from '../../../hooks/use-file-uploader';
 
-const DesCmp = ({ editor, setOpen }) => {
+function fileToBase64(file): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+const DesCmp = ({ editor, setOpen, uploadFileConfig }) => {
   const { inputRef, file, uploading, error, selectFile, onFileChange } = useFileUploader({
     // url: 'http://localhost:3002/file/upload',
-    url: 'https://api.dingshaohua.com/file/upload',
-    onProgress: (percent, file) => {
-      console.log(`Uploading ${file.name}: ${percent}%`);
-    },
+    handler: uploadFileConfig.handler,
+    // onProgress: (percent, file) => {
+    //   console.log(`Uploading ${file.name}: ${percent}%`);
+    // },
     onSuccess: (res, file) => {
       setOpen(false);
-      const imgUrl = 'https://api.dingshaohua.com' + res.data;
-      console.log(`Uploadedsuccessfully`, imgUrl);
+
+      const imgUrl = (uploadFileConfig.imgHost || '') + res;
 
       // 调用内置的 @tiptap/extension-image
       editor.chain().focus().setImage({ src: imgUrl }).run();
+      if (uploadFileConfig.transformBase64) {
+        fileToBase64(file).then((base64) => {
+          uploadFileConfig.onSuccess && uploadFileConfig.onSuccess({ base64, file, url: imgUrl });
+        });
+      } else {
+        uploadFileConfig.onSuccess && uploadFileConfig.onSuccess({ file, url: imgUrl });
+      }
     },
     onError: (err, file) => {
       console.error(`Failed to upload ${file.name}`, err);
@@ -60,7 +76,7 @@ const DesCmp = ({ editor, setOpen }) => {
   );
 };
 
-const imgUpload = ({ editor }) => {
+const imgUpload = ({ editor, uploadFileConfig }) => {
   const [open, setOpen] = useState(false);
 
   const show = () => {
@@ -76,7 +92,7 @@ const imgUpload = ({ editor }) => {
   return (
     <div className="fontStyle">
       <Tooltip title="图片">
-        <Popover content={<DesCmp editor={editor} setOpen={setOpen} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange} getPopupContainer={trigger => trigger.parentNode as HTMLElement}>
+        <Popover content={<DesCmp editor={editor} setOpen={setOpen} uploadFileConfig={uploadFileConfig} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange} getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}>
           <Button onClick={show} color="default" variant="filled" autoInsertSpace>
             <RiFileImageLine />
           </Button>

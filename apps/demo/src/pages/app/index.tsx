@@ -2,9 +2,10 @@ import './style.scss';
 import { Divider } from 'antd';
 import TiptapEditor from '@repo/tiptap-editor';
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 
 const initContent = `
-<p>Hell<span style="color:red">o</span>  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>!</p> 
+<p>Hell<span style="color:red">o</span>  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>! 把集合 $\{x | x^2 - 4x + 3 = 0\}$ 用列举法表示，正确的是（ ）．</p> 
     <table>
       <thead>
         <tr>
@@ -45,6 +46,8 @@ const App = () => {
 
   const onChange = (content: string) => {
     setContent(content);
+    // console.log(content);
+    
   };
   const [editable, setEditable] = useState(false);
   const onDoubleClick = (e) => {
@@ -57,6 +60,29 @@ const App = () => {
       setEditable(false);
     }
   };
+
+  
+  const onUploadSuccess = (fileInfo: any) => {
+    console.log(fileInfo);
+  }
+
+  const uploadFileConfig = {
+    transformBase64: true,
+    imgHost: 'https://api.dingshaohua.com',
+    handler: async (fileToUpload: File) => {
+      const formData = new FormData();
+      formData.append('file', fileToUpload);
+      const res = await axios.post('https://api.dingshaohua.com/file/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      return res.data;
+    },
+    onSuccess: (fileInfo: any) => {
+      console.log(fileInfo);
+    }
+  }
 
   return (
     <div className="app">
@@ -76,7 +102,7 @@ const App = () => {
         <div className="title">(or 双击编辑器也能快速进入编辑状态)</div>
         <Divider />
         <div className="editor-container" onDoubleClick={onDoubleClick}>
-          <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容" onClickEditor={onClickEditor} />
+          <TiptapEditor ref={editorRef} onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容" onClickEditor={onClickEditor} uploadFileConfig={uploadFileConfig} />
         </div>
       </div>
     </div>

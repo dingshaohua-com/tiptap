@@ -7,13 +7,14 @@ import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
 import TableCell from '@tiptap/extension-table-cell';
+import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
 import { Dot, Horizontal, Question, Formula, Img, Span } from './extensions';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+
 
 interface CustomEditorProps {
   content?: string;
@@ -84,10 +85,12 @@ const CustomEditor = (props, ref) => {
     };
   });
 
+
+ 
   const handlers = {
     onSave: props.onSave,
   };
-
+  
   // 透传过来的有些方法， tiptap 不需要
   const arrt = {
     ...props,
@@ -97,6 +100,7 @@ const CustomEditor = (props, ref) => {
   delete arrt.onChange;
   delete arrt.editable;
   delete arrt.onClickEditor;
+  delete arrt.uploadFileConfig;
 
   useEffect(() => {
     editor.setEditable(Boolean(props.editable));
@@ -106,11 +110,28 @@ const CustomEditor = (props, ref) => {
       const docSize = editor.state.doc.content.size;
       editor.commands.setTextSelection(docSize); // 将光标移到文档的最后
     }
-    // 获取所有 <math-field> 元素，设置为只读
-    const mathFields = document.querySelectorAll('math-field');
-    mathFields.forEach((field: any) => {
-      field.readonly = true;
-    });
+    // // 获取所有 <math-field> 元素，设置为只读
+    // const mathFields = document.querySelectorAll('math-field');
+    // mathFields.forEach((field: any) => {
+    //   field.readonly = true;
+    // });
+
+    // if(Boolean(props.editable)){
+    //   const mathFields = document.querySelectorAll('math-field');
+    //   // mathFields.forEach((field: any) => {
+    //   //   field.readonly = true;
+    //   //   // field.setAttribute('caneditable', true);
+    //   // });
+    //   mathFields.forEach((field: any) => {
+    //     field.addEventListener('click', (e) => {
+    //       e.stopPropagation();
+    //       const latex = handleOldData(e.target.innerHTML)
+    //       console.log(latex);
+          
+    //     });
+    //   });
+    // }
+    
   }, [props.editable]);
 
   useEffect(() => {
@@ -118,6 +139,10 @@ const CustomEditor = (props, ref) => {
     if (props.content !== editor.getHTML()) {
       editor.commands.setContent(handleOldData(props.content));
     }
+    const mathFields = document.querySelectorAll('math-field');
+    mathFields.forEach((field: any) => {
+      field.readonly = true;
+    });
   }, [props.content]);
 
   const [uniqueId, setUniqueId] = useState('tiptap_' + uuidv4().replace(/-/g, ''));
@@ -141,7 +166,7 @@ const CustomEditor = (props, ref) => {
 
   return (
     <div className={cs(['tiptap-editor', { editable: props.editable }])} id={uniqueId}>
-      {props.editable && <MenuBar editor={editor} handlers={handlers} />}
+      {props.editable && <MenuBar editor={editor} handlers={handlers} uploadFileConfig={props.uploadFileConfig}/>}
       <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>
   );
