@@ -2,52 +2,26 @@ import { Button, Tooltip, Popover, Input } from 'antd';
 import { useState } from 'react';
 import ohmImg from '../../../assets/ohm.svg';
 
-const DesCmp = ({ editor, setOpen }) => {
- 
-    
 
-  const [netImg, setNetImg] = useState();
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-      
-    </div>
-  );
-};
-
-const imgUpload = ({ editor }) => {
+const imgUpload = ({ editor, handlers }) => {
   const [open, setOpen] = useState(false);
 
-  const show = () => {
-    // setOpen(true);
+  const ok = () => {
     editor.chain().focus().insertQs().run();
-  };
-  const hide = () => {
-    setOpen(false);
-  };
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
+    handlers.onInsertQs && handlers.onInsertQs();
   };
 
   return (
     <div className="fontStyle">
-      <Tooltip title="填空">
-        {/* <Popover
-          content={<DesCmp editor={editor} setOpen={setOpen}/>}
-          title=""
-          open={open}
-          trigger="click"
-          destroyTooltipOnHide={true}
-          onOpenChange={handleOpenChange}
-        > */}
+      <Tooltip title="插入填空">
           <Button
-            onClick={show}
+            onClick={ok}
             color="default"
             variant="filled"
             autoInsertSpace
           >
             <img src={ohmImg} style={{ width: 18 }}/>
           </Button>
-        {/* </Popover> */}
       </Tooltip>
     </div>
   );

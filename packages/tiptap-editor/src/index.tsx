@@ -7,15 +7,14 @@ import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import Underline from '@tiptap/extension-underline';
-import TableCell from '@tiptap/extension-table-cell';
 import TextAlign from '@tiptap/extension-text-align';
+import TableCell from '@tiptap/extension-table-cell';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
 import { uploadQuestionAttachHelper } from '@/services/api/question';
 import { Dot, Formula, Horizontal, Img, Question, Span } from './extensions';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-
 
 interface CustomEditorProps {
   content?: string;
@@ -71,8 +70,6 @@ const CustomEditor = (props, ref) => {
       Question.descendants(editor);
     },
     onUpdate({ editor }) {
-     
-
       let html = editor.getHTML();
       const json = editor.getJSON();
       // 清除空段落
@@ -92,8 +89,9 @@ const CustomEditor = (props, ref) => {
         props?.onChange && props.onChange(html);
       }
     },
-    onBlur({ editor }) {
-      editor.setEditable(false);
+    onBlur(arg) {
+      arg.editor.setEditable(false);
+      props.onBlur && props.onBlur(arg);
     },
     editable: Boolean(props.editable),
   });
@@ -114,6 +112,7 @@ const CustomEditor = (props, ref) => {
 
   const handlers = {
     onSave: props.onSave,
+    onInsertQs: props.onInsertQs,
   };
 
   // 透传过来的有些方法， tiptap 不需要
@@ -126,6 +125,8 @@ const CustomEditor = (props, ref) => {
   delete arrt.editable;
   delete arrt.uploadFileConfig;
   delete arrt.isTextarea;
+  delete arrt.onInsertQs;
+  delete arrt.onBlur;
 
   useEffect(() => {
     // 如果不一样，再覆盖，否则插入的横线有问题，未知原因
@@ -150,7 +151,6 @@ const CustomEditor = (props, ref) => {
   }
 
   const onClick = () => {
-    
     if (!editor.isEditable) {
       editor.setEditable(true);
       editor.commands.focus(); // 先聚焦编辑器

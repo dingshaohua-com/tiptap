@@ -28,7 +28,7 @@ const MenuBar = ({ editor, handlers, uploadFileConfig }) => {
       {/* <Shape editor={editor} /> */}
       <Formula editor={editor} />
       <ImgUpload editor={editor} uploadFileConfig={uploadFileConfig} />
-      <InsertQs editor={editor} />
+      <InsertQs editor={editor} handlers={handlers}/>
       <Divider type="vertical" className="menuBarDivider" />
       <Action editor={editor} handlers={handlers} />
     </div>

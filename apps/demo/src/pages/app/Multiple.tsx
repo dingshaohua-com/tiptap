@@ -51,13 +51,17 @@ const Multiple = () => {
     }
   };
 
+  const onInsertQs = (content) => {
+    console.log(content);
+  };
+
   return (
     <div className="app">
         {questions.map((item, index) => (
           <div key={index}>
             <Divider />
             <div className="editor-container">
-              <TiptapEditor onSave={onSave} editable={false} content={item.content} placeholder="请输入内容" onClickEditor={onClickEditor.bind(null, index)} onChange={onChange}/>
+              <TiptapEditor onSave={onSave} editable={false} onInsertQs={onInsertQs} content={item.content} placeholder="请输入内容" onClickEditor={onClickEditor.bind(null, index)} onChange={onChange}/>
             </div>
           </div>
         ))}
