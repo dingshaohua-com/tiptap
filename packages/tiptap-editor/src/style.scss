@@ -173,7 +173,15 @@
   }
 }
 
-.ML__virtual-keyboard-toggle, .ML__menu-toggle {
+// math-filed 的软键盘隐藏
+math-field::part(virtual-keyboard-toggle), math-field::part(menu-toggle) {
   display: none !important;
+}
+
+// math-filed 的边框隐藏
+math-field{
+  outline: none !important;
+  // border: none !important;
+  border: 1px solid rgba($color: #000000, $alpha: 0.08);
 }
 

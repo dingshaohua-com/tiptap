@@ -39,15 +39,15 @@ const Shape = ({ editor }) => {
     };
 
     useEffect(() => {
-      if(!open){
+      if (!open) {
         setPos(0);
         setMfPreviewVal('');
       }
-    },[open])
+    }, [open]);
 
     const [pos, setPos] = useState(0);
     useEffect(() => {
-      emitter.on('formula-click', ({content, pos}) => {
+      emitter.on('formula-click', ({ content, pos }) => {
         if (Boolean(editor.isEditable)) {
           setPos(pos);
           setMfPreviewVal(content);
@@ -80,11 +80,13 @@ const Shape = ({ editor }) => {
       <div>
         <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
         <div className="mf-preview">
+          <div className="mf-preview-title"> 预览：</div>
           <div className="mf">
             <math-field onInput={(evt) => setMfPreviewVal((evt.target as HTMLInputElement)?.value)}>{mfPreviewVal}</math-field>
           </div>
         </div>
         <div className="mf-preview-input">
+          <div className="mf-preview-input-title"> 源码：</div>
           <input type="text" value={mfPreviewVal} onChange={(evt) => setMfPreviewVal(evt.target.value)} />
         </div>
         <div className="mf-preview-input-btn">
