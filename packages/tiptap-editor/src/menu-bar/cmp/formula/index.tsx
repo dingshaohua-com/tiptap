@@ -34,6 +34,7 @@ const Shape = ({ editor }) => {
       } else {
         editor.commands.insertFormula(mfPreviewVal);
       }
+      // editor.commands.blur();
       hide();
     };
 

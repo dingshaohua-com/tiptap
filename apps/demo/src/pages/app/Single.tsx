@@ -39,11 +39,8 @@ const Single = () => {
     setEditable(true);
   };
 
-  const onClickEditor = (isClickEditor, isEditable, event) => {
-    const isEditableBtn = event?.target?.closest('.editable-btn');
-    if (!isClickEditor && isEditable && !isEditableBtn) {
-      setEditable(false);
-    }
+  const onClickEditor = (isClickEditor) => {
+    setEditable(isClickEditor);
   };
 
   return (

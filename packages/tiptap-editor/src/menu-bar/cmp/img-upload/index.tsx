@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { RiFileImageLine } from '@remixicon/react';
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { useFileUploader } from '../../../hooks/use-file-uploader';
@@ -93,17 +93,7 @@ const imgUpload = ({ editor, uploadFileConfig }) => {
   //   !uploadFileConfig.handler && console.error('既然开启了图片上传能力，请完善图片上传配置');
   // }, [uploadFileConfig]);
 
-  const Content = () => {
-    return (
-      <Tooltip title="图片">
-        <Popover content={<DesCmp editor={editor} setOpen={setOpen} uploadFileConfig={uploadFileConfig} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange} getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}>
-          <Button onClick={show} color="default" variant="filled" autoInsertSpace>
-            <RiFileImageLine />
-          </Button>
-        </Popover>
-      </Tooltip>
-    );
-  };
+
   return (
     <div className="fontStyle">
       {uploadFileConfig.handler ? (

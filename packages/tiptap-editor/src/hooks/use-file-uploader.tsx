@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useRef, useState, useCallback } from 'react';
 
 interface UploadOptions {
@@ -37,7 +36,7 @@ export function useFileUploader(options: UploadOptions) {
         setUploading(true);
         setError(null);
         const response = await options.handler(fileToUpload);
-        options.onSuccess?.(response.data, fileToUpload);
+        options.onSuccess?.(response, fileToUpload);
       } catch (err) {
         setError('上传失败');
         options.onError?.(err, fileToUpload);

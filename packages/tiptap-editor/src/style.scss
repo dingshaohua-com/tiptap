@@ -1,8 +1,8 @@
 /* Basic editor styles */
 
 .editable {
-  border-radius: 10px;
   border: rgba($color: #000000, $alpha: 0.1) solid 1px;
+  border-radius: 6px;
   .editorContent {
     padding: 4px 6px;
   }
@@ -10,16 +10,16 @@
 
 .tiptap-editor {
   .editorContent {
+    display: flex;
     flex: 1;
 
     overflow: auto;
-    display: flex;
 
     .ProseMirror {
-      outline: none;
+      width: 100%;
       // 一下三个属性 就是自适应剩余父元素的高度 将剩余的空间铺满
       height: 100%;
-      width: 100%;
+      outline: none;
 
       // padding: 10px;
       > * + * {
@@ -41,22 +41,22 @@
       }
 
       code {
-        background-color: rgba(#616161, 0.1);
         color: #616161;
+        background-color: rgba(#616161, 0.1);
       }
 
       pre {
-        background: #0d0d0d;
+        padding: 0.75rem 1rem;
         color: #fff;
         font-family: 'JetBrainsMono', monospace;
-        padding: 0.75rem 1rem;
+        background: #0d0d0d;
         border-radius: 0.5rem;
 
         code {
-          color: inherit;
           padding: 0;
-          background: none;
+          color: inherit;
           font-size: 0.8rem;
+          background: none;
         }
       }
 
@@ -71,16 +71,16 @@
       }
 
       hr {
+        margin: 2rem 0;
         border: none;
         border-top: 2px solid rgba(#0d0d0d, 0.1);
-        margin: 2rem 0;
       }
 
       p.is-editor-empty:first-child::before {
-        color: #adb5bd;
-        content: attr(data-placeholder);
         float: left;
         height: 0;
+        color: #adb5bd;
+        content: attr(data-placeholder);
         pointer-events: none;
       }
 
@@ -99,19 +99,19 @@
 
       /* 可以放在你的全局 CSS 或组件样式文件中 */
       table {
-        border-collapse: collapse;
         width: 100%;
+        border-collapse: collapse;
       }
 
       th,
       td {
-        border: 1px solid #ddd;
         padding: 2px 8px;
+        border: 1px solid #ddd;
       }
 
       th {
-        background-color: #f2f2f2;
         text-align: left;
+        background-color: #f2f2f2;
       }
 
       math-field[readonly] {
@@ -133,5 +133,42 @@
         }
       }
     }
+  }
+}
+
+.is-input {
+  width: 300px;
+  min-height: 32px;
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5715;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  &:hover {
+    border-color: #1890ff;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+.is-textarea {
+  min-height: 80px;
+  padding: 6px 11px;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5715;
+  white-space: pre-wrap;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  &:hover {
+    border-color: #1890ff;
   }
 }

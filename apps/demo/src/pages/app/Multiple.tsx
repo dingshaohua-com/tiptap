@@ -24,7 +24,6 @@ const initContent = `
 
 const questionsInit = [
   {
-    editable: false,
     content: initContent,
   },
   {
@@ -40,13 +39,9 @@ const Multiple = () => {
   };
 
   const onChange = (content: string) => {
-    console.log(content);
+    // console.log(content);
   };
 
-  const onDoubleClick = (index) => {
-    questions[index].editable = true;
-    setQuestions([...questions]);
-  };
 
   const onClickEditor = (index, isClickEditor, isEditable, event) => {
     const isEditableBtn = event?.target?.closest('.editable-btn');
@@ -58,17 +53,15 @@ const Multiple = () => {
 
   return (
     <div className="app">
-      <div className="my-edit">
         {questions.map((item, index) => (
           <div key={index}>
             <Divider />
-            <div className="editor-container" onDoubleClick={() => onDoubleClick(index)}>
-              <TiptapEditor onSave={onSave} editable={item.editable} content={item.content} placeholder="请输入内容" onClickEditor={onClickEditor.bind(null, index)} onChange={onChange}/>
+            <div className="editor-container">
+              <TiptapEditor onSave={onSave} editable={false} content={item.content} placeholder="请输入内容" onClickEditor={onClickEditor.bind(null, index)} onChange={onChange}/>
             </div>
           </div>
         ))}
       </div>
-    </div>
   );
 };
 

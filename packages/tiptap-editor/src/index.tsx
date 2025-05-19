@@ -10,28 +10,23 @@ import Underline from '@tiptap/extension-underline';
 import TableCell from '@tiptap/extension-table-cell';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
-import { Dot, Horizontal, Question, Formula, Img, Span } from './extensions';
+import { uploadQuestionAttachHelper } from '@/services/api/question';
+import { Dot, Formula, Horizontal, Img, Question, Span } from './extensions';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 
 interface CustomEditorProps {
   content?: string;
   onSave?: (content: string) => void;
-  onClickEditor?: (result: boolean) => void;
   placeholder?: string;
   [str: string]: any;
-  config?: any
 }
 
 const CustomEditor = (props, ref) => {
-  // 更新 `editableRef` 的值，以确保它总是保存最新的 `props.editable`
-  const editableRef = useRef(Boolean(props.editable));
-  useEffect(() => {
-    editableRef.current = Boolean(props.editable);
-  }, [props.editable]);
-
+  const [uniqueId] = useState('tiptap_' + uuidv4().replace(/-/g, ''));
+  const lastHTMLRef = useRef<string>('');
   const editor: any = useEditor({
     extensions: [
       StarterKit,
@@ -59,11 +54,25 @@ const CustomEditor = (props, ref) => {
         placeholder: props.placeholder || '请输入 …',
       }),
     ],
+    editorProps: {
+      attributes: { 'data-id': uniqueId },
+      handleDOMEvents: {
+        // 点击工具栏的时候阻止失焦
+        blur: (view, event) => {
+          const editorId = view.dom.getAttribute('data-id');
+          const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
+          if (relatedTarget?.closest('#' + editorId)) return true;
+          return false;
+        },
+      },
+    },
     content: handleOldData(props.content) || '',
     onCreate({ editor }) {
       Question.descendants(editor);
     },
     onUpdate({ editor }) {
+     
+
       let html = editor.getHTML();
       const json = editor.getJSON();
       // 清除空段落
@@ -74,13 +83,28 @@ const CustomEditor = (props, ref) => {
           html = '';
         }
       }
-      console.log(888999);
-      
-      props?.onUpdate && props.onUpdate({ html, json });
-      props?.onChange && props.onChange(html);
+
+      //onUpdate 在 Tiptap 中的触发机制：哪怕你只是点击编辑器、没有改变内容，但如果 Tiptap 在内部调整了文档结构（比如补全空段落、自动清理节点等），也会触发
+      const newHTML = editor.getHTML();
+      if (newHTML !== lastHTMLRef.current) {
+        lastHTMLRef.current = newHTML;
+        props?.onUpdate && props.onUpdate({ html, json });
+        props?.onChange && props.onChange(html);
+      }
+    },
+    onBlur({ editor }) {
+      editor.setEditable(false);
     },
     editable: Boolean(props.editable),
   });
+
+  useEffect(() => {
+    return () => {
+      if (editor) {
+        editor.destroy();
+      }
+    };
+  }, [editor]);
 
   useImperativeHandle(ref, () => {
     return {
@@ -88,12 +112,10 @@ const CustomEditor = (props, ref) => {
     };
   });
 
-
- 
   const handlers = {
     onSave: props.onSave,
   };
-  
+
   // 透传过来的有些方法， tiptap 不需要
   const arrt = {
     ...props,
@@ -102,18 +124,8 @@ const CustomEditor = (props, ref) => {
   delete arrt.onUpdate;
   delete arrt.onChange;
   delete arrt.editable;
-  delete arrt.onClickEditor;
   delete arrt.uploadFileConfig;
-
-  useEffect(() => {
-    editor.setEditable(Boolean(props.editable));
-    if (props.editable) {
-      // 聚焦到最后一位字符
-      editor.commands.focus(); // 先聚焦编辑器
-      const docSize = editor.state.doc.content.size;
-      editor.commands.setTextSelection(docSize); // 将光标移到文档的最后
-    }
-  }, [props.editable]);
+  delete arrt.isTextarea;
 
   useEffect(() => {
     // 如果不一样，再覆盖，否则插入的横线有问题，未知原因
@@ -126,39 +138,31 @@ const CustomEditor = (props, ref) => {
     });
   }, [props.content]);
 
-  const [uniqueId, setUniqueId] = useState('tiptap_' + uuidv4().replace(/-/g, ''));
-  const onClickBodyListener = () => {
-    window.addEventListener('click', function (event) {
-      const target = event.target as HTMLElement;
-      // 判断点击的元素是否在编辑器内
-      if (target.closest('#' + uniqueId)) {
-        // console.log('点击发生在编辑器内');
-        props.onClickEditor && props.onClickEditor(true, editableRef.current, event);
-      } else {
-        // console.log('点击发生在编辑器外');
-        props.onClickEditor && props.onClickEditor(false, editableRef.current, event);
-      }
-    });
+  // 给一个默认的uploadFileConfig的handler
+  let uploadFileConfig = props.uploadFileConfig;
+  if (!uploadFileConfig) {
+    uploadFileConfig = {
+      transformBase64: true,
+      // handler: uploadQuestionAttachHelper,
+    };
+  } else if (!uploadFileConfig.handler) {
+    // uploadFileConfig.handler = uploadQuestionAttachHelper;
+  }
+
+  const onClick = () => {
+    
+    if (!editor.isEditable) {
+      editor.setEditable(true);
+      editor.commands.focus(); // 先聚焦编辑器
+      const docSize = editor.state.doc.content.size;
+      editor.commands.setTextSelection(docSize); // 将光标移到文档的最后
+    }
   };
 
-  useEffect(() => {
-    onClickBodyListener();
-  }, []);
-
-    // 给一个默认的uploadFileConfig的handler
-    let uploadFileConfig = props.uploadFileConfig;
-    if (!uploadFileConfig) {
-      uploadFileConfig = {
-        transformBase64: true,
-        // handler: uploadQuestionAttachHelper,
-      };
-    } else if (!uploadFileConfig.handler) {
-      // uploadFileConfig.handler = uploadQuestionAttachHelper;
-    }
-
+  // onPointerDownCapture 是因为 math-field 的点击事件会冒泡到父级，导致无法执行
   return (
-    <div className={cs(['tiptap-editor', { editable: props.editable }])} id={uniqueId}>
-      {props.editable && <MenuBar editor={editor} handlers={handlers} uploadFileConfig={uploadFileConfig}/>}
+    <div className={cs(['tiptap-editor', { editable: true, 'is-input': !props.isTextarea && !editor.isEditable, 'is-textarea': props.isTextarea && !editor.isEditable }])} id={uniqueId} onPointerDownCapture={onClick}>
+      {editor.isEditable && <MenuBar editor={editor} handlers={handlers} uploadFileConfig={uploadFileConfig} />}
       <EditorContent editor={editor} className="editorContent" {...arrt} />
     </div>
   );

@@ -31,19 +31,25 @@ export const Formula = Node.create({
       wrapper.textContent = node.textContent;
       
       // 添加点击事件
-      const mc = new Hammer(wrapper, {
-        recognizers: [
-          [Hammer.Tap, { event: 'doubletap', taps: 2 }]
-        ]
-      });
-      mc.on('doubletap', (event) => {
-        console.log('Math field clicked', { node, getPos, editor });
-        // 你可以在这里触发编辑器命令或做其他操作
-        editor.commands.setNodeSelection(getPos());
-        emitter.emit('formula-click', {
-          content: node.textContent, 
-          pos:getPos()
-        });
+      const hammer = new Hammer.Manager(wrapper);
+      const singleTap = new Hammer.Tap({ event: 'singletap', taps: 1 });
+      const doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, interval: 300, threshold: 9, });
+
+      hammer.add([doubleTap, singleTap]);
+      doubleTap.recognizeWith(singleTap); // 双击时需要识别单击
+      singleTap.requireFailure(doubleTap); // 单击需要等待确认不是双击
+      // hammer.on('singletap', (e) => {
+      //   // if (!editor.isFocused) { }
+      // });
+      hammer.on('doubletap', (event) => {
+        if (editor.isFocused) {
+          // 你可以在这里触发编辑器命令或做其他操作
+          editor.commands.setNodeSelection(getPos());
+          emitter.emit('formula-click', {
+            content: node.textContent,
+            pos: getPos(),
+          });
+        }
       });
       
       return {
@@ -62,9 +68,10 @@ export const Formula = Node.create({
         };
         const { from } = editor.state.selection;
         editor.commands.insertContentAt(from, currentNode);
+        editor.commands.focus();
         return true;
       },
-      updateFormula: (pos, arg) => ({ tr, state, dispatch }) => {
+      updateFormula: (pos, arg) => ({ tr, state, dispatch, commands }) => {
         // 获取指定位置的节点
         const node = state.doc.nodeAt(pos);
         // 创建新节点
@@ -73,6 +80,7 @@ export const Formula = Node.create({
           arg ? [state.schema.text(arg)] : null
         );
         tr.replaceWith(pos, pos + node.nodeSize, newNode);
+        commands.focus();
         return true;
       },
     };
