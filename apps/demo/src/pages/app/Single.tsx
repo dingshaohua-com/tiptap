@@ -18,8 +18,22 @@ import { useEffect, useRef, useState } from 'react';
 </tbody>
 </table> */}
 const initContent = `
-<p>Hell<img src="https://doc.dingshaohua.com/assets/images/fe-fw-lib-7961ee52ada77d43b6b3d68daef3794d.png" alt="apple" style="width: 100px; height: 100px;"><span style="color:red">o</span>  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>! 把集合 $\{x | x^2 - 4x + 3 = 0\}$ 用列举法表示，正确的是（ ）．</p> 
-
+<p>
+Hell <img src="https://doc.dingshaohua.com/assets/images/fe-fw-lib-7961ee52ada77d43b6b3d68daef3794d.png" alt="apple" style="width: 100px; height: 100px;"><span style="color:red">o</span>  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>! 把集合 $\{x | x^2 - 4x + 3 = 0\}$ 用列举法表示，<p>正确的是（ ）．</p></p> 
+<table>
+<thead>
+  <tr>
+    <th>Header 1</th>
+    <th>Header 2</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Cell 1</td>
+    <td>Cell 2</td>
+  </tr>
+</tbody>
+</table>
 `;
 const Single = () => {
   const [content, setContent] = useState(initContent);
@@ -39,9 +53,6 @@ const Single = () => {
     setEditable(true);
   };
 
-  const onClickEditor = (isClickEditor) => {
-    setEditable(isClickEditor);
-  };
 
   return (
     <div className="app">
@@ -62,7 +73,7 @@ const Single = () => {
 
         <Divider />
         <div className="editor-container" onDoubleClick={onDoubleClick}>
-          <TiptapEditor onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容" onClickEditor={onClickEditor} />
+          <TiptapEditor onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容"/>
         </div>
       </div>
     </div>

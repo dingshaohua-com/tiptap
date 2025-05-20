@@ -18,6 +18,8 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 // import { uploadQuestionAttachHelper } from '@/services/api/question';
 import { Dot, Formula, Horizontal, Img, Question, Span, ResizableImg } from './extensions';
 
+import Highlight from '@tiptap/extension-highlight';
+
 const uploadQuestionAttachHelper = (file: File) => {
   console.log('uploadQuestionAttachHelper', file);
 };
@@ -50,6 +52,9 @@ const CustomEditor = (props, ref) => {
       }),
       Color,
       TextStyle,
+      Highlight.configure({
+        multicolor: true, // 允许多种颜色
+      }),
       Table.configure({
         resizable: true,
       }),

@@ -1,33 +1,62 @@
+import './style.scss';
+import ColorPicker from './color-picker';
 import { useEffect, useState } from 'react';
-import { RiTableLine } from '@remixicon/react';
+import { RiFontColor, RiPaletteFill } from '@remixicon/react';
 import { Button, Tooltip, Popover, Input } from 'antd';
 
 const imgUpload = ({ editor, handlers }) => {
-  const [open, setOpen] = useState(false);
+  const [textColorOpen, setTextColorOpen] = useState(false);
+  const [backgroundColorOpen, setBackgroundColorOpen] = useState(false);
 
-  const ok = () => {
-    // editor.chain().focus().insertQs().run();
-    // handlers.onInsertQs && handlers.onInsertQs();
-    // editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
-    editor.commands.setColor('#ff0000');  // 设置为红色
-  };
-
-
-  // useEffect(() => {
-  //   editor.view.dom.addEventListener('contextmenu', (event) => {
-  //     const target = event.target;
-
-  
-  //   });
-  // }, []);
+  const buttonGroup: Array<any> = [
+    {
+      value: 'textColor',
+      label: 'TextColor',
+      icon: RiFontColor,
+      action: (editor) => {
+        // editor.chain().focus().toggleBold().run();
+        // editor.commands.focus();
+      },
+      isActive: (editor) => false,
+      // canExecute: (editor) => editor.can().chain().focus().toggleBold().run() && !editor.isActive('codeBlock'),
+      tooltip: '字体颜色',
+      open: textColorOpen,
+      setOpen: setTextColorOpen,
+    },
+    {
+      value: 'backgroundColor',
+      label: 'BackgroundColor',
+      icon: RiPaletteFill,
+      action: (editor) => {
+        // editor.chain().focus().toggleBold().run();
+        // editor.commands.focus();
+      },
+      isActive: (editor) => false,
+      // canExecute: (editor) => editor.can().chain().focus().toggleBold().run() && !editor.isActive('codeBlock'),
+      tooltip: '背景色',
+      open: backgroundColorOpen,
+      setOpen: setBackgroundColorOpen,
+    },
+  ];
 
   return (
-    <div className="fontStyle">
-      <Tooltip title="插入表格">
-        <Button onClick={ok} color="default" variant="filled" autoInsertSpace>
-          <RiTableLine style={{ width: 18 }} />
-        </Button>
-      </Tooltip>
+    <div className="fontStyle color-picker">
+      {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value, open, setOpen }) => (
+        <Tooltip title={tooltip} key={value}>
+          <Popover 
+            content={<ColorPicker editor={editor} onClose={() => setOpen(false)} type={value} />} 
+            title="" 
+            open={open} 
+            trigger="click" 
+            getPopupContainer={(trigger) => trigger.parentNode as HTMLElement} 
+            onOpenChange={setOpen}
+          >
+            <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
+              <Icon />
+            </Button>
+          </Popover>
+        </Tooltip>
+      ))}
     </div>
   );
 };
