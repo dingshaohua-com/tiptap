@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { RiFileImageLine } from '@remixicon/react';
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { useFileUploader } from '../../../hooks/use-file-uploader';
@@ -26,12 +27,13 @@ const DesCmp = ({ editor, setOpen, uploadFileConfig }) => {
 
       // 调用内置的 @tiptap/extension-image
       editor.chain().focus().setImage({ src: imgUrl }).run();
+      const id = uuidv4();
       if (uploadFileConfig.transformBase64) {
         fileToBase64(file).then((base64) => {
-          uploadFileConfig.onSuccess && uploadFileConfig.onSuccess({ base64, file, url: imgUrl });
+          uploadFileConfig.onSuccess && uploadFileConfig.onSuccess({ base64, file, url: imgUrl, id });
         });
       } else {
-        uploadFileConfig.onSuccess && uploadFileConfig.onSuccess({ file, url: imgUrl });
+        uploadFileConfig.onSuccess && uploadFileConfig.onSuccess({ file, url: imgUrl, id });
       }
     },
     onError: (err, file) => {
@@ -58,7 +60,7 @@ const DesCmp = ({ editor, setOpen, uploadFileConfig }) => {
       <Input
         value={netImg}
         onChange={(e: any) => setNetImg(e.target.value)}
-        style={{ width: '120px' }}
+        style={{ width: 'max-content' }}
         addonAfter={
           <span style={{ cursor: 'pointer' }} onClick={insertNetImg}>
             确定
@@ -71,7 +73,7 @@ const DesCmp = ({ editor, setOpen, uploadFileConfig }) => {
         本地上传
       </span>
       {/* 渲染隐藏的input元素 */}
-      <input type="file" ref={inputRef} onChange={onFileChange} style={{ display: 'none' }} multiple />
+      <input type="file" ref={inputRef} onChange={onFileChange} style={{ display: 'none' }} multiple accept="image/*"/>
     </div>
   );
 };
@@ -92,7 +94,6 @@ const imgUpload = ({ editor, uploadFileConfig }) => {
   // useEffect(() => {
   //   !uploadFileConfig.handler && console.error('既然开启了图片上传能力，请完善图片上传配置');
   // }, [uploadFileConfig]);
-
 
   return (
     <div className="fontStyle">
