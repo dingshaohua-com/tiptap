@@ -1,4 +1,6 @@
 import './style.scss';
+import Color from './cmp/color';
+import Table from './cmp/table';
 // import Shape from './cmp/shape';
 import Action from './cmp/action';
 import Heading from './cmp/heading';
@@ -9,7 +11,6 @@ import FontStyle from './cmp/font-style';
 import ImgUpload from './cmp/img-upload';
 import AlignStyle from './cmp/align-style';
 import InsertSome from './cmp/insert-some';
-
 const MenuBar = ({ editor, handlers, uploadFileConfig }) => {
   if (!editor) {
     return null;
@@ -23,12 +24,17 @@ const MenuBar = ({ editor, handlers, uploadFileConfig }) => {
       <Divider type="vertical" className="menuBarDivider" />
       <InsertSome editor={editor} />
       <Divider type="vertical" className="menuBarDivider" />
+      <Color editor={editor} />
+      <Divider type="vertical" className="menuBarDivider" />
       <AlignStyle editor={editor} />
       <Divider type="vertical" className="menuBarDivider" />
       {/* <Shape editor={editor} /> */}
+      <Table editor={editor} />
+      <Divider type="vertical" className="menuBarDivider" />
       <Formula editor={editor} />
+      <Divider type="vertical" className="menuBarDivider" />
       <ImgUpload editor={editor} uploadFileConfig={uploadFileConfig} />
-      <InsertQs editor={editor} handlers={handlers}/>
+      <InsertQs editor={editor} handlers={handlers} />
       <Divider type="vertical" className="menuBarDivider" />
       <Action editor={editor} handlers={handlers} />
     </div>

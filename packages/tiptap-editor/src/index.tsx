@@ -3,18 +3,24 @@ import cs from 'classnames';
 import MenuBar from './menu-bar';
 import { v4 as uuidv4 } from 'uuid';
 import { handleOldData } from './utils';
+import Color from '@tiptap/extension-color';
 import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
 import TableCell from '@tiptap/extension-table-cell';
+import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
-import { uploadQuestionAttachHelper } from '@/services/api/question';
-import { Dot, Formula, Horizontal, Img, Question, Span } from './extensions';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+// import { uploadQuestionAttachHelper } from '@/services/api/question';
+import { Dot, Formula, Horizontal, Img, Question, Span, ResizableImg } from './extensions';
+
+const uploadQuestionAttachHelper = (file: File) => {
+  console.log('uploadQuestionAttachHelper', file);
+};
 
 interface CustomEditorProps {
   content?: string;
@@ -30,7 +36,7 @@ const CustomEditor = (props, ref) => {
     extensions: [
       StarterKit,
       Underline,
-      Img.configure({
+      ResizableImg.configure({
         inline: true,
       }),
       Formula,
@@ -42,6 +48,8 @@ const CustomEditor = (props, ref) => {
         alignments: ['left', 'center', 'right'],
         defaultAlignment: 'left',
       }),
+      Color,
+      TextStyle,
       Table.configure({
         resizable: true,
       }),
@@ -90,8 +98,8 @@ const CustomEditor = (props, ref) => {
       }
     },
     onBlur(arg) {
-      arg.editor.setEditable(false);
-      props.onBlur && props.onBlur(arg);
+      // arg.editor.setEditable(false);
+      // props.onBlur && props.onBlur(arg);
     },
     editable: Boolean(props.editable),
   });
@@ -144,10 +152,10 @@ const CustomEditor = (props, ref) => {
   if (!uploadFileConfig) {
     uploadFileConfig = {
       transformBase64: true,
-      // handler: uploadQuestionAttachHelper,
+      handler: uploadQuestionAttachHelper,
     };
   } else if (!uploadFileConfig.handler) {
-    // uploadFileConfig.handler = uploadQuestionAttachHelper;
+    uploadFileConfig.handler = uploadQuestionAttachHelper;
   }
 
   const onClick = () => {
