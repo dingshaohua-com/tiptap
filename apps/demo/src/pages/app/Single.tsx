@@ -67,11 +67,11 @@ const Single = () => {
         <div className="title">
           下方是一个实例编辑器，现在{' '}
           {editable ? (
-            <span className="editable-btn" onClick={() => setEditable(false)}>
+            <span key={1} className="editable-btn" onClick={() => setEditable(false)}>
               退出编辑
             </span>
           ) : (
-            <span className="editable-btn" onClick={() => setEditable(true)}>
+            <span key={2} className="editable-btn" onClick={() => setEditable(true)}>
               开始编辑
             </span>
           )}
