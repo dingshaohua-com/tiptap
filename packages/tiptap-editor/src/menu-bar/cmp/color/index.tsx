@@ -3,8 +3,12 @@ import ColorPicker from './color-picker';
 import { useEffect, useState } from 'react';
 import { RiFontColor, RiPaletteFill } from '@remixicon/react';
 import { Button, Tooltip, Popover, Input } from 'antd';
+import { useEditorConfig } from '../../../config-ctx';
 
-const imgUpload = ({ editor, handlers }) => {
+const imgUpload = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
+  
   const [textColorOpen, setTextColorOpen] = useState(false);
   const [backgroundColorOpen, setBackgroundColorOpen] = useState(false);
 
@@ -40,7 +44,7 @@ const imgUpload = ({ editor, handlers }) => {
   ];
 
   return (
-    <div className="fontStyle color-picker">
+    <div className="itemsStyle color-picker">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value, open, setOpen }) => (
         <Tooltip title={tooltip} key={value}>
           <Popover 

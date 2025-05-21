@@ -1,6 +1,6 @@
-import { RiMenu2Fill, RiMenu5Line, RiMenu3Line } from '@remixicon/react';
-import './style.scss';
 import { Button, Tooltip } from 'antd';
+import { useEditorConfig } from '../../../config-ctx';
+import { RiMenu2Fill, RiMenu5Line, RiMenu3Line } from '@remixicon/react';
 
 const buttonGroup: Array<any> = [
   {
@@ -9,9 +9,7 @@ const buttonGroup: Array<any> = [
     icon: RiMenu2Fill,
     action: (editor) => editor.chain().focus().toggleTextAlign('left').run(),
     isActive: (editor) => editor.isActive({ textAlign: 'left' }),
-    canExecute: (editor) =>
-      editor.can().chain().focus().toggleTextAlign('left').run() &&
-      !editor.isActive('codeBlock'),
+    canExecute: (editor) => editor.can().chain().focus().toggleTextAlign('left').run() && !editor.isActive('codeBlock'),
     tooltip: '居左',
   },
 
@@ -21,9 +19,7 @@ const buttonGroup: Array<any> = [
     icon: RiMenu3Line,
     action: (editor) => editor.chain().focus().toggleTextAlign('center').run(),
     isActive: (editor) => editor.isActive({ textAlign: 'center' }),
-    canExecute: (editor) =>
-      editor.can().chain().focus().toggleTextAlign('center').run() &&
-      !editor.isActive('codeBlock'),
+    canExecute: (editor) => editor.can().chain().focus().toggleTextAlign('center').run() && !editor.isActive('codeBlock'),
     tooltip: '居中',
   },
   {
@@ -32,24 +28,20 @@ const buttonGroup: Array<any> = [
     icon: RiMenu5Line,
     action: (editor) => editor.chain().focus().toggleTextAlign('right').run(),
     isActive: (editor) => editor.isActive({ textAlign: 'right' }),
-    canExecute: (editor) =>
-      editor.can().chain().focus().toggleTextAlign('right').run() &&
-      !editor.isActive('codeBlock'),
+    canExecute: (editor) => editor.can().chain().focus().toggleTextAlign('right').run() && !editor.isActive('codeBlock'),
     tooltip: '居右',
   },
 ];
 
-const FontStyle = ({ editor }) => {
+const FontStyle = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
+
   return (
-    <div className="fontStyle">
+    <div className="itemsStyle">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value }) => (
         <Tooltip title={tooltip} key={value}>
-          <Button
-            onClick={() => action(editor)}
-            color="default"
-            variant={isActive(editor) ? 'solid' : 'filled'}
-            autoInsertSpace
-          >
+          <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
             <Icon />
           </Button>
         </Tooltip>

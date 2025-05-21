@@ -1,5 +1,7 @@
 import { Button, Tooltip } from 'antd';
 import { RiSave3Line } from '@remixicon/react';
+import { useEditorConfig } from '../../../config-ctx';
+
 
 const buttonGroup: Array<any> = [
   {
@@ -7,8 +9,8 @@ const buttonGroup: Array<any> = [
     label: 'LineSolid',
     icon: RiSave3Line,
     style: { width: 20 },
-    action: (editor, handlers) => {
-      if(!handlers.onSave){return false};
+    action: (editor, config) => {
+      if(!config.onSave){return false};
       let html = editor.getHTML();
       const json = editor.getJSON();
       // 清除空段落
@@ -19,19 +21,22 @@ const buttonGroup: Array<any> = [
           html = '';
         }
       }
-      handlers.onSave({html, json});
+      config.onSave({html, json});
     },
     tooltip: '保存',
   },
 ];
 
-const FontStyle = ({ editor, handlers }) => {
+const FontStyle = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
+
   return (
-    <div className="fontStyle">
+    <div className="itemsStyle">
       {buttonGroup.map(({ icon: Icon, tooltip, action, value, style }) => (
         <Tooltip title={tooltip} key={value}>
           <Button
-            onClick={() => action(editor, handlers)}
+            onClick={() => action(editor, config)}
             color="default"
             variant="filled"
             autoInsertSpace

@@ -1,8 +1,12 @@
 import './style.scss';
 import { Select } from 'antd';
+import { useEditorConfig } from '../../../config-ctx';
 
-const Heading = ({ editor }) => {
-  const onChange = (level: Number) => {
+const Heading = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
+
+  const onChange = (level: any) => {
     if (level === 0) {
       editor.chain().focus().setParagraph().run();
     } else {
@@ -42,13 +46,9 @@ const Heading = ({ editor }) => {
   };
   const activeLeave = getActiveLeave();
   return (
-    <Select
-      getPopupContainer={trigger => trigger.parentNode}
-      value={activeLeave || 0}
-      style={{ width: 88 }}
-      options={options}
-      onChange={onChange}
-    />
+    <div className="itemsStyle">
+      <Select getPopupContainer={(trigger) => trigger.parentNode} value={activeLeave || 0} style={{ width: 88 }} options={options} onChange={onChange} />
+    </div>
   );
 };
 

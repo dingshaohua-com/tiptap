@@ -46,12 +46,23 @@ const Single = () => {
 
   const onChange = (content: string) => {
     setContent(content);
-    console.log(content);
+    // console.log(content);
   };
-  const [editable, setEditable] = useState(true);
-  const onDoubleClick = (e) => {
+  const [editable, setEditable] = useState(false);
+
+  const onBlur = () => {
+    console.log('onBlur');
+    setEditable(false);
+    
+  };
+
+  const onFocus = () => {
+    console.log('onFocus');
     setEditable(true);
   };
+
+
+
 
 
   return (
@@ -72,9 +83,7 @@ const Single = () => {
         <div className="title">(or 双击编辑器也能快速进入编辑状态)</div>
 
         <Divider />
-        <div className="editor-container" onDoubleClick={onDoubleClick}>
-          <TiptapEditor onSave={onSave} onChange={onChange} editable={editable} content={content} placeholder="请输入内容"/>
-        </div>
+        <TiptapEditor onSave={onSave} onChange={onChange} editable={editable} content={content} onBlur={onBlur} onFocus={onFocus} placeholder="请输入内容"/>
       </div>
     </div>
   );

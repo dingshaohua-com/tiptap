@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { RiTableLine } from '@remixicon/react';
+import { useEditorConfig } from '../../../config-ctx';
 import { Button, Tooltip, Popover, Input } from 'antd';
 
-const imgUpload = ({ editor, handlers }) => {
+const imgUpload = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
+
   const [open, setOpen] = useState(false);
 
   const ok = () => {
@@ -106,7 +110,7 @@ const imgUpload = ({ editor, handlers }) => {
   }, []);
 
   return (
-    <div className="fontStyle">
+    <div className="itemsStyle">
       <Tooltip title="插入表格">
         <Button onClick={ok} color="default" variant="filled" autoInsertSpace>
           <RiTableLine style={{ width: 18 }} />

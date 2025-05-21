@@ -34,6 +34,7 @@
     "classnames": "^2.5.1",
     "hammerjs": "^2.0.8",
     "mathlive": "^0.104.0",
+    "md5": "^2.3.0",
     "mitt": "^3.0.1",
     "remixicon": "^4.6.0",
     "uuid": "^11.1.0"

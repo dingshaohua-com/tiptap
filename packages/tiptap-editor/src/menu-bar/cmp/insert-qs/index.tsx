@@ -1,18 +1,21 @@
 import { Button, Tooltip, Popover, Input } from 'antd';
 import { useState } from 'react';
 import ohmImg from '../../../assets/ohm.svg';
+import { useEditorConfig } from '../../../config-ctx';
 
 
-const imgUpload = ({ editor, handlers }) => {
+const imgUpload = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
   const [open, setOpen] = useState(false);
 
   const ok = () => {
     editor.chain().focus().insertQs().run();
-    handlers.onInsertQs && handlers.onInsertQs();
+    config.onInsertQs && config.onInsertQs();
   };
 
   return (
-    <div className="fontStyle">
+    <div className="itemsStyle">
       <Tooltip title="插入填空">
           <Button
             onClick={ok}

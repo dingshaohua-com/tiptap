@@ -3,6 +3,7 @@ import presets from './latex-presets';
 import { useEffect, useState } from 'react';
 import { RiFormula } from '@remixicon/react';
 import emitter from '../../../utils/emitter';
+import { useEditorConfig } from '../../../config-ctx';
 import { Button, Popover, Tabs, TabsProps } from 'antd';
 
 const FormulaContent = ({ editor, onClose }) => {
@@ -47,10 +48,7 @@ const FormulaContent = ({ editor, onClose }) => {
       <div className="custom-tabpanel" key={item.key}>
         {item.content.map((it) => (
           <div className="formula-item" key={it.latex}>
-            <div
-              className="formula-item-mask"
-              onClick={() => onClickItem(it)}
-            ></div>
+            <div className="formula-item-mask" onClick={() => onClickItem(it)}></div>
             <math-field contentEditable={false}>{it.latex}</math-field>
           </div>
         ))}
@@ -80,7 +78,10 @@ const FormulaContent = ({ editor, onClose }) => {
   );
 };
 
-const Shape = ({ editor }) => {
+const Shape = () => {
+  const config = useEditorConfig();
+  const editor = config.editor!;
+
   const [open, setOpen] = useState(false);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -88,15 +89,8 @@ const Shape = ({ editor }) => {
   };
 
   return (
-    <div className="formula">
-      <Popover 
-        content={<FormulaContent editor={editor} onClose={() => setOpen(false)} />} 
-        open={open} 
-        trigger="click" 
-        destroyOnHidden={true} 
-        onOpenChange={handleOpenChange} 
-        getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}
-      >
+    <div className="itemsStyle">
+      <Popover content={<FormulaContent editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange} getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}>
         <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace>
           <RiFormula />
         </Button>
