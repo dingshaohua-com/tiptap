@@ -47,7 +47,7 @@ const Multiple = () => {
       {questions.map((item, index) => (
         <div key={index}>
           <Divider />
-          <TiptapEditor onSave={onSave} content={item.content} onChange={onChange} />
+            <TiptapEditor onSave={onSave} content={item.content} onChange={onChange} />
         </div>
       ))}
     </div>

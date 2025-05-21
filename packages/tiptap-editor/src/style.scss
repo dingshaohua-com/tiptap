@@ -1,30 +1,31 @@
 .editable {
   min-width: 800px;
+  border: rgba($color: #000000, $alpha: 0.1) solid 1px;
   border-radius: 0 0 6px 6px !important;
+  background-color: white;
   .menuBar {
+    background-color: white;
     border-radius: 6px 6px 0 0 !important;
-    background-color: #f6f6f6;
+    border-bottom: none;
   }
 }
 
 .tiptap-editor {
-  background-color: white;
+  box-sizing: border-box;
   position: relative;
-  border: rgba($color: #000000, $alpha: 0.1) solid 1px;
-  border-radius: 6px;
   padding: 4px;
   .menuBar {
-    padding: 4px 0;
     position: absolute;
-    background-color: #fff;
-    left: -1px;
     right: -1px;
+    left: -1px;
     z-index: 100;
-    border: 1px #e5e7eb solid;
     display: flex;
-    align-items: center;
     flex-shrink: 0;
     flex-wrap: wrap;
+    align-items: center;
+    padding: 4px 0;
+    // background-color: #fff;
+    border: 1px rgba($color: #000000, $alpha: 0.1) solid;
 
     .itemsStyle {
       display: flex;
@@ -215,7 +216,7 @@ math-field::part(menu-toggle) {
 
 // math-filed 的边框隐藏
 math-field {
-  outline: none !important;
   // border: none !important;
   border: 1px solid rgba($color: #000000, $alpha: 0.08);
+  outline: none !important;
 }
