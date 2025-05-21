@@ -1,3 +1,8 @@
-packages:   # 配置 pnpm 工作区路径
-  - 'apps/*' # app
-  - 'packages/*' # 其它
+packages:
+  - apps/*
+  - packages/*
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - core-js
+  - core-js-pure
+  - esbuild

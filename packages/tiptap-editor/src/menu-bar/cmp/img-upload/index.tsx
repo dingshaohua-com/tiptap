@@ -83,7 +83,7 @@ const imgUpload = () => {
     <div className="itemsStyle">
       {config.imageUploadHandler ? (
         <Tooltip title="图片">
-          <Popover content={<DesCmp editor={editor} setOpen={setOpen} config={config} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange} getPopupContainer={(trigger) => trigger.parentNode as HTMLElement}>
+          <Popover content={<DesCmp editor={editor} setOpen={setOpen} config={config} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
             <Button onClick={show} color="default" variant="filled" autoInsertSpace>
               <RiFileImageLine />
             </Button>

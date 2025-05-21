@@ -52,7 +52,6 @@ const imgUpload = () => {
             title="" 
             open={open} 
             trigger="click" 
-            getPopupContainer={(trigger) => trigger.parentNode as HTMLElement} 
             onOpenChange={setOpen}
           >
             <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
