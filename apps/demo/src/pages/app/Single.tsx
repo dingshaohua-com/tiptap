@@ -49,7 +49,14 @@ const Single = () => {
     setContent(content);
     // console.log(content);
   };
-  const [editable, setEditable] = useState(false);
+  const [editable, _setEditable] = useState(false);
+
+  const setEditable = (value: boolean) => {
+    console.trace('setEditable', value);
+    console.log('~~~~~~~~~~~~~~~~');
+    _setEditable(value);
+  };
+
 
   const onBlur = () => {
     console.log('onBlur');
@@ -61,20 +68,20 @@ const Single = () => {
     setEditable(true);
   };
 
+  const toggleEditable = () => {
+    console.log(211111111);
+    
+    setEditable(!editable)
+  }
+
   return (
     <div className="app">
       <div className="my-edit">
         <div className="title">
-          下方是一个实例编辑器，现在{' '}
-          {editable ? (
-            <span key={1} className="editable-btn" onClick={() => setEditable(false)}>
-              退出编辑
-            </span>
-          ) : (
-            <span key={2} className="editable-btn" onClick={() => setEditable(true)}>
-              开始编辑
-            </span>
-          )}
+          下方是一个实例编辑器，现在
+          <span className="editable-btn" onClick={toggleEditable}>
+            {editable ? '退出' : '开始'}编辑
+          </span>
           (or 双击编辑器也能快速进入编辑状态)
         </div>
 
