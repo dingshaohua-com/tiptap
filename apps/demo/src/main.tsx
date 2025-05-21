@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client';
 import { EditorDefaultConfigProvider } from '@repo/tiptap-editor';
 
 const defaultConfig = {
+  clickToEdit: true,
   imgBaseUrl: 'https://api.dingshaohua.com',
   imageUploadHandler: async (file: File) => {
     const formData = new FormData();

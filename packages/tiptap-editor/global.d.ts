@@ -26,7 +26,7 @@ declare interface EditorDefaultConfig {
 // 编辑器配置
 type EditorConfig = {
   content?: string;
-  onSave?: (content: string) => Promise<string>;
+  onSave?: (arg: string) => void;
   placeholder?: string;
   editor?: Editor;
   onBlur?: (arg: any) => void;

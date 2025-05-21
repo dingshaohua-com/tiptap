@@ -83,7 +83,7 @@ const Single = () => {
         <div className="title">(or 双击编辑器也能快速进入编辑状态)</div>
 
         <Divider />
-        <TiptapEditor onSave={onSave} onChange={onChange} editable={editable} content={content} onBlur={onBlur} onFocus={onFocus} placeholder="请输入内容"/>
+        <TiptapEditor onSave={onSave} onChange={onChange} editable={editable} content={content} onBlur={onBlur} onFocus={onFocus}/>
       </div>
     </div>
   );

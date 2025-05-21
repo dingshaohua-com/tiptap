@@ -42,30 +42,15 @@ const Multiple = () => {
     // console.log(content);
   };
 
-
-  const onClickEditor = (index, isClickEditor, isEditable, event) => {
-    const isEditableBtn = event?.target?.closest('.editable-btn');
-    if (!isClickEditor && isEditable && !isEditableBtn) {
-      questions[index].editable = false;
-      setQuestions([...questions]);
-    }
-  };
-
-  const onInsertQs = (content) => {
-    console.log(content);
-  };
-
   return (
     <div className="app">
-        {questions.map((item, index) => (
-          <div key={index}>
-            <Divider />
-            <div className="editor-container">
-              <TiptapEditor onSave={onSave} editable={false} onInsertQs={onInsertQs} content={item.content} placeholder="请输入内容" onClickEditor={onClickEditor.bind(null, index)} onChange={onChange}/>
-            </div>
-          </div>
-        ))}
-      </div>
+      {questions.map((item, index) => (
+        <div key={index}>
+          <Divider />
+          <TiptapEditor onSave={onSave} content={item.content} onChange={onChange} />
+        </div>
+      ))}
+    </div>
   );
 };
 

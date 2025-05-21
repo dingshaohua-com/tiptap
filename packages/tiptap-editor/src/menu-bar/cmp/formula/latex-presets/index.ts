@@ -1,15 +1,22 @@
-const allModules = [];
-const requireModules = import.meta.glob('./modules/**/*.ts', { eager: true });
-for (const path in requireModules) {
-  const moduleConent: any = requireModules[path];
-  allModules.push(moduleConent.default);
-}
+import math from './modules/math';
+import matrix from './modules/matrix';
+import physics from './modules/physics';
+import chemistry from './modules/chemistry';
+import mathSymbol from './modules/math-symbol';
+import greekLetter from './modules/greek-letter';
 
+const allModules = [chemistry, math, mathSymbol, physics, matrix, greekLetter];
 export default allModules;
+// const allModules = [];
+// const requireModules = import.meta.glob('./modules/**/*.ts', { eager: true });
+// for (const path in requireModules) {
+//   const moduleConent: any = requireModules[path];
+//   allModules.push(moduleConent.default);
+// }
 
+// export default allModules;
 
 // const allModules: any[] = [];
-
 // // Webpack 使用 require.context 代替 import.meta.glob
 // const requireModules = require.context(
 //   './modules',      // 要扫描的目录
