@@ -4,16 +4,16 @@ import MenuBar from './menu-bar';
 import { v4 as uuidv4 } from 'uuid';
 import { handleOldData } from './utils';
 import { EditorConfig } from '../global';
-import Color from '@tiptap/extension-color';
 import Table from '@tiptap/extension-table';
+import Color from '@tiptap/extension-color';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import { useEffect, useRef, useState } from 'react';
-import Underline from '@tiptap/extension-underline';
 import Highlight from '@tiptap/extension-highlight';
-import TextStyle from '@tiptap/extension-text-style';
-import TableCell from '@tiptap/extension-table-cell';
+import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import TableCell from '@tiptap/extension-table-cell';
+import TextStyle from '@tiptap/extension-text-style';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
@@ -65,7 +65,11 @@ const CustomEditor = (props: EditorConfig) => {
         blur: (view, event) => {
           const editorId = view.dom.getAttribute('data-id');
           const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
-          if (relatedTarget?.closest('#' + editorId)) return true;
+          const noBlur = relatedTarget?.closest('.no-blur');
+          const toolBar = relatedTarget?.closest('#' + editorId);
+          console.log(event.target, relatedTarget, noBlur);
+
+          if (noBlur || toolBar) return true;
           return false;
         },
       },

@@ -10,7 +10,7 @@ const initContent = `
 const Single = () => {
   const [content, setContent] = useState(initContent);
 
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(true);
 
   const onBlur = () => {
     setEditable(false);

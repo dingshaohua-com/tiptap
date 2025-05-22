@@ -1,4 +1,6 @@
+import './style.scss';
 import { useEffect, useState } from 'react';
+import TableSelector from './table-selector';
 import { RiTableLine } from '@remixicon/react';
 import { useEditorConfig } from '../../../config-ctx';
 import { Button, Tooltip, Popover, Input } from 'antd';
@@ -9,19 +11,16 @@ const imgUpload = () => {
 
   const [open, setOpen] = useState(false);
 
-  const ok = () => {
-    // editor.chain().focus().insertQs().run();
-    // handlers.onInsertQs && handlers.onInsertQs();
-    editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
-  };
+  const ok = () => {};
 
-  function showCustomContextMenu(editor) {
+  function showCustomContextMenu() {
     // 如果菜单已经存在，不再重复创建
     if (document.getElementById('custom-context-menu')) return;
 
     // 创建菜单容器
     const menu = document.createElement('div');
     menu.id = 'custom-context-menu';
+    menu.className = 'no-blur';
     Object.assign(menu.style, {
       position: 'absolute',
       display: 'none',
@@ -30,14 +29,17 @@ const imgUpload = () => {
       boxShadow: '0 2px 5px rgba(0,0,0,0.15)',
       padding: '8px',
       zIndex: 9999,
-      fontSize: '14px',
-      minWidth: '120px',
+      fontSize: '12px',
+      minWidth: '60px',
       cursor: 'default',
     });
 
     // 菜单项配置
     const actions = [
-      { label: '插入行', action: () => editor.commands.addRowAfter() },
+      { label: '插入行', action: () => {
+        editor.commands.addRowAfter();
+        editor.commands.focus();
+      } },
       { label: '删除行', action: () => editor.commands.deleteRow() },
       { label: '插入列', action: () => editor.commands.addColumnAfter() },
       { label: '删除列', action: () => editor.commands.deleteColumn() },
@@ -109,12 +111,25 @@ const imgUpload = () => {
     });
   }, []);
 
+  const show = () => {
+    setOpen(true);
+  };
+  const hide = () => {
+    setOpen(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
+
   return (
     <div className="itemsStyle">
       <Tooltip title="插入表格">
-        <Button onClick={ok} color="default" variant="filled" autoInsertSpace>
-          <RiTableLine style={{ width: 18 }} />
-        </Button>
+        <Popover content={<TableSelector />} title="" open={open} trigger="click" onOpenChange={handleOpenChange}>
+          <Button onClick={ok} color="default" variant="filled" autoInsertSpace>
+            <RiTableLine style={{ width: 18 }} />
+          </Button>
+        </Popover>
       </Tooltip>
     </div>
   );
