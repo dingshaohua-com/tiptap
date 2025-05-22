@@ -65,11 +65,9 @@ const CustomEditor = (props: EditorConfig) => {
         blur: (view, event) => {
           const editorId = view.dom.getAttribute('data-id');
           const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
-          const noBlur = relatedTarget?.closest('.no-blur');
+          // const noBlur = relatedTarget?.closest('.no-blur');
           const toolBar = relatedTarget?.closest('#' + editorId);
-          console.log(event.target, relatedTarget, noBlur);
-
-          if (noBlur || toolBar) return true;
+          if (toolBar) return true;
           return false;
         },
       },
