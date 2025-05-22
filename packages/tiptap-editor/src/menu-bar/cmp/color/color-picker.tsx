@@ -11,7 +11,7 @@ const ColorPickerMenu = ({ editor, onClose, type }) => {
     if (type === 'textColor') {
       editor?.chain().focus().setColor(color).run();
     } else {
-      editor?.chain().focus().toggleHighlight({color}).run();
+      editor?.chain().focus().toggleHighlight({ color }).run();
     }
     // onClose?.();
   };
@@ -31,6 +31,7 @@ const ColorPickerMenu = ({ editor, onClose, type }) => {
       </div> */}
 
       <Sketch
+        className="no-blur"
         color={customColor}
         onChange={(color) => {
           console.log(1122);

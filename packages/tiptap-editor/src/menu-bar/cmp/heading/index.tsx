@@ -47,7 +47,7 @@ const Heading = () => {
   const activeLeave = getActiveLeave();
   return (
     <div className="itemsStyle">
-      <Select getPopupContainer={(trigger) => trigger.parentNode} value={activeLeave || 0} style={{ width: 88 }} options={options} onChange={onChange} />
+      <Select onMouseDown={(e) => e.preventDefault()} getPopupContainer={(trigger) => trigger.parentNode} value={activeLeave || 0} style={{ width: 88 }} options={options} onChange={onChange} />
     </div>
   );
 };

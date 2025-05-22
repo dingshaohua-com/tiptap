@@ -4,16 +4,16 @@ import MenuBar from './menu-bar';
 import { v4 as uuidv4 } from 'uuid';
 import { handleOldData } from './utils';
 import { EditorConfig } from '../global';
-import Table from '@tiptap/extension-table';
 import Color from '@tiptap/extension-color';
+import Table from '@tiptap/extension-table';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import { useEffect, useRef, useState } from 'react';
-import Highlight from '@tiptap/extension-highlight';
 import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import TableCell from '@tiptap/extension-table-cell';
+import Highlight from '@tiptap/extension-highlight';
 import TextStyle from '@tiptap/extension-text-style';
+import TableCell from '@tiptap/extension-table-cell';
+import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
@@ -63,11 +63,13 @@ const CustomEditor = (props: EditorConfig) => {
       handleDOMEvents: {
         // 点击工具栏的时候阻止失焦
         blur: (view, event) => {
+          console.log('哈哈哈', event.relatedTarget);
+
           const editorId = view.dom.getAttribute('data-id');
           const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
-          // const noBlur = relatedTarget?.closest('.no-blur');
+          const noBlur = relatedTarget?.closest('.no-blur');
           const toolBar = relatedTarget?.closest('#' + editorId);
-          if (toolBar) return true;
+          if (toolBar || noBlur) return true;
           return false;
         },
       },
@@ -103,16 +105,20 @@ const CustomEditor = (props: EditorConfig) => {
       config.onFocus && config.onFocus(arg);
     },
     onBlur(arg) {
+      console.log('失焦啦');
+      editor.setEditable(false);
+      config.onBlur && config.onBlur(arg);
+
       // 为了解决外部onBlur事件，万一重新赋值引发的赋值冲突
-      if (config.clickToEdit) {
-        setTimeout(() => {
-          editor.setEditable(false);
-          config.onBlur && config.onBlur(arg);
-        }, 130);
-      } else {
-        editor.setEditable(false);
-        config.onBlur && config.onBlur(arg);
-      }
+      // if (config.clickToEdit) {
+      //   setTimeout(() => {
+      //     editor.setEditable(false);
+      //     config.onBlur && config.onBlur(arg);
+      //   }, 130);
+      // } else {
+      //   editor.setEditable(false);
+      //   config.onBlur && config.onBlur(arg);
+      // }
     },
     editable: Boolean(props.editable),
   });

@@ -48,7 +48,7 @@ const FormulaContent = ({ editor, onClose }) => {
       <div className="custom-tabpanel" key={item.key}>
         {item.content.map((it) => (
           <div className="formula-item" key={it.latex}>
-            <div className="formula-item-mask" onClick={() => onClickItem(it)}></div>
+            <div className="formula-item-mask" onClick={() => onClickItem(it)} onMouseDown={(e) => e.preventDefault()}></div>
             <math-field contentEditable={false}>{it.latex}</math-field>
           </div>
         ))}
@@ -65,12 +65,12 @@ const FormulaContent = ({ editor, onClose }) => {
           <math-field onInput={(evt) => setMfPreviewVal((evt.target as HTMLInputElement)?.value)}>{mfPreviewVal}</math-field>
         </div>
       </div>
-      <div className="mf-preview-input">
+      <div className="mf-preview-input no-blur">
         <div className="mf-preview-input-title">源码：</div>
         <input type="text" value={mfPreviewVal} onChange={(evt) => setMfPreviewVal(evt.target.value)} />
       </div>
       <div className="mf-preview-input-btn">
-        <Button type="primary" onClick={insertFormula}>
+        <Button type="primary" onClick={insertFormula} onMouseDown={(e) => e.preventDefault()}>
           插入
         </Button>
       </div>
@@ -91,7 +91,7 @@ const Shape = () => {
   return (
     <div className="itemsStyle">
       <Popover content={<FormulaContent editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
-        <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace>
+        <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
           <RiFormula />
         </Button>
       </Popover>

@@ -42,6 +42,7 @@ const TableSelector: React.FC<TableSelectorProps> = ({
             <div
               key={index}
               onMouseEnter={() => handleMouseMove(row, col)}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={handleClick}
               className={`cell ${selected ? "selected" : ""}`}
             />

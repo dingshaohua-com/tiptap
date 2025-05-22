@@ -10,9 +10,11 @@ const initContent = `
 const Single = () => {
   const [content, setContent] = useState(initContent);
 
-  const [editable, setEditable] = useState(true);
+  const [editable, setEditable] = useState(false);
 
   const onBlur = () => {
+    console.log(8989);
+
     setEditable(false);
   };
 
@@ -29,6 +31,10 @@ const Single = () => {
     // setContent(content);
   };
 
+  const onSave = (arg) => {
+    console.log('onSave', arg);
+  };
+
   return (
     <div className="app">
       <div className="my-edit">
@@ -41,7 +47,16 @@ const Single = () => {
         </div>
 
         <Divider />
-        <TiptapEditor editable={editable} content={content} onBlur={onBlur} onFocus={onFocus} onChange={onChange} />
+        {/* <textarea > */}
+        <form
+          onBlur={() => {
+            console.log('外层表单失焦了');
+          }}
+        >
+          <TiptapEditor editable={editable} content={content} onChange={onChange} onSave={onSave} />
+        </form>
+
+        {/* </textarea> */}
       </div>
     </div>
   );

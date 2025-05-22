@@ -1,14 +1,14 @@
 import './style.scss';
 import ColorPicker from './color-picker';
 import { useEffect, useState } from 'react';
-import { RiFontColor, RiPaletteFill } from '@remixicon/react';
-import { Button, Tooltip, Popover, Input } from 'antd';
 import { useEditorConfig } from '../../../config-ctx';
+import { Button, Tooltip, Popover, Input } from 'antd';
+import { RiFontColor, RiPaletteFill } from '@remixicon/react';
 
 const imgUpload = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
-  
+
   const [textColorOpen, setTextColorOpen] = useState(false);
   const [backgroundColorOpen, setBackgroundColorOpen] = useState(false);
 
@@ -47,14 +47,21 @@ const imgUpload = () => {
     <div className="itemsStyle color-picker">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value, open, setOpen }) => (
         <Tooltip title={tooltip} key={value}>
-          <Popover 
-            content={<ColorPicker editor={editor} onClose={() => setOpen(false)} type={value} />} 
-            title="" 
-            open={open} 
-            trigger="click" 
+          <Popover
+            //  getPopupContainer={triggerNode => triggerNode.parentNode}
+            content={<ColorPicker editor={editor} onClose={() => setOpen(false)} type={value} />}
+            title=""
+            open={open}
+            trigger="click"
             onOpenChange={setOpen}
           >
-            <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
+            <Button
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => action(editor)}
+              color="default"
+              variant={isActive(editor) ? 'solid' : 'filled'}
+              autoInsertSpace
+            >
               <Icon />
             </Button>
           </Popover>

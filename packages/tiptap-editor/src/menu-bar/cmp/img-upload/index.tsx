@@ -42,7 +42,7 @@ const DesCmp = ({ editor, setOpen, config }) => {
 
   const [netImg, setNetImg] = useState();
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }} className='no-blur'>
       <Input
         value={netImg}
         onChange={(e: any) => setNetImg(e.target.value)}
@@ -84,7 +84,7 @@ const imgUpload = () => {
       {config.imageUploadHandler ? (
         <Tooltip title="图片">
           <Popover content={<DesCmp editor={editor} setOpen={setOpen} config={config} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
-            <Button onClick={show} color="default" variant="filled" autoInsertSpace>
+            <Button onClick={show} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
               <RiFileImageLine />
             </Button>
           </Popover>

@@ -126,7 +126,7 @@ const imgUpload = () => {
     <div className="itemsStyle">
       <Tooltip title="插入表格">
         <Popover content={<TableSelector />} title="" open={open} trigger="click" onOpenChange={handleOpenChange}>
-          <Button onClick={ok} color="default" variant="filled" autoInsertSpace>
+          <Button onClick={ok} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
             <RiTableLine style={{ width: 18 }} />
           </Button>
         </Popover>

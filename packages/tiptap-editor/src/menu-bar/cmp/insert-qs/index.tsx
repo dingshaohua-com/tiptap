@@ -18,6 +18,7 @@ const imgUpload = () => {
     <div className="itemsStyle">
       <Tooltip title="插入填空">
           <Button
+            onMouseDown={(e) => e.preventDefault()}
             onClick={ok}
             color="default"
             variant="filled"

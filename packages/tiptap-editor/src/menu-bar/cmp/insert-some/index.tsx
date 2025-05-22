@@ -29,7 +29,7 @@ const FontStyle = () => {
     <div className="itemsStyle">
       {buttonGroup.map(({ icon: Icon, tooltip, action, value }) => (
         <Tooltip title={tooltip} key={value}>
-          <Button onClick={() => action(editor)} color="default" variant="filled" autoInsertSpace>
+          <Button onClick={() => action(editor)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
             <img src={Icon} />
           </Button>
         </Tooltip>

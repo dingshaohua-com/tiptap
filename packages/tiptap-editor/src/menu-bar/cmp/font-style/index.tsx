@@ -70,7 +70,7 @@ const FontStyle = () => {
     <div className="itemsStyle">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value }) => (
         <Tooltip title={tooltip} key={value}>
-          <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
+          <Button onMouseDown={(e) => e.preventDefault()} onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
             <Icon />
           </Button>
         </Tooltip>
