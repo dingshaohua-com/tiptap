@@ -56,7 +56,7 @@ const DesCmp = ({ editor, setOpen, config }) => {
         placeholder="网络地址"
       />
       或
-      <span style={{ color: 'blue', cursor: 'pointer' }} onClick={onSelectFile}>
+      <span style={{ color: 'blue', cursor: 'pointer' }} onClick={onSelectFile} onMouseDown={(e) => e.preventDefault()}>
         本地上传
       </span>
       <input type="file" ref={inputRef} onChange={onFileChange} style={{ display: 'none' }} multiple accept="image/*" />
