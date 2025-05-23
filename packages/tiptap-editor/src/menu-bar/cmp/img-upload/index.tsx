@@ -1,6 +1,7 @@
 import md5 from 'md5';
 import { useState } from 'react';
 import { getFilename } from '../../../utils';
+import { Feature } from '../../../utils/enum';
 import { getFileExtension } from '../../../utils';
 import { RiFileImageLine } from '@remixicon/react';
 import { useEditorConfig } from '../../../config-ctx';
@@ -42,7 +43,7 @@ const DesCmp = ({ editor, setOpen, config }) => {
 
   const [netImg, setNetImg] = useState();
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }} className='no-blur'>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }} className="no-blur">
       <Input
         value={netImg}
         onChange={(e: any) => setNetImg(e.target.value)}
@@ -63,9 +64,10 @@ const DesCmp = ({ editor, setOpen, config }) => {
   );
 };
 
-const imgUpload = () => {
+const ImgUpload = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
+  if (!config.features.includes(Feature.imgupload)) return null;
 
   const [open, setOpen] = useState(false);
 
@@ -80,7 +82,7 @@ const imgUpload = () => {
   };
 
   return (
-    <div className="itemsStyle">
+    <>
       {config.imageUploadHandler ? (
         <Tooltip title="图片">
           <Popover content={<DesCmp editor={editor} setOpen={setOpen} config={config} />} title="" open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
@@ -94,8 +96,8 @@ const imgUpload = () => {
           <RiFileImageLine />
         </Button>
       )}
-    </div>
+    </>
   );
 };
 
-export default imgUpload;
+export default ImgUpload;

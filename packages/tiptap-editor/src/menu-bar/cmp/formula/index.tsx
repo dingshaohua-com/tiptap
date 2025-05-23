@@ -3,6 +3,7 @@ import presets from './latex-presets';
 import { useEffect, useState } from 'react';
 import { RiFormula } from '@remixicon/react';
 import emitter from '../../../utils/emitter';
+import { Feature } from '../../../utils/enum';
 import { useEditorConfig } from '../../../config-ctx';
 import { Button, Popover, Tabs, TabsProps } from 'antd';
 
@@ -58,7 +59,7 @@ const FormulaContent = ({ editor, onClose }) => {
 
   return (
     <div>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+      <Tabs defaultActiveKey="1" items={items} onChange={onChange} onMouseDown={(e) => e.preventDefault()} />
       <div className="mf-preview">
         <div className="mf-preview-title">预览：</div>
         <div className="mf">
@@ -78,9 +79,10 @@ const FormulaContent = ({ editor, onClose }) => {
   );
 };
 
-const Shape = () => {
+const Formula = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
+  if (!config.features.includes(Feature.formula)) return null;
 
   const [open, setOpen] = useState(false);
 
@@ -89,14 +91,12 @@ const Shape = () => {
   };
 
   return (
-    <div className="itemsStyle">
-      <Popover content={<FormulaContent editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
-        <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
-          <RiFormula />
-        </Button>
-      </Popover>
-    </div>
+    <Popover content={<FormulaContent editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
+      <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
+        <RiFormula />
+      </Button>
+    </Popover>
   );
 };
 
-export default Shape;
+export default Formula;

@@ -1,8 +1,10 @@
+import { Feature } from './enum';
+
 const autoPrefixImageHost = (html: string, host = 'https://gil-test.oss-cn-beijing.aliyuncs.com') => {
   return html.replace(/<img\s+[^>]*src=["'](?!https?:\/\/|data:)([^"']+)["']/g, (match, relativeSrc) => match.replace(relativeSrc, host + '/' + relativeSrc.replace(/^\/+/, '')));
 };
 
-function convertInlineLatexToMathField(html: string): string {
+const convertInlineLatexToMathField = (html: string): string => {
   const latexRegex = /\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\$(?!\$)([\s\S]+?)\$/g;
 
   return html.replace(latexRegex, (_, group1, group2, group3, group4) => {
@@ -10,7 +12,7 @@ function convertInlineLatexToMathField(html: string): string {
     const content = group1 || group2 || group3 || group4 || '';
     return `<math-field>${content.trim()}</math-field>`;
   });
-}
+};
 
 // 特殊处理旧的富文本内容中的一些数据(自动添加图片前缀, 正则替换)
 export const handleOldData = (data: any) => {
@@ -60,4 +62,36 @@ export const getFileExtension = (fileUrl: string) => {
   const match = fileUrl.match(/[^?#]*\.([^?#/.]*)(?:[?#].*)?$/i);
 
   return match ? match[1].toLowerCase() : '';
+};
+
+// 计算最终编辑器的功能（工具栏菜单）列表
+export const calculateFeatures = (includeFeatures?: Feature[], excludeFeatures?: Feature[]): Feature[] => {
+  let features: Feature[] = [];
+  if (includeFeatures && !excludeFeatures) {
+    features = includeFeatures;
+  }
+  if (!includeFeatures && excludeFeatures) {
+    features = Object.values(Feature).filter((feature) => !excludeFeatures.includes(feature));
+  }
+
+  if (includeFeatures && excludeFeatures) {
+    features = includeFeatures.filter((feature) => !excludeFeatures.includes(feature));
+  }
+
+  if (!includeFeatures && !excludeFeatures) {
+    features = Object.values(Feature);
+  }
+
+  return features;
+};
+
+
+/**
+ * 将 PascalCase 转换为 camelCase
+ * @param str - 输入的大驼峰字符串
+ * @returns 转换后的小驼峰字符串
+ */
+export const pascalToCamel = (str: string): string => {
+  if (!str) return '';
+  return str[0].toLowerCase() + str.slice(1);
 };

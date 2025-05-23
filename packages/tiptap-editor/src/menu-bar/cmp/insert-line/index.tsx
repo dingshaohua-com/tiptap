@@ -4,29 +4,28 @@ import Solid from '../../../assets/solid.svg';
 import Dashed from '../../../assets/dashed.svg';
 import { useEditorConfig } from '../../../config-ctx';
 
-const buttonGroup: Array<any> = [
+const buttonGroupTemp: Array<any> = [
   {
-    value: 'lineSolid',
-    label: 'LineSolid',
+    id: 'lineSolid',
     icon: Solid,
     action: (editor: Editor) => editor.chain().focus().insertHr().run(),
     tooltip: '下划线-细线',
   },
   {
-    value: 'lineDashed',
-    label: 'LineDashed',
+    id: 'lineDashed',
     icon: Dashed,
     action: (editor: Editor) => editor.chain().focus().insertHr('dashed').run(),
     tooltip: '下划线-虚线',
   },
 ];
 
-const FontStyle = () => {
+const InsertLine = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
-
+  const buttonGroup = buttonGroupTemp.filter((item) => config.features.includes(item.id));
+  if (!buttonGroup.length) return null;
   return (
-    <div className="itemsStyle">
+    <div className="group">
       {buttonGroup.map(({ icon: Icon, tooltip, action, value }) => (
         <Tooltip title={tooltip} key={value}>
           <Button onClick={() => action(editor)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
@@ -38,4 +37,4 @@ const FontStyle = () => {
   );
 };
 
-export default FontStyle;
+export default InsertLine;

@@ -1,15 +1,17 @@
 import { Divider } from 'antd';
-import Table from './cmp/table';
 import Color from './cmp/color';
+import Table from './cmp/table';
 // import Shape from './cmp/shape';
 import Action from './cmp/action';
-import Heading from './cmp/heading';
+import GroupCmp from './group-cmp';
 import Formula from './cmp/formula';
+import Heading from './cmp/heading';
 import InsertQs from './cmp/insert-qs';
-import ImgUpload from './cmp/img-upload';
+import { Feature } from '../utils/enum';
 import FontStyle from './cmp/font-style';
-import InsertSome from './cmp/insert-some';
+import ImgUpload from './cmp/img-upload';
 import AlignStyle from './cmp/align-style';
+import InsertLine from './cmp/insert-line';
 import { useEditorConfig } from '../config-ctx';
 import { useState, useEffect, useRef } from 'react';
 
@@ -26,25 +28,23 @@ const MenuBar = () => {
   }, []);
 
   if (!config.editor) return null;
-
+  {
+    /* <Divider type="vertical" /> */
+  }
   return (
     <div className="menuBar" ref={toolbarRef} style={{ top: `-${toolbarHeight}px` }}>
       <Heading />
-      <Divider type="vertical" />
       <FontStyle />
-      <Divider type="vertical" />
-      <InsertSome />
-      <Divider type="vertical" />
+      <InsertLine />
       <Color />
-      <Divider type="vertical" />
       <AlignStyle />
-      <Divider type="vertical" />
       {/* <Shape/> */}
-      <Table />
-      <Formula />
-      <ImgUpload />
-      <InsertQs />
-      <Divider type="vertical" />
+      <GroupCmp>
+        <Table />
+        <Formula />
+        <ImgUpload />
+        <InsertQs />
+      </GroupCmp>
       <Action />
     </div>
   );

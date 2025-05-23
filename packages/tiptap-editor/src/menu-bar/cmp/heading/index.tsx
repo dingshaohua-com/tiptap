@@ -1,10 +1,12 @@
 import './style.scss';
 import { Select } from 'antd';
+import { Feature } from '../../../utils/enum';
 import { useEditorConfig } from '../../../config-ctx';
 
 const Heading = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
+  if (!config.features.includes(Feature.heading)) return null;
 
   const onChange = (level: any) => {
     if (level === 0) {
@@ -45,8 +47,9 @@ const Heading = () => {
     }
   };
   const activeLeave = getActiveLeave();
+
   return (
-    <div className="itemsStyle">
+    <div className="group">
       <Select onMouseDown={(e) => e.preventDefault()} getPopupContainer={(trigger) => trigger.parentNode} value={activeLeave || 0} style={{ width: 88 }} options={options} onChange={onChange} />
     </div>
   );

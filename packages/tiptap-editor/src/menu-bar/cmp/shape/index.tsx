@@ -34,7 +34,7 @@ const Shape = ({ editor }) => {
     };
 
     return (
-      <div className="shapItems">
+      <div className="shapItems group">
         {items.map((item) => {
           const imgFullUrl = urlBase + item + '.svg';
           return (

@@ -21,6 +21,8 @@ declare interface EditorDefaultConfig {
   onImageUpload?: ({ file, base64, url, id }: { file: File; base64: string; url: string; id: string }) => void;
   placeholder?: string;
   clickToEdit?: boolean;
+  includeFeatures?: Feature[];
+  excludeFeatures?: Feature[];
 }
 
 // 编辑器配置

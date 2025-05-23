@@ -9,13 +9,13 @@ const imgUpload = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
 
+
   const [textColorOpen, setTextColorOpen] = useState(false);
   const [backgroundColorOpen, setBackgroundColorOpen] = useState(false);
 
-  const buttonGroup: Array<any> = [
+  const buttonGroupTemp: Array<any> = [
     {
-      value: 'textColor',
-      label: 'TextColor',
+      id: 'textColor',
       icon: RiFontColor,
       action: (editor) => {
         // editor.chain().focus().toggleBold().run();
@@ -28,8 +28,7 @@ const imgUpload = () => {
       setOpen: setTextColorOpen,
     },
     {
-      value: 'backgroundColor',
-      label: 'BackgroundColor',
+      id: 'backgroundColor',
       icon: RiPaletteFill,
       action: (editor) => {
         // editor.chain().focus().toggleBold().run();
@@ -42,9 +41,11 @@ const imgUpload = () => {
       setOpen: setBackgroundColorOpen,
     },
   ];
+  const buttonGroup = buttonGroupTemp.filter((item) => config.features.includes(item.id));
+  if (!buttonGroup.length) return null;
 
   return (
-    <div className="itemsStyle color-picker">
+    <div className="group color-picker">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value, open, setOpen }) => (
         <Tooltip title={tooltip} key={value}>
           <Popover

@@ -2,10 +2,9 @@ import { Button, Tooltip } from 'antd';
 import { useEditorConfig } from '../../../config-ctx';
 import { RiMenu2Fill, RiMenu5Line, RiMenu3Line } from '@remixicon/react';
 
-const buttonGroup: Array<any> = [
+const buttonGroupTemp: Array<any> = [
   {
-    value: 'alignLeft',
-    label: 'AlignLeft',
+    id: 'alignLeft',
     icon: RiMenu2Fill,
     action: (editor) => editor.chain().focus().toggleTextAlign('left').run(),
     isActive: (editor) => editor.isActive({ textAlign: 'left' }),
@@ -14,8 +13,7 @@ const buttonGroup: Array<any> = [
   },
 
   {
-    value: 'alignCenter',
-    label: 'AlignCenter',
+    id: 'alignCenter',
     icon: RiMenu3Line,
     action: (editor) => editor.chain().focus().toggleTextAlign('center').run(),
     isActive: (editor) => editor.isActive({ textAlign: 'center' }),
@@ -23,8 +21,7 @@ const buttonGroup: Array<any> = [
     tooltip: '居中',
   },
   {
-    value: 'alignRight',
-    label: 'AlignRight',
+    id: 'alignRight',
     icon: RiMenu5Line,
     action: (editor) => editor.chain().focus().toggleTextAlign('right').run(),
     isActive: (editor) => editor.isActive({ textAlign: 'right' }),
@@ -33,12 +30,13 @@ const buttonGroup: Array<any> = [
   },
 ];
 
-const FontStyle = () => {
+const AlignStyle = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
-
+  const buttonGroup = buttonGroupTemp.filter((item) => config.features.includes(item.id));
+  if (!buttonGroup.length) return null;
   return (
-    <div className="itemsStyle">
+    <div className="group">
       {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value }) => (
         <Tooltip title={tooltip} key={value}>
           <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
@@ -50,4 +48,4 @@ const FontStyle = () => {
   );
 };
 
-export default FontStyle;
+export default AlignStyle;

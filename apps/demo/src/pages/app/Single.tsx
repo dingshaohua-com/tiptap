@@ -1,7 +1,7 @@
 import './style.scss';
 import axios from 'axios';
 import { Divider } from 'antd';
-import TiptapEditor from '@repo/tiptap-editor';
+import TiptapEditor, {Feature} from '@repo/tiptap-editor';
 import { useEffect, useRef, useState } from 'react';
 
 const initContent = `
@@ -10,7 +10,7 @@ const initContent = `
 const Single = () => {
   const [content, setContent] = useState(initContent);
 
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(true);
 
   const onBlur = () => {
     console.log(8989);
@@ -53,7 +53,8 @@ const Single = () => {
             console.log('外层表单失焦了');
           }}
         >
-          <TiptapEditor editable={editable} content={content} onChange={onChange} onSave={onSave} />
+          {/* includeFeatures={[Feature.heading, Feature.bold]}  */}
+          <TiptapEditor editable={editable} content={content} onChange={onChange} onSave={onSave} includeFeatures={[Feature.heading, Feature.bold, Feature.insertQs]}/>
         </form>
 
         {/* </textarea> */}

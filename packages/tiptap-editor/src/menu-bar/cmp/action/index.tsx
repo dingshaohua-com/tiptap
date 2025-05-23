@@ -1,12 +1,12 @@
 import { Button, Tooltip } from 'antd';
 import { RiSave3Line } from '@remixicon/react';
 import { useEditorConfig } from '../../../config-ctx';
+import { Feature } from '../../../utils/enum';
 
 
-const buttonGroup: Array<any> = [
+const buttonGroupTemp: Array<any> = [
   {
-    value: 'lineSolid',
-    label: 'LineSolid',
+    value: 'save',
     icon: RiSave3Line,
     style: { width: 20 },
     action: (editor, config) => {
@@ -30,9 +30,11 @@ const buttonGroup: Array<any> = [
 const FontStyle = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
+  const buttonGroup = buttonGroupTemp.filter((item) => config.features.includes(item.id));
+  if (!buttonGroup.length) return null;
 
   return (
-    <div className="itemsStyle">
+    <div className="group">
       {buttonGroup.map(({ icon: Icon, tooltip, action, value, style }) => (
         <Tooltip title={tooltip} key={value}>
           <Button

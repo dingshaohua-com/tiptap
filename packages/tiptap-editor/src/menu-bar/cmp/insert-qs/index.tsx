@@ -1,12 +1,13 @@
-import { Button, Tooltip, Popover, Input } from 'antd';
 import { useState } from 'react';
 import ohmImg from '../../../assets/ohm.svg';
+import { Feature } from '../../../utils/enum';
 import { useEditorConfig } from '../../../config-ctx';
+import { Button, Tooltip, Popover, Input } from 'antd';
 
-
-const imgUpload = () => {
+const InsertQs = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
+  if (!config.features.includes(Feature.insertQs)) return null;
   const [open, setOpen] = useState(false);
 
   const ok = () => {
@@ -15,20 +16,12 @@ const imgUpload = () => {
   };
 
   return (
-    <div className="itemsStyle">
-      <Tooltip title="插入填空">
-          <Button
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={ok}
-            color="default"
-            variant="filled"
-            autoInsertSpace
-          >
-            <img src={ohmImg} style={{ width: 18 }}/>
-          </Button>
-      </Tooltip>
-    </div>
+    <Tooltip title="插入填空">
+      <Button onMouseDown={(e) => e.preventDefault()} onClick={ok} color="default" variant="filled" autoInsertSpace>
+        <img src={ohmImg} style={{ width: 18 }} />
+      </Button>
+    </Tooltip>
   );
 };
 
-export default imgUpload;
+export default InsertQs;

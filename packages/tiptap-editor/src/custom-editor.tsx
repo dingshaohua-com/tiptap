@@ -2,25 +2,27 @@ import './style.scss';
 import cs from 'classnames';
 import MenuBar from './menu-bar';
 import { v4 as uuidv4 } from 'uuid';
-import { handleOldData } from './utils';
+import { Feature } from './utils/enum';
 import { EditorConfig } from '../global';
-import Color from '@tiptap/extension-color';
 import Table from '@tiptap/extension-table';
+import Color from '@tiptap/extension-color';
 import StarterKit from '@tiptap/starter-kit';
 import TableRow from '@tiptap/extension-table-row';
 import { useEffect, useRef, useState } from 'react';
-import Underline from '@tiptap/extension-underline';
 import Highlight from '@tiptap/extension-highlight';
-import TextStyle from '@tiptap/extension-text-style';
-import TableCell from '@tiptap/extension-table-cell';
+import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import TableCell from '@tiptap/extension-table-cell';
+import TextStyle from '@tiptap/extension-text-style';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
+import { calculateFeatures, handleOldData } from './utils';
 import { useEditorDefaultConfig, EditorConfigProvider } from './config-ctx';
 import { Dot, Formula, Horizontal, Question, Span, ResizableImg } from './extensions';
 
 const CustomEditor = (props: EditorConfig) => {
+  const features: Feature[] = calculateFeatures(props.includeFeatures, props.excludeFeatures);
   const defaultConfig = useEditorDefaultConfig();
   const config = { ...defaultConfig, ...props };
 
@@ -168,7 +170,7 @@ const CustomEditor = (props: EditorConfig) => {
 
   // onPointerDownCapture 是因为 math-field 的点击事件会冒泡到父级，导致无法执行
   return (
-    <EditorConfigProvider {...{ ...config, editor }}>
+    <EditorConfigProvider {...{ ...config, editor, features }}>
       <div className={cs(['tiptap-editor', { editable: editor.isEditable }])} id={uniqueId} onPointerDownCapture={startEdit}>
         {editor.isEditable && <MenuBar />}
         <EditorContent editor={editor} className="editorContent" />

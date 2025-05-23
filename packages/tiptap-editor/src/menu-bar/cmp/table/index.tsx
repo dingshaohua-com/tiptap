@@ -1,13 +1,15 @@
 import './style.scss';
 import { useEffect, useState } from 'react';
 import TableSelector from './table-selector';
+import { Feature } from '../../../utils/enum';
 import { RiTableLine } from '@remixicon/react';
 import { useEditorConfig } from '../../../config-ctx';
 import { Button, Tooltip, Popover, Input } from 'antd';
 
-const imgUpload = () => {
+const Table = () => {
   const config = useEditorConfig();
   const editor = config.editor!;
+  if (!config.features.includes(Feature.table)) return null;
 
   const [open, setOpen] = useState(false);
 
@@ -36,10 +38,13 @@ const imgUpload = () => {
 
     // 菜单项配置
     const actions = [
-      { label: '插入行', action: () => {
-        editor.commands.addRowAfter();
-        editor.commands.focus();
-      } },
+      {
+        label: '插入行',
+        action: () => {
+          editor.commands.addRowAfter();
+          editor.commands.focus();
+        },
+      },
       { label: '删除行', action: () => editor.commands.deleteRow() },
       { label: '插入列', action: () => editor.commands.addColumnAfter() },
       { label: '删除列', action: () => editor.commands.deleteColumn() },
@@ -123,7 +128,6 @@ const imgUpload = () => {
   };
 
   return (
-    <div className="itemsStyle">
       <Tooltip title="插入表格">
         <Popover content={<TableSelector />} title="" open={open} trigger="click" onOpenChange={handleOpenChange}>
           <Button onClick={ok} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
@@ -131,8 +135,7 @@ const imgUpload = () => {
           </Button>
         </Popover>
       </Tooltip>
-    </div>
   );
 };
 
-export default imgUpload;
+export default Table;
