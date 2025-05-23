@@ -7,9 +7,7 @@ import { Feature } from '../../../utils/enum';
 import { useEditorConfig } from '../../../config-ctx';
 import { Button, Popover, Tabs, TabsProps } from 'antd';
 
-const FormulaContent = ({ editor, onClose }) => {
-  const [mfPreviewVal, setMfPreviewVal] = useState('');
-  const [pos, setPos] = useState(0);
+const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal }) => {
 
   const onChange = (key: string) => {
     console.log(key);
@@ -27,20 +25,6 @@ const FormulaContent = ({ editor, onClose }) => {
     }
     onClose();
   };
-
-  useEffect(() => {
-    const handleFormulaClick = ({ content, pos }) => {
-      if (Boolean(editor.isEditable)) {
-        setPos(pos);
-        setMfPreviewVal(content);
-      }
-    };
-
-    emitter.on('formula-click', handleFormulaClick);
-    return () => {
-      emitter.off('formula-click', handleFormulaClick);
-    };
-  }, [editor]);
 
   const items: TabsProps['items'] = presets.map((item) => ({
     key: item.key,
@@ -85,13 +69,31 @@ const Formula = () => {
   if (!config.features.includes(Feature.formula)) return null;
 
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState(0);
+  const [mfPreviewVal, setMfPreviewVal] = useState('');
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
 
+  const handleFormulaClick = ({ content, pos }) => {
+    console.log('formula-click收到');
+    if (Boolean(editor.isEditable)) {
+      setOpen(true);
+      setPos(pos);
+      setMfPreviewVal(content);
+    }
+  };
+
+  useEffect(() => {
+    emitter.on('formula-click', handleFormulaClick);
+    return () => {
+      emitter.off('formula-click', handleFormulaClick);
+    };
+  }, [editor]);
+
   return (
-    <Popover content={<FormulaContent editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
+    <Popover content={<FormulaContent pos={pos} mfPreviewVal={mfPreviewVal} setMfPreviewVal={setMfPreviewVal} setPos={setPos} editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
       <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
         <RiFormula />
       </Button>

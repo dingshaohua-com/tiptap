@@ -26,6 +26,10 @@ const buttonGroupTemp: Array<any> = [
           html = stripOuterNode(html);
         }
       }
+
+      // html = unwrapMathFieldToLatex(html);
+
+      // 将 math-field转换为 latex 字符串
       config.onSave({ html, json });
     },
     tooltip: '保存',

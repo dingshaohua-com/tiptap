@@ -95,6 +95,7 @@ const CustomEditor = (props: EditorConfig) => {
           html = stripOuterNode(html);
         }
       }
+      // html = unwrapMathFieldToLatex(html);
 
       //onUpdate 在 Tiptap 中的触发机制：哪怕你只是点击编辑器、没有改变内容，但如果 Tiptap 在内部调整了文档结构（比如补全空段落、自动清理节点等），也会触发
       const newHTML = editor.getHTML();

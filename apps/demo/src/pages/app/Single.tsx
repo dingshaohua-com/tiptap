@@ -5,7 +5,7 @@ import TiptapEditor, {Feature} from '@repo/tiptap-editor';
 import { useEffect, useRef, useState } from 'react';
 
 const initContent = `
-<p>Hell World ! 把集合用列举法表示，正确的是</p> 
+<p>这是一个公式 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$</p>
 `;
 const Single = () => {
   const [content, setContent] = useState(initContent);

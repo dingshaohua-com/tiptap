@@ -4,7 +4,17 @@ const autoPrefixImageHost = (html: string, host = 'https://gil-test.oss-cn-beiji
   return html.replace(/<img\s+[^>]*src=["'](?!https?:\/\/|data:)([^"']+)["']/g, (match, relativeSrc) => match.replace(relativeSrc, host + '/' + relativeSrc.replace(/^\/+/, '')));
 };
 
-const convertInlineLatexToMathField = (html: string): string => {
+export const unwrapMathFieldToLatex = (html: string) => {
+  return html.replace(/<math-field>([\s\S]*?)<\/math-field>/g, (_, inner) => {
+    const unescaped = inner
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&");
+    return unescaped;
+  });
+}
+
+const convertLatexToMathField = (html: string): string => {
   const latexRegex = /\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\$(?!\$)([\s\S]+?)\$/g;
 
   return html.replace(latexRegex, (_, group1, group2, group3, group4) => {
@@ -14,11 +24,32 @@ const convertInlineLatexToMathField = (html: string): string => {
   });
 };
 
+// const convertLatexToMathField = (html: string) => {
+//   const patterns = [
+//     /\\\([^\)]*?\\\)/g, // \(...\)
+//     /\$[^$]*?\$/g, // $...$
+//     /\\\[[\s\S]*?\\\]/g, // \[...\]
+//     /\$\$[\s\S]*?\$\$/g, // $$...$$
+//   ];
+
+//   let output = html;
+
+//   patterns.forEach((regex) => {
+//     output = output.replace(regex, (fullMatch) => {
+//       // 直接将整个匹配内容包裹进去
+//       const escaped = fullMatch.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+//       return `<math-field>${escaped}</math-field>`;
+//     });
+//   });
+
+//   return output;
+// };
+
 // 特殊处理旧的富文本内容中的一些数据(自动添加图片前缀, 正则替换)
 export const handleOldData = (data: any) => {
   let newData = data;
   if (newData) {
-    newData = convertInlineLatexToMathField(newData);
+    newData = convertLatexToMathField(newData);
     newData = autoPrefixImageHost(newData);
   }
   return newData;
