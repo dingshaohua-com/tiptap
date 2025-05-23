@@ -85,7 +85,6 @@ export const calculateFeatures = (includeFeatures?: Feature[], excludeFeatures?:
   return features;
 };
 
-
 /**
  * 将 PascalCase 转换为 camelCase
  * @param str - 输入的大驼峰字符串
@@ -94,4 +93,17 @@ export const calculateFeatures = (includeFeatures?: Feature[], excludeFeatures?:
 export const pascalToCamel = (str: string): string => {
   if (!str) return '';
   return str[0].toLowerCase() + str.slice(1);
+};
+
+// 移除最外层节点
+export const stripOuterNode = (html: string): string => {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html.trim();
+
+  // 如果只有一个子节点并且是 Element，则返回其 innerHTML
+  if (wrapper.childNodes.length === 1 && wrapper.firstChild instanceof HTMLElement) {
+    return wrapper.firstChild.innerHTML;
+  }
+
+  return html;
 };

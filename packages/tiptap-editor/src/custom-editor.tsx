@@ -17,7 +17,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import TableHeader from '@tiptap/extension-table-header';
-import { calculateFeatures, handleOldData } from './utils';
+import { calculateFeatures, handleOldData, stripOuterNode } from './utils';
 import { useEditorDefaultConfig, EditorConfigProvider } from './config-ctx';
 import { Dot, Formula, Horizontal, Question, Span, ResizableImg } from './extensions';
 
@@ -89,6 +89,10 @@ const CustomEditor = (props: EditorConfig) => {
         if (firstNode.type === 'paragraph' && !firstNode.content) {
           delete json.content;
           html = '';
+        }
+
+        if(config.stripOuterNode){
+          html = stripOuterNode(html);
         }
       }
 

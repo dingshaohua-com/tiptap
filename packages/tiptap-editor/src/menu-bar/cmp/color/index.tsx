@@ -46,11 +46,11 @@ const imgUpload = () => {
 
   return (
     <div className="group color-picker">
-      {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value, open, setOpen }) => (
-        <Tooltip title={tooltip} key={value}>
+      {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, id, open, setOpen }) => (
+        <Tooltip title={tooltip} key={id}>
           <Popover
             //  getPopupContainer={triggerNode => triggerNode.parentNode}
-            content={<ColorPicker editor={editor} onClose={() => setOpen(false)} type={value} />}
+            content={<ColorPicker editor={editor} onClose={() => setOpen(false)} type={id} />}
             title=""
             open={open}
             trigger="click"

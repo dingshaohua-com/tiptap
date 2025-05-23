@@ -37,8 +37,8 @@ const AlignStyle = () => {
   if (!buttonGroup.length) return null;
   return (
     <div className="group">
-      {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, value }) => (
-        <Tooltip title={tooltip} key={value}>
+      {buttonGroup.map(({ icon: Icon, tooltip, isActive, action, id }) => (
+        <Tooltip title={tooltip} key={id}>
           <Button onClick={() => action(editor)} color="default" variant={isActive(editor) ? 'solid' : 'filled'} autoInsertSpace>
             <Icon />
           </Button>

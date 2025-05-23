@@ -23,6 +23,7 @@ declare interface EditorDefaultConfig {
   clickToEdit?: boolean;
   includeFeatures?: Feature[];
   excludeFeatures?: Feature[];
+  stripOuterNode?: boolean;
 }
 
 // 编辑器配置

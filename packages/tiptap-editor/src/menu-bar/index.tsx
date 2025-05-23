@@ -1,17 +1,15 @@
-import { Divider } from 'antd';
-import Color from './cmp/color';
 import Table from './cmp/table';
+import Color from './cmp/color';
 // import Shape from './cmp/shape';
 import Action from './cmp/action';
 import GroupCmp from './group-cmp';
-import Formula from './cmp/formula';
 import Heading from './cmp/heading';
+import Formula from './cmp/formula';
 import InsertQs from './cmp/insert-qs';
-import { Feature } from '../utils/enum';
-import FontStyle from './cmp/font-style';
 import ImgUpload from './cmp/img-upload';
-import AlignStyle from './cmp/align-style';
+import FontStyle from './cmp/font-style';
 import InsertLine from './cmp/insert-line';
+import AlignStyle from './cmp/align-style';
 import { useEditorConfig } from '../config-ctx';
 import { useState, useEffect, useRef } from 'react';
 
@@ -26,11 +24,7 @@ const MenuBar = () => {
       setToolbarHeight(toolbarRef.current.offsetHeight);
     }
   }, []);
-
   if (!config.editor) return null;
-  {
-    /* <Divider type="vertical" /> */
-  }
   return (
     <div className="menuBar" ref={toolbarRef} style={{ top: `-${toolbarHeight}px` }}>
       <Heading />

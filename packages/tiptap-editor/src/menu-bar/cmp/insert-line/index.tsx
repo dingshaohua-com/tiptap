@@ -26,8 +26,8 @@ const InsertLine = () => {
   if (!buttonGroup.length) return null;
   return (
     <div className="group">
-      {buttonGroup.map(({ icon: Icon, tooltip, action, value }) => (
-        <Tooltip title={tooltip} key={value}>
+      {buttonGroup.map(({ icon: Icon, tooltip, action, id }) => (
+        <Tooltip title={tooltip} key={id}>
           <Button onClick={() => action(editor)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
             <img src={Icon} />
           </Button>

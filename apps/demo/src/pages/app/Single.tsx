@@ -27,7 +27,7 @@ const Single = () => {
   };
 
   const onChange = (content: string) => {
-    // console.log('content', content);
+    console.log('content', content);
     // setContent(content);
   };
 
@@ -54,7 +54,7 @@ const Single = () => {
           }}
         >
           {/* includeFeatures={[Feature.heading, Feature.bold]}  */}
-          <TiptapEditor editable={editable} content={content} onChange={onChange} onSave={onSave} includeFeatures={[Feature.heading, Feature.bold, Feature.insertQs]}/>
+          <TiptapEditor editable={editable} content={content} onChange={onChange} onSave={onSave} stripOuterNode={false} />
         </form>
 
         {/* </textarea> */}
