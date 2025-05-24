@@ -98,5 +98,5 @@ const ImgUpload = () => {
     </>
   );
 };
-
+ImgUpload.id = 'imgUpload';
 export default ImgUpload;

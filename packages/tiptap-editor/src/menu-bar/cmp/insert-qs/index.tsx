@@ -24,5 +24,5 @@ const InsertQs = () => {
     </Tooltip>
   );
 };
-
+InsertQs.id = 'insertQs';
 export default InsertQs;

@@ -135,5 +135,6 @@ const Table = () => {
       </Tooltip>
   );
 };
+Table.id = 'table';
 
 export default Table;

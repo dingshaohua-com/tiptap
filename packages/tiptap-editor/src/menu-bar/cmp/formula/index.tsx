@@ -100,5 +100,6 @@ const Formula = () => {
     </Popover>
   );
 };
+Formula.id = 'formula';
 
 export default Formula;
