@@ -77,7 +77,7 @@ const Formula = () => {
     setOpen(newOpen);
   };
 
-  const handleFormulaClick = ({ content, pos }) => {
+  const handleFormulaClick = ({ content, pos }: any) => {
     if (Boolean(editor.isEditable)) {
       setOpen(true);
       setPos(pos);
