@@ -65,8 +65,6 @@ const CustomEditor = (props: EditorConfig) => {
       handleDOMEvents: {
         // 点击工具栏的时候阻止失焦
         blur: (view, event) => {
-          console.log('哈哈哈', event.relatedTarget);
-
           const editorId = view.dom.getAttribute('data-id');
           const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
           const noBlur = relatedTarget?.closest('.no-blur');
@@ -112,7 +110,6 @@ const CustomEditor = (props: EditorConfig) => {
       config.onFocus && config.onFocus(arg);
     },
     onBlur(arg) {
-      console.log('失焦啦');
       editor.setEditable(false);
       config.onBlur && config.onBlur(arg);
 
@@ -153,7 +150,6 @@ const CustomEditor = (props: EditorConfig) => {
   };
 
   useEffect(() => {
-    console.log('接收到的editable', props.editable, editor.isEditable);
     if (props.editable === editor.isEditable) return;
     if (props.editable) {
       startEdit();

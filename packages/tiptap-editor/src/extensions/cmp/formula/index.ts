@@ -45,7 +45,6 @@ export const Formula = Node.create({
         if (editor.isFocused) {
           // 你可以在这里触发编辑器命令或做其他操作
           editor.commands.setNodeSelection(getPos());
-          console.log('formula-click发射啦');
           emitter.emit('formula-click', {
             content: node.textContent,
             pos: getPos(),

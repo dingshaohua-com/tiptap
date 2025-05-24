@@ -108,8 +108,6 @@ const Table = () => {
         const x = event.clientX;
         const y = event.clientY;
 
-        console.log('点击的是表格');
-
         // 显示自定义菜单
         showCustomContextMenu(editor);
       }

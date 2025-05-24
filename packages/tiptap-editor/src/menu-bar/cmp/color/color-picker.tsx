@@ -34,8 +34,6 @@ const ColorPickerMenu = ({ editor, onClose, type }) => {
         className="no-blur"
         color={customColor}
         onChange={(color) => {
-          console.log(1122);
-
           setCustomColor(color.hex);
           applyColor(color.hex);
         }}

@@ -10,7 +10,7 @@ import { Button, Popover, Tabs, TabsProps } from 'antd';
 const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal }) => {
 
   const onChange = (key: string) => {
-    console.log(key);
+    // console.log(key);
   };
 
   const onClickItem = (value) => {
@@ -77,7 +77,6 @@ const Formula = () => {
   };
 
   const handleFormulaClick = ({ content, pos }) => {
-    console.log('formula-click收到');
     if (Boolean(editor.isEditable)) {
       setOpen(true);
       setPos(pos);

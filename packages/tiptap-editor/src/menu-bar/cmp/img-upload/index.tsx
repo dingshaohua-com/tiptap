@@ -12,7 +12,6 @@ import { fileToBase64, TexttoBase64 } from '../../../utils/toBase64';
 const DesCmp = ({ editor, setOpen, config }) => {
   const { inputRef, selectFile, onFileChange } = useFileUploader({
     handler: config.imageUploadHandler,
-    // onProgress: (percent, file) => { console.log(`Uploading ${file.name}: ${percent}%`);},
     onSuccess: async (res, file) => {
       setOpen(false);
       const url = (config.imgBaseUrl || '') + res;
