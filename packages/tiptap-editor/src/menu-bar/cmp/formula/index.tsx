@@ -93,7 +93,7 @@ const Formula = () => {
   }, [editor]);
 
   return (
-    <Popover content={<FormulaContent pos={pos} mfPreviewVal={mfPreviewVal} setMfPreviewVal={setMfPreviewVal} setPos={setPos} editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
+    <Popover content={<FormulaContent pos={pos} mfPreviewVal={mfPreviewVal} setMfPreviewVal={setMfPreviewVal} editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
       <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
         <RiFormula />
       </Button>
