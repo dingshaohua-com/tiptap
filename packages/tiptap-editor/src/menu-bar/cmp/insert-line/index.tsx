@@ -8,12 +8,14 @@ const buttonGroupTemp: Array<any> = [
   {
     id: 'lineSolid',
     icon: Solid,
-    action: (editor: Editor) => editor.chain().focus().insertHr().run(),
+    // @ts-ignore
+    action: (editor: Editor) => editor.chain().focus()?.insertHr().run(),
     tooltip: '下划线-细线',
   },
   {
     id: 'lineDashed',
     icon: Dashed,
+     // @ts-ignore
     action: (editor: Editor) => editor.chain().focus().insertHr('dashed').run(),
     tooltip: '下划线-虚线',
   },

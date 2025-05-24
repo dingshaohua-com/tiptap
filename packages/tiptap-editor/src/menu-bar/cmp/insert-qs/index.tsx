@@ -11,6 +11,7 @@ const InsertQs = () => {
   const [open, setOpen] = useState(false);
 
   const ok = () => {
+    // @ts-ignore
     editor.chain().focus().insertQs().run();
     config.onInsertQs && config.onInsertQs();
   };

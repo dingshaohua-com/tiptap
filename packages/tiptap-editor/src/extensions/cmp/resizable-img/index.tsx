@@ -65,7 +65,7 @@ export const ResizableImg = Image.extend({
             });
 
             // Handle clicks outside the container
-            document.addEventListener('click', (event) => {
+            document.addEventListener('click', (event: any) => {
                 if (!container.contains(event.target) && editing) {
                     editing = false;
                     removeResizeUI();

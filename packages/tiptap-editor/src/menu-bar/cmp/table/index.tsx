@@ -70,7 +70,7 @@ const Table = () => {
     document.body.appendChild(menu);
 
     // 显示菜单
-    function showMenu(x, y) {
+    function showMenu(x: number, y: number) {
       menu.style.left = `${x}px`;
       menu.style.top = `${y}px`;
       menu.style.display = 'block';
@@ -82,7 +82,7 @@ const Table = () => {
     }
 
     // 监听右键事件
-    editor.view.dom.addEventListener('contextmenu', (event) => {
+    editor.view.dom.addEventListener('contextmenu', (event: any) => {
       const cell = event.target.closest('td, th');
       if (cell) {
         event.preventDefault();
@@ -97,7 +97,7 @@ const Table = () => {
   }
 
   useEffect(() => {
-    editor.view.dom.addEventListener('contextmenu', (event) => {
+    editor.view.dom.addEventListener('contextmenu', (event: any) => {
       const target = event.target;
 
       // 判断是否在表格单元格中（<td> 或 <th>）
@@ -109,7 +109,7 @@ const Table = () => {
         const y = event.clientY;
 
         // 显示自定义菜单
-        showCustomContextMenu(editor);
+        showCustomContextMenu();
       }
     });
   }, []);

@@ -7,13 +7,14 @@ import { Feature } from '../../../utils/enum';
 import { useEditorConfig } from '../../../config-ctx';
 import { Button, Popover, Tabs, TabsProps } from 'antd';
 
+// @ts-ignore
 const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal }) => {
 
   const onChange = (key: string) => {
     // console.log(key);
   };
 
-  const onClickItem = (value) => {
+  const onClickItem = (value: any) => {
     setMfPreviewVal(mfPreviewVal + value.latex);
   };
 
