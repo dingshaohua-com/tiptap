@@ -28,7 +28,7 @@ const questionsInit = [
   },
   {
     editable: false,
-    content: '哈哈',
+    content: '相同条件下，\\rm{NH_4Cl} 大, <br> 我是新的段落',
   },
 ];
 const Multiple = () => {

@@ -14,41 +14,52 @@ export const unwrapMathFieldToLatex = (html: string) => {
   });
 }
 
-const convertLatexToMathField = (html: string): string => {
-  const latexRegex = /\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\$(?!\$)([\s\S]+?)\$/g;
+// const convertLatexToMathField = (html: string): string => {
+//   const latexRegex = /\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\\\[([\s\S]+?)\\\]|\$(?!\$)([\s\S]+?)\$/g;
 
-  return html.replace(latexRegex, (_, group1, group2, group3, group4) => {
-    // 哪个组匹配到就用哪个
-    const content = group1 || group2 || group3 || group4 || '';
-    return `<math-field>${content.trim()}</math-field>`;
-  });
+//   return html.replace(latexRegex, (_, group1, group2, group3, group4) => {
+//     // 哪个组匹配到就用哪个
+//     const content = group1 || group2 || group3 || group4 || '';
+//     return `<math-field>${content.trim()}</math-field>`;
+//   });
+// };
+
+const convertLatexToMathField = (html: string): string => {
+  // 定义各类 LaTeX 匹配规则
+  const rules: { regex: RegExp; type: string }[] = [
+    { regex: /\\\((.*?)\\\)/g, type: 'inline' },         // 匹配 \( ... \)
+    { regex: /\$(?!\$)(.*?)(?<!\\)\$/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
+    { regex: /\\\[([\s\S]*?)\\\]/g, type: 'block' },      // 匹配 \[ ... \]
+    { regex: /\$\$([\s\S]*?)\$\$/g, type: 'block' },      // 匹配 $$ ... $$
+    { regex: /\\rm\{([\s\S]*?)\}/g, type: 'rm' },   // 匹配 \rm{ ... }
+  ];
+
+  let result = html;
+
+  for (const { regex } of rules) {
+    result = result.replace(regex, (_, content) => {
+      return `<math-field>${content.trim()}</math-field>`;
+    });
+  }
+
+  return result;
 };
 
-// const convertLatexToMathField = (html: string) => {
-//   const patterns = [
-//     /\\\([^\)]*?\\\)/g, // \(...\)
-//     /\$[^$]*?\$/g, // $...$
-//     /\\\[[\s\S]*?\\\]/g, // \[...\]
-//     /\$\$[\s\S]*?\$\$/g, // $$...$$
-//   ];
-
-//   let output = html;
-
-//   patterns.forEach((regex) => {
-//     output = output.replace(regex, (fullMatch) => {
-//       // 直接将整个匹配内容包裹进去
-//       const escaped = fullMatch.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-//       return `<math-field>${escaped}</math-field>`;
-//     });
-//   });
-
-//   return output;
-// };
+/**
+ * 将文本中的换行符 \n 替换为 <br> 标签
+ * @param text 原始文本
+ * @returns HTML 字符串，换行变为 <br>
+ */
+const convertLineBreaksToHtml = (text: string): string => {
+  if (!text) return '';
+  return text.replace(/\n/g, '<br>');
+};
 
 // 特殊处理旧的富文本内容中的一些数据(自动添加图片前缀, 正则替换)
 export const handleOldData = (data: any) => {
   let newData = data;
   if (newData) {
+    newData = convertLineBreaksToHtml(newData);
     newData = convertLatexToMathField(newData);
     newData = autoPrefixImageHost(newData);
   }
