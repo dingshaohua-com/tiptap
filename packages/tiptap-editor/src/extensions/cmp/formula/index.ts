@@ -1,8 +1,9 @@
-import katex from 'katex';
+// import katex from 'katex';
 import { Editor } from '@tiptap/core';
 import { Extension } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 import emitter from '../../../utils/emitter';
+import renderMathInElement from 'katex/contrib/auto-render';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
 declare module '@tiptap/core' {
@@ -25,7 +26,7 @@ export const Formula = Extension.create({
           // 根据公式类型选择合适的分隔符
           // const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
           // const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
-          
+
           return editor.commands.insertContent(latex);
         },
       updateFormula:
@@ -36,7 +37,7 @@ export const Formula = Extension.create({
           // 根据公式类型选择合适的分隔符
           // const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
           // const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
-          
+
           // 先删除旧内容
           editor.commands.deleteRange({ from: pos, to: end });
           // 再插入新内容
@@ -51,11 +52,11 @@ export const Formula = Extension.create({
         props: {
           decorations: (state) => {
             const decorations: Decoration[] = [];
-            
+
             state.doc.descendants((node, pos) => {
               if (node.isText) {
                 const text = node.text || '';
-                
+
                 // 定义各类 LaTeX 匹配规则
                 const rules: { regex: RegExp; type: string }[] = [
                   // { regex: /\\\((.*?)\\\)/g, type: 'inline' }, // 匹配 \( ... \)
@@ -78,33 +79,40 @@ export const Formula = Extension.create({
                     const start = pos + match.index;
                     const end = start + match[0].length;
 
-                    console.log(666, formulaContent);
-                    
-                    
                     // 使用 inline 装饰器来隐藏原始文本
                     decorations.push(
                       Decoration.inline(start, end, {
                         style: 'display: none;',
                       }),
                     );
-                    
+
                     // 使用 widget 装饰器来显示渲染后的公式
                     const decoration = Decoration.widget(start, () => {
                       const container = document.createElement('span');
                       container.className = 'formula-container';
                       container.style.cssText = 'display: inline-block; position: relative; cursor: pointer;';
-                      
+
                       const formula = document.createElement('span');
                       formula.className = 'formula-decoration';
                       formula.style.cssText = 'display: inline-block;';
-                      
-                      // 根据公式类型设置不同的渲染选项
-                      const options = {
-                        displayMode: rule.type === 'block',
+
+                      // 创建临时容器
+                      const temp = document.createElement('div');
+                      temp.innerHTML = formulaContent;
+
+                      // 使用 KaTeX 渲染这个容器
+                      renderMathInElement(temp, {
+                        delimiters: [
+                          { left: '$$', right: '$$', display: true },
+                          { left: '$', right: '$', display: false },
+                          { left: '\\(', right: '\\)', display: false },
+                          { left: '\\[', right: '\\]', display: true },
+                        ],
                         throwOnError: false,
-                      };
-                      
-                      formula.innerHTML = katex.renderToString(formulaContent, options);
+                      });
+
+                      // 获取渲染后的 HTML 字符串
+                      formula.innerHTML = temp.innerHTML;
 
                       // 添加样式来隐藏 katex-html 元素（KaTeX 渲染时自动添加的辅助元素）
                       const style = document.createElement('style');
@@ -113,16 +121,16 @@ export const Formula = Extension.create({
                           display: none !important;
                         }
                       `;
-                      
+
                       // 使用 requestAnimationFrame 确保在下一帧时添加事件监听
                       requestAnimationFrame(() => {
                         // 添加点击事件
                         container.addEventListener('click', (event) => {
                           event.stopPropagation();
-                          
+
                           // 从 Extension 上下文获取编辑器实例
                           const editor = this.editor;
-                          
+
                           if (editor) {
                             emitter.emit('formula-click', {
                               content: formulaContent,
@@ -132,19 +140,19 @@ export const Formula = Extension.create({
                           }
                         });
                       });
-                      
+
                       container.appendChild(style);
                       container.appendChild(formula);
                       return container;
                     });
-                    
+
                     decorations.push(decoration);
                   }
                 }
               }
               return true;
             });
-            
+
             return DecorationSet.create(state.doc, decorations);
           },
         },

@@ -5,7 +5,7 @@ import chemistry from './modules/chemistry';
 import mathSymbol from './modules/math-symbol';
 import greekLetter from './modules/greek-letter';
 
-const allModules = [chemistry, math, mathSymbol, physics, matrix, greekLetter];
+const allModules = [chemistry, math, mathSymbol, physics, greekLetter];
 export default allModules;
 // const allModules = [];
 // const requireModules = import.meta.glob('./modules/**/*.ts', { eager: true });

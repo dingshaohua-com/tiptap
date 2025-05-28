@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import TiptapEditor, { Feature } from '@repo/tiptap-editor';
 import katex from 'katex';
 
-// const initContent = `<p>这是一个公式 \\(\\frac{d^2y}{dx^2}\\Big|_{x=1}\\)</p>`;
-const initContent = `<p>相同条件下，\\rm{NH_4Cl}  比\\rm{NH_4I} 的大</p>`;
+const initContent = `<p>这是一个公式 \\(\\frac{d^2y}{dx^2}\\Big|_{x=1}\\)</p>`;
+// const initContent = `<p>相同条件下，\\rm{NH_4Cl}  比\\rm{NH_4I} 的大 \\(\\frac{d^2y}{dx^2}\\Big|_{x=1}\\)</p>`;
 
 
 const Single = () => {
