@@ -23,10 +23,10 @@ export const Formula = Extension.create({
         (latex: string) =>
         ({ editor }: { editor: Editor }) => {
           // 根据公式类型选择合适的分隔符
-          const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
-          const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
+          // const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
+          // const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
           
-          return editor.commands.insertContent(formula);
+          return editor.commands.insertContent(latex);
         },
       updateFormula:
         (pos: number, end: number, latex: string) =>
@@ -34,13 +34,13 @@ export const Formula = Extension.create({
           console.log(111, pos, end, latex);
 
           // 根据公式类型选择合适的分隔符
-          const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
-          const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
+          // const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
+          // const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
           
           // 先删除旧内容
           editor.commands.deleteRange({ from: pos, to: end });
           // 再插入新内容
-          return editor.commands.insertContentAt(pos, formula);
+          return editor.commands.insertContentAt(pos, latex);
         },
     };
   },
@@ -58,11 +58,16 @@ export const Formula = Extension.create({
                 
                 // 定义各类 LaTeX 匹配规则
                 const rules: { regex: RegExp; type: string }[] = [
-                  { regex: /\\\((.*?)\\\)/g, type: 'inline' }, // 匹配 \( ... \)
-                  { regex: /\$(?!\$)(.*?)(?<!\\)\$/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
-                  { regex: /\\\[([\s\S]*?)\\\]/g, type: 'block' }, // 匹配 \[ ... \]
-                  { regex: /\$\$([\s\S]*?)\$\$/g, type: 'block' }, // 匹配 $$ ... $$
-                  { regex: /\\rm\{([\s\S]*?)\}/g, type: 'rm' }, // 匹配 \rm{ ... }
+                  // { regex: /\\\((.*?)\\\)/g, type: 'inline' }, // 匹配 \( ... \)
+                  // { regex: /\$(?!\$)(.*?)(?<!\\)\$/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
+                  // { regex: /\\\[([\s\S]*?)\\\]/g, type: 'block' }, // 匹配 \[ ... \]
+                  // { regex: /\$\$([\s\S]*?)\$\$/g, type: 'block' }, // 匹配 $$ ... $$
+                  // { regex: /\\rm\{([\s\S]*?)\}/g, type: 'rm' }, // 匹配 \rm{ ... }
+                  { regex: /(\\\(.*?\\\))/g, type: 'inline' }, // 匹配 \( ... \)
+                  { regex: /(\$(?!\$).*?(?<!\\)\$)/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
+                  { regex: /(\\\[[\s\S]*?\\\])/g, type: 'block' }, // 匹配 \[ ... \]
+                  { regex: /(\$\$[\s\S]*?\$\$)/g, type: 'block' }, // 匹配 $$ ... $$
+                  { regex: /(\\rm\{[\s\S]*?\})/g, type: 'rm' }, // 匹配 \rm{ ... }
                 ];
 
                 // 遍历所有规则
@@ -72,6 +77,9 @@ export const Formula = Extension.create({
                     const formulaContent = match[1];
                     const start = pos + match.index;
                     const end = start + match[0].length;
+
+                    console.log(666, formulaContent);
+                    
                     
                     // 使用 inline 装饰器来隐藏原始文本
                     decorations.push(
