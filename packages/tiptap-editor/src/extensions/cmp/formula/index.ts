@@ -1,13 +1,15 @@
 import katex from 'katex';
+import { Editor } from '@tiptap/core';
 import { Extension } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
+import emitter from '../../../utils/emitter';
 import { Decoration, DecorationSet } from 'prosemirror-view';
-import { Editor } from '@tiptap/core';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     formula: {
       insertFormula: (latex: string) => ReturnType;
+      updateFormula: (pos: number, end: number, latex: string) => ReturnType;
     };
   }
 }
@@ -17,12 +19,29 @@ export const Formula = Extension.create({
 
   addCommands() {
     return {
-      insertFormula: (latex: string) => ({ editor }: { editor: Editor }) => {
-        // 根据公式类型选择合适的分隔符
-        const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
-        const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
-        return editor.commands.insertContent(formula);
-      },
+      insertFormula:
+        (latex: string) =>
+        ({ editor }: { editor: Editor }) => {
+          // 根据公式类型选择合适的分隔符
+          const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
+          const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
+          
+          return editor.commands.insertContent(formula);
+        },
+      updateFormula:
+        (pos: number, end: number, latex: string) =>
+        ({ editor }: { editor: Editor }) => {
+          console.log(111, pos, end, latex);
+
+          // 根据公式类型选择合适的分隔符
+          const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
+          const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
+          
+          // 先删除旧内容
+          editor.commands.deleteRange({ from: pos, to: end });
+          // 再插入新内容
+          return editor.commands.insertContentAt(pos, formula);
+        },
     };
   },
 
@@ -39,11 +58,11 @@ export const Formula = Extension.create({
                 
                 // 定义各类 LaTeX 匹配规则
                 const rules: { regex: RegExp; type: string }[] = [
-                  { regex: /\\\((.*?)\\\)/g, type: 'inline' },         // 匹配 \( ... \)
+                  { regex: /\\\((.*?)\\\)/g, type: 'inline' }, // 匹配 \( ... \)
                   { regex: /\$(?!\$)(.*?)(?<!\\)\$/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
-                  { regex: /\\\[([\s\S]*?)\\\]/g, type: 'block' },      // 匹配 \[ ... \]
-                  { regex: /\$\$([\s\S]*?)\$\$/g, type: 'block' },      // 匹配 $$ ... $$
-                  { regex: /\\rm\{([\s\S]*?)\}/g, type: 'rm' },         // 匹配 \rm{ ... }
+                  { regex: /\\\[([\s\S]*?)\\\]/g, type: 'block' }, // 匹配 \[ ... \]
+                  { regex: /\$\$([\s\S]*?)\$\$/g, type: 'block' }, // 匹配 $$ ... $$
+                  { regex: /\\rm\{([\s\S]*?)\}/g, type: 'rm' }, // 匹配 \rm{ ... }
                 ];
 
                 // 遍历所有规则
@@ -65,7 +84,7 @@ export const Formula = Extension.create({
                     const decoration = Decoration.widget(start, () => {
                       const container = document.createElement('span');
                       container.className = 'formula-container';
-                      container.style.cssText = 'display: inline-block; position: relative;';
+                      container.style.cssText = 'display: inline-block; position: relative; cursor: pointer;';
                       
                       const formula = document.createElement('span');
                       formula.className = 'formula-decoration';
@@ -86,6 +105,26 @@ export const Formula = Extension.create({
                           display: none !important;
                         }
                       `;
+                      
+                      // 使用 requestAnimationFrame 确保在下一帧时添加事件监听
+                      requestAnimationFrame(() => {
+                        // 添加点击事件
+                        container.addEventListener('click', (event) => {
+                          event.stopPropagation();
+                          
+                          // 从 Extension 上下文获取编辑器实例
+                          const editor = this.editor;
+                          
+                          if (editor) {
+                            emitter.emit('formula-click', {
+                              content: formulaContent,
+                              pos: start,
+                              end,
+                            });
+                          }
+                        });
+                      });
+                      
                       container.appendChild(style);
                       container.appendChild(formula);
                       return container;

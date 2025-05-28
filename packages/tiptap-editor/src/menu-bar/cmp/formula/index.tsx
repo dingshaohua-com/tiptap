@@ -8,8 +8,7 @@ import { useEditorConfig } from '../../../config-ctx';
 import { Button, Popover, Tabs, TabsProps } from 'antd';
 
 // @ts-ignore
-const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal }) => {
-
+const FormulaContent = ({ editor, onClose, pos, end, mfPreviewVal, setMfPreviewVal }) => {
   const onChange = (key: string) => {
     // console.log(key);
   };
@@ -19,15 +18,14 @@ const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal })
   };
 
   const insertFormula = () => {
-    if (pos) {
-      editor.commands.updateFormula(pos, mfPreviewVal);
-    } else {
-      try {
+    try {
+      if (pos) {
+        editor.commands.updateFormula(pos, end, mfPreviewVal);
+      } else {
         editor.commands.insertFormula(mfPreviewVal);
-      } catch (error) {
-        console.log(error);
       }
-     
+    } catch (error) {
+      // console.log(error);
     }
     onClose();
   };
@@ -58,7 +56,7 @@ const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal })
       </div>
       <div className="mf-preview-input no-blur">
         <div className="mf-preview-input-title">源码：</div>
-        <input type="text" value={mfPreviewVal} onChange={(evt) => setMfPreviewVal(evt.target.value)} />
+        <textarea value={mfPreviewVal} onChange={(evt) => setMfPreviewVal(evt.target.value)} />
       </div>
       <div className="mf-preview-input-btn">
         <Button type="primary" onClick={insertFormula} onMouseDown={(e) => e.preventDefault()}>
@@ -76,16 +74,18 @@ const Formula = () => {
 
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState(0);
+  const [end, setEnd] = useState(0);
   const [mfPreviewVal, setMfPreviewVal] = useState('');
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
 
-  const handleFormulaClick = ({ content, pos }: any) => {
+  const handleFormulaClick = ({ content, pos, end }: any) => {
     if (Boolean(editor.isEditable)) {
       setOpen(true);
       setPos(pos);
+      setEnd(end);
       setMfPreviewVal(content);
     }
   };
@@ -98,7 +98,7 @@ const Formula = () => {
   }, [editor]);
 
   return (
-    <Popover content={<FormulaContent pos={pos} mfPreviewVal={mfPreviewVal} setMfPreviewVal={setMfPreviewVal} editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
+    <Popover content={<FormulaContent pos={pos} end={end} mfPreviewVal={mfPreviewVal} setMfPreviewVal={setMfPreviewVal} editor={editor} onClose={() => setOpen(false)} />} open={open} trigger="click" destroyOnHidden={true} onOpenChange={handleOpenChange}>
       <Button onClick={() => setOpen(true)} color="default" variant="filled" autoInsertSpace onMouseDown={(e) => e.preventDefault()}>
         <RiFormula />
       </Button>
