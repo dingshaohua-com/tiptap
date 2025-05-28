@@ -1,88 +1,107 @@
-import { Node } from '@tiptap/core';
-import emitter from '../../../utils/emitter';
-import Hammer from 'hammerjs';
+import katex from 'katex';
+import { Extension } from '@tiptap/core';
+import { Plugin } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { Editor } from '@tiptap/core';
 
-export const Formula = Node.create({
-  name: 'mathField',
-  atom: true,
-  group: 'inline',
-  inline: true,
-  content: 'text*',
-
-  parseHTML() {
-    return [{ tag: 'math-field' }];
-  },
- 
-  // 渲染（文档初始化和变动就会被渲染 执行此函数）和提交（即调用getHtml）的时候的最终代码
-  renderHTML({HTMLAttributes }) {
-    return ['math-field', HTMLAttributes, 0];
-  },
-
-  addNodeView() {
-    return ({ editor, node, getPos, HTMLAttributes }) => {
-      const wrapper = document.createElement('math-field');
-      
-      // 设置属性
-      Object.entries(HTMLAttributes).forEach(([key, value]) => {
-        wrapper.setAttribute(key, value);
-      });
-      
-      // 设置内容
-      wrapper.textContent = node.textContent;
-      
-      // 添加点击事件
-      const hammer = new Hammer.Manager(wrapper);
-      const singleTap = new Hammer.Tap({ event: 'singletap', taps: 1 });
-      const doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, interval: 300, threshold: 9, });
-
-      hammer.add([doubleTap, singleTap]);
-      doubleTap.recognizeWith(singleTap); // 双击时需要识别单击
-      singleTap.requireFailure(doubleTap); // 单击需要等待确认不是双击
-      // hammer.on('singletap', (e) => {
-      //   // if (!editor.isFocused) { }
-      // });
-      hammer.on('doubletap', (event) => {
-        if (editor.isFocused) {
-          // 你可以在这里触发编辑器命令或做其他操作
-          editor.commands.setNodeSelection(getPos());
-          emitter.emit('formula-click', {
-            content: node.textContent,
-            pos: getPos(),
-          });
-        }
-      });
-      
-      return {
-        dom: wrapper,
-      };
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    formula: {
+      insertFormula: (latex: string) => ReturnType;
     };
-  },
+  }
+}
 
-  // @ts-ignore
+export const Formula = Extension.create({
+  name: 'formula',
+
   addCommands() {
     return {
-      insertFormula: (arg) => (editor) => {
-        const currentNode = {
-          type: this.name,
-          content: [{ type: 'text', text: arg || '' }],
-        };
-        const { from } = editor.state.selection;
-        editor.commands.insertContentAt(from, currentNode);
-        editor.commands.focus();
-        return true;
-      },
-      updateFormula: (pos, arg) => ({ tr, state, dispatch, commands }) => {
-        // 获取指定位置的节点
-        const node = state.doc.nodeAt(pos);
-        // 创建新节点
-        const newNode = this.type.create(
-          node.attrs, 
-          arg ? [state.schema.text(arg)] : null
-        );
-        tr.replaceWith(pos, pos + node.nodeSize, newNode);
-        commands.focus();
-        return true;
+      insertFormula: (latex: string) => ({ editor }: { editor: Editor }) => {
+        // 根据公式类型选择合适的分隔符
+        const isBlock = latex.includes('\n') || latex.length > 50; // 简单的启发式判断
+        const formula = isBlock ? `\\[${latex}\\]` : `\\(${latex}\\)`;
+        return editor.commands.insertContent(formula);
       },
     };
+  },
+
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        props: {
+          decorations: (state) => {
+            const decorations: Decoration[] = [];
+            
+            state.doc.descendants((node, pos) => {
+              if (node.isText) {
+                const text = node.text || '';
+                
+                // 定义各类 LaTeX 匹配规则
+                const rules: { regex: RegExp; type: string }[] = [
+                  { regex: /\\\((.*?)\\\)/g, type: 'inline' },         // 匹配 \( ... \)
+                  { regex: /\$(?!\$)(.*?)(?<!\\)\$/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
+                  { regex: /\\\[([\s\S]*?)\\\]/g, type: 'block' },      // 匹配 \[ ... \]
+                  { regex: /\$\$([\s\S]*?)\$\$/g, type: 'block' },      // 匹配 $$ ... $$
+                  { regex: /\\rm\{([\s\S]*?)\}/g, type: 'rm' },         // 匹配 \rm{ ... }
+                ];
+
+                // 遍历所有规则
+                for (const rule of rules) {
+                  let match;
+                  while ((match = rule.regex.exec(text)) !== null) {
+                    const formulaContent = match[1];
+                    const start = pos + match.index;
+                    const end = start + match[0].length;
+                    
+                    // 使用 inline 装饰器来隐藏原始文本
+                    decorations.push(
+                      Decoration.inline(start, end, {
+                        style: 'display: none;',
+                      }),
+                    );
+                    
+                    // 使用 widget 装饰器来显示渲染后的公式
+                    const decoration = Decoration.widget(start, () => {
+                      const container = document.createElement('span');
+                      container.className = 'formula-container';
+                      container.style.cssText = 'display: inline-block; position: relative;';
+                      
+                      const formula = document.createElement('span');
+                      formula.className = 'formula-decoration';
+                      formula.style.cssText = 'display: inline-block;';
+                      
+                      // 根据公式类型设置不同的渲染选项
+                      const options = {
+                        displayMode: rule.type === 'block',
+                        throwOnError: false,
+                      };
+                      
+                      formula.innerHTML = katex.renderToString(formulaContent, options);
+
+                      // 添加样式来隐藏 katex-html 元素（KaTeX 渲染时自动添加的辅助元素）
+                      const style = document.createElement('style');
+                      style.textContent = `
+                        .formula-decoration .katex-html {
+                          display: none !important;
+                        }
+                      `;
+                      container.appendChild(style);
+                      container.appendChild(formula);
+                      return container;
+                    });
+                    
+                    decorations.push(decoration);
+                  }
+                }
+              }
+              return true;
+            });
+            
+            return DecorationSet.create(state.doc, decorations);
+          },
+        },
+      }),
+    ];
   },
 });

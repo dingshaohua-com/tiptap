@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@repo/tiptap-editor": "workspace:*",
+    "mathlive": "^0.105.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

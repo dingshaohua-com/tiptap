@@ -1,12 +1,15 @@
 import './style.scss';
 import axios from 'axios';
 import { Divider } from 'antd';
-import TiptapEditor, {Feature} from '@repo/tiptap-editor';
 import { useEffect, useRef, useState } from 'react';
+import TiptapEditor, { Feature } from '@repo/tiptap-editor';
+import katex from 'katex';
 
-const initContent = `
-<p>这是一个公式 $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$</p>
-`;
+// const initContent = `
+// <p>这是一个公式 \\(\\frac{d^2y}{dx^2}\\Big|_{x=1}\\)</p>
+// `;
+
+const initContent = `你的内容，包含 \\(\\frac{d^2y}{dx^2}\\Big|_{x=1}\\)这样的公式`;
 const Single = () => {
   const [content, setContent] = useState(initContent);
 
@@ -37,6 +40,16 @@ const Single = () => {
 
   return (
     <div className="app">
+      <p>
+        这是一个公式{' '}
+        <span
+          dangerouslySetInnerHTML={{
+            __html: katex.renderToString(`\\(\\frac{d^2y}{dx^2}\\Big|_{x=1}\\)`, {
+              throwOnError: false,
+            }),
+          }}
+        ></span>
+      </p>
       <div className="my-edit">
         <div className="title">
           下方是一个实例编辑器，现在

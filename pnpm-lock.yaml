@@ -21,6 +21,9 @@ importers:
       '@repo/tiptap-editor':
         specifier: workspace:*
         version: link:../../packages/tiptap-editor
+      mathlive:
+        specifier: ^0.105.3
+        version: 0.105.3
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -188,6 +191,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.11.5
         version: 2.12.0
+      '@types/katex':
+        specifier: ^0.16.7
+        version: 0.16.7
       '@uiw/react-color':
         specifier: ^2.5.5
         version: 2.5.5(@babel/runtime@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -203,9 +209,9 @@ importers:
       hammerjs:
         specifier: ^2.0.8
         version: 2.0.8
-      mathlive:
-        specifier: ^0.104.0
-        version: 0.104.2
+      katex:
+        specifier: ^0.16.22
+        version: 0.16.22
       md5:
         specifier: ^2.3.0
         version: 2.3.0
@@ -2501,6 +2507,9 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
+  '@types/katex@0.16.7':
+    resolution: {integrity: sha512-HMwFiRujE5PjrgwHQ25+bsLJgowjGjm5Z8FVSf0N6PwgJrwxH0QxzHYDcKsTfV3wva0vzrpqMTJS2jXPr5BMEQ==}
+
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
 
@@ -4704,6 +4713,10 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
+  katex@0.16.22:
+    resolution: {integrity: sha512-XCHRdUw4lf3SKBaJe4EvgqIuWwkPSo9XoeO8GjQW94Bp7TWv9hNhzZjZ+OH9yf1UmLygb7DIT5GSFQiyt16zYg==}
+    hasBin: true
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -4823,9 +4836,8 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
-  mathlive@0.104.2:
-    resolution: {integrity: sha512-5z3B5DEZf20UNf+VPXE/0CD1r2rGkNlzdvCt3muTunWPSFb5aBy6WRPXdeMPdsulSCXDse/EYotr0Mx0R+tX4Q==}
-    engines: {node: '>=21.0.0', npm: '>=10.5.0'}
+  mathlive@0.105.3:
+    resolution: {integrity: sha512-eEnJIlRm1ga18ymY79di5Iuc161CzHs3PTXIg8WUHeEt/jpxFHs2CPVYRNxAzOo+5t4S7lA+HDretW4i5dsTmg==}
 
   md5@2.3.0:
     resolution: {integrity: sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==}
@@ -10478,6 +10490,8 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
+  '@types/katex@0.16.7': {}
+
   '@types/linkify-it@5.0.0': {}
 
   '@types/markdown-it@14.1.2':
@@ -13056,6 +13070,10 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
+  katex@0.16.22:
+    dependencies:
+      commander: 8.3.0
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -13164,7 +13182,7 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  mathlive@0.104.2:
+  mathlive@0.105.3:
     dependencies:
       '@cortex-js/compute-engine': 0.28.0
 

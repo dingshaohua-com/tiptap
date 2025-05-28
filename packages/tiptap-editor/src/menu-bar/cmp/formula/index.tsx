@@ -22,7 +22,12 @@ const FormulaContent = ({ editor, onClose, pos, mfPreviewVal, setMfPreviewVal })
     if (pos) {
       editor.commands.updateFormula(pos, mfPreviewVal);
     } else {
-      editor.commands.insertFormula(mfPreviewVal);
+      try {
+        editor.commands.insertFormula(mfPreviewVal);
+      } catch (error) {
+        console.log(error);
+      }
+     
     }
     onClose();
   };

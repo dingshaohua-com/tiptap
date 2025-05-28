@@ -60,7 +60,7 @@ export const handleOldData = (data: any) => {
   let newData = data;
   if (newData) {
     newData = convertLineBreaksToHtml(newData);
-    newData = convertLatexToMathField(newData);
+    // newData = convertLatexToMathField(newData);
     newData = autoPrefixImageHost(newData);
   }
   return newData;
