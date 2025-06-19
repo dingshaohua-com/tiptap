@@ -67,10 +67,25 @@ const CustomEditor = (props: EditorConfig) => {
         blur: (view, event) => {
           const editorId = view.dom.getAttribute('data-id');
           const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
-          const noBlur = relatedTarget?.closest('.no-blur');
+          // const noBlur = relatedTarget?.closest('.no-blur');
           const toolBar = relatedTarget?.closest('#' + editorId);
-          if (toolBar || noBlur) return true;
+          console.log('toolBar',editorId,  toolBar, relatedTarget, document.querySelector('#' + editorId));
+          
+          if (toolBar) return true;
           return false;
+          // return false;
+          // const editorId = view.dom.getAttribute('data-id');
+          // const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
+          // const noBlur = relatedTarget?.closest('.no-blur');
+          // const toolBar = relatedTarget?.closest('#' + editorId);
+          // if (toolBar || noBlur) return true;
+          // return false;
+          // const editorId = view.dom.getAttribute('data-id');
+          // const relatedTarget = (event as FocusEvent).relatedTarget as HTMLElement;
+          // const toolBar = relatedTarget?.closest('#' + editorId);
+          // console.log('toolBar', toolBar);
+          
+          // if (toolBar) return true;
         },
       },
     },
@@ -110,20 +125,32 @@ const CustomEditor = (props: EditorConfig) => {
       config.onFocus && config.onFocus(arg);
     },
     onBlur(arg) {
-      editor.setEditable(false);
-      config.onBlur && config.onBlur(arg);
-
       // 为了解决外部onBlur事件，万一重新赋值引发的赋值冲突
-      // if (config.clickToEdit) {
-      //   setTimeout(() => {
-      //     editor.setEditable(false);
-      //     config.onBlur && config.onBlur(arg);
-      //   }, 130);
-      // } else {
-      //   editor.setEditable(false);
-      //   config.onBlur && config.onBlur(arg);
-      // }
+      if (config.clickToEdit) {
+        setTimeout(() => {
+          editor.setEditable(false);
+          config.onBlur && config.onBlur(arg);
+        }, 130);
+      } else {
+        editor.setEditable(false);
+        config.onBlur && config.onBlur(arg);
+      }
     },
+    // onBlur(arg) {
+    //   editor.setEditable(false);
+    //   config.onBlur && config.onBlur(arg);
+
+    //   // 为了解决外部onBlur事件，万一重新赋值引发的赋值冲突
+    //   // if (config.clickToEdit) {
+    //   //   setTimeout(() => {
+    //   //     editor.setEditable(false);
+    //   //     config.onBlur && config.onBlur(arg);
+    //   //   }, 130);
+    //   // } else {
+    //   //   editor.setEditable(false);
+    //   //   config.onBlur && config.onBlur(arg);
+    //   // }
+    // },
     editable: Boolean(props.editable),
   });
 

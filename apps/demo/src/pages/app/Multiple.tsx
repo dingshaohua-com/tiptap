@@ -5,7 +5,7 @@ import TiptapEditor from '@repo/tiptap-editor';
 import { useEffect, useRef, useState } from 'react';
 
 const initContent = `
-<p>Hell<span style="color:red">o</span>  <math-field>\\frac{x}{y}</math-field> World <span data-tiptype="question-blank_filling"></span>! 把集合 $\{x | x^2 - 4x + 3 = 0\}$ 用列举法表示，正确的是（ ）．</p> 
+<p>Hell<span style="color:red">o</span>  把集合 $\{x | x^2 - 4x + 3 = 0\}$ 用列举法表示，正确的是（ ）．</p> 
     <table>
       <thead>
         <tr>
@@ -28,7 +28,7 @@ const questionsInit = [
   },
   {
     editable: false,
-    content: '相同条件下，\\rm{NH_4Cl} 大, <br> 我是新的段落',
+    content: '相同条件下 大, <br> 我是新的段落',
   },
 ];
 const Multiple = () => {

@@ -46,20 +46,53 @@ const convertLatexToMathField = (html: string): string => {
 };
 
 /**
- * 将文本中的换行符 \n 替换为 <br> 标签
+ * 将文本中的换行符 \n 替换为 <br> 标签，但保留 LaTeX 公式中的换行符
  * @param text 原始文本
  * @returns HTML 字符串，换行变为 <br>
  */
 const convertLineBreaksToHtml = (text: string): string => {
   if (!text) return '';
-  return text.replace(/\n/g, '<br>');
+
+  // 定义 LaTeX 公式匹配规则
+  const rules: { regex: RegExp; type: string }[] = [
+    { regex: /(\\\(.*?\\\))/g, type: 'inline' }, // 匹配 \( ... \)
+    { regex: /(\$(?!\$).*?(?<!\\)\$)/g, type: 'inline' }, // 匹配 $...$，避免 $$ 和转义 $
+    { regex: /(\\\[[\s\S]*?\\\])/g, type: 'block' }, // 匹配 \[ ... \]
+    { regex: /(\$\$[\s\S]*?\$\$)/g, type: 'block' }, // 匹配 $$ ... $$
+    { regex: /(\\rm\{[\s\S]*?\})/g, type: 'rm' }, // 匹配 \rm{ ... }
+  ];
+
+  // 将文本分割成 LaTeX 公式和非 LaTeX 公式部分
+  let result = text;
+  let lastIndex = 0;
+  let processedText = '';
+
+  // 遍历所有规则
+  for (const rule of rules) {
+    let match;
+    while ((match = rule.regex.exec(text)) !== null) {
+      // 处理 LaTeX 公式前的普通文本
+      const beforeFormula = text.slice(lastIndex, match.index);
+      processedText += beforeFormula.replace(/\n/g, '<br>');
+      
+      // 保留 LaTeX 公式中的换行符
+      processedText += match[0];
+      
+      lastIndex = match.index + match[0].length;
+    }
+  }
+
+  // 处理最后一个 LaTeX 公式后的普通文本
+  processedText += text.slice(lastIndex).replace(/\n/g, '<br>');
+
+  return processedText;
 };
 
 // 特殊处理旧的富文本内容中的一些数据(自动添加图片前缀, 正则替换)
 export const handleOldData = (data: any) => {
   let newData = data;
   if (newData) {
-    newData = convertLineBreaksToHtml(newData);
+    // newData = convertLineBreaksToHtml(newData);
     // newData = convertLatexToMathField(newData);
     newData = autoPrefixImageHost(newData);
   }
